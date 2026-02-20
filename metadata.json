@@ -1,0 +1,8 @@
+{
+  "name": "Ndjele Solution",
+  "description": "L'application multiservice révolutionnaire au Gabon. Transport, Artisans, Marketplace et Livraison en une seule main.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}

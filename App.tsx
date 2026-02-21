@@ -38,6 +38,8 @@ import PharmacyRegistrationView from './components/PharmacyRegistrationView';
 import PharmacyDashboard from './components/PharmacyDashboard';
 import BusinessDashboard from './components/BusinessDashboard';
 import OnePagerView from './components/OnePagerView';
+import LawyerView from './components/LawyerView';
+import BailiffView from './components/BailiffView';
 
 const DEFAULT_ARTISANS: Artisan[] = [
   { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong' },
@@ -130,7 +132,7 @@ const App: React.FC = () => {
     if (activeView === 'home') {
       switch (user.role) {
         case 'DRIVER': return <DriverDashboard onNavigate={navigateProtected} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} registeredDriver={registeredDriver} />;
-        case 'DELIVERY': return <DeliveryDashboard onNavigate={setActiveView} registeredLivreur={registeredLivreur} marketplaceOrders={orders} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} onAcceptOrder={() => {}} onMarkDelivered={() => {}} />;
+        case 'DELIVERY': return <DeliveryDashboard onNavigate={setActiveView} registeredLivreur={registeredLivreur} marketplaceOrders={orders} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} onAcceptOrder={() => {}} onMarkDelivered={() => {}} onUpdateOrder={(id, updates) => setOrders(orders.map(o => o.id === id ? { ...o, ...updates } : o))} />;
         case 'MERCHANT': return <MerchantDashboard onNavigate={setActiveView} registeredMerchant={registeredMerchant} onUpdateMerchant={setRegisteredMerchant} />;
         case 'DOCTOR': return registeredDoctor ? <DoctorDashboard onNavigate={setActiveView} doctorName={user.name} /> : <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => {setRegisteredDoctor(d); setActiveView('home');}} />;
         case 'PHARMACY': return registeredPharmacy ? <PharmacyDashboard onNavigate={setActiveView} pharmacy={registeredPharmacy} /> : <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
@@ -159,6 +161,8 @@ const App: React.FC = () => {
       case 'marketplace': return <MarketplaceView onNavigate={setActiveView} registeredMerchant={registeredMerchant} onCreateOrder={(o) => setOrders([o, ...orders])} onBuyNow={(p, m) => { setCheckoutData({product: p, merchant: m}); setActiveView('order-checkout'); }} />;
       case 'order-checkout': return checkoutData ? <OrderCheckoutView onNavigate={setActiveView} product={checkoutData.product} merchant={checkoutData.merchant} onCreateOrder={(o) => setOrders([o, ...orders])} clientName={user.name} /> : null;
       case 'delivery': return <DeliveryView onNavigate={setActiveView} registeredLivreur={registeredLivreur} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
+      case 'lawyers': return <LawyerView onNavigate={setActiveView} />;
+      case 'bailiffs': return <BailiffView onNavigate={setActiveView} />;
       case 'artisan-registration': return <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
       case 'delivery-registration': return <DeliveryRegistrationView onNavigate={navigateProtected} onRegister={(l) => { setRegisteredLivreur(l); setActiveView('home'); }} />;
       case 'merchant-registration': return <MerchantRegistrationView onNavigate={navigateProtected} onRegister={(m) => { setRegisteredMerchant(m); setActiveView('home'); }} />;

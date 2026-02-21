@@ -10,6 +10,7 @@ interface DeliveryDashboardProps {
   marketplaceOrders: MarketplaceOrder[];
   onAcceptOrder: (id: string, livreurName: string) => void;
   onMarkDelivered: (id: string) => void;
+  onUpdateOrder: (id: string, updates: Partial<MarketplaceOrder>) => void;
 }
 
 const DeliveryDashboard: React.FC<DeliveryDashboardProps> = ({ 
@@ -18,7 +19,8 @@ const DeliveryDashboard: React.FC<DeliveryDashboardProps> = ({
   onAcceptRequest, 
   marketplaceOrders, 
   onAcceptOrder, 
-  onMarkDelivered 
+  onMarkDelivered,
+  onUpdateOrder
 }) => {
   const [isOnline, setIsOnline] = useState(true);
   const [tab, setTab] = useState<'express' | 'store'>('express');
@@ -118,14 +120,21 @@ const DeliveryDashboard: React.FC<DeliveryDashboardProps> = ({
                   </button>
                 ) : order.status === 'PICKED_UP' ? (
                   <button 
+                    onClick={() => onUpdateOrder(order.id, { status: 'WAITING_CLIENT_VALIDATION' })}
+                    className="w-full py-4 bg-amber-500 text-white rounded-2xl font-black text-xs uppercase shadow-lg shadow-amber-200 flex items-center justify-center gap-2"
+                  >
+                    <Clock className="w-4 h-4" /> Marquer comme livré (Attente client)
+                  </button>
+                ) : order.status === 'WAITING_CLIENT_VALIDATION' ? (
+                  <button 
                     onClick={() => onMarkDelivered(order.id)}
                     className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase shadow-lg shadow-emerald-200 flex items-center justify-center gap-2"
                   >
-                    <CheckCircle2 className="w-4 h-4" /> Colis livré
+                    <CheckCircle2 className="w-4 h-4" /> Confirmer livraison définitive
                   </button>
                 ) : (
                   <div className="py-3 text-center text-[10px] font-black text-slate-400 uppercase bg-slate-50 rounded-2xl">
-                    Attente confirmation client...
+                    Livraison terminée
                   </div>
                 )}
               </div>

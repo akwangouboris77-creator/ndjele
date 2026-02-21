@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, Smartphone, Star, Car, Truck, ChevronRight, Package, Hammer, Crown, ShoppingBag, Plus, CreditCard, ArrowUpRight, CheckCircle2, Clock, Lock, Zap, Home, LayoutDashboard, AlertTriangle, Stethoscope, Pill, User as UserIcon } from 'lucide-react';
+import { MapPin, Smartphone, Star, Car, Truck, ChevronRight, Package, Hammer, Crown, ShoppingBag, Plus, CreditCard, ArrowUpRight, CheckCircle2, Clock, Lock, Zap, Home, LayoutDashboard, AlertTriangle, Stethoscope, Pill, User as UserIcon, ShieldCheck, Gavel } from 'lucide-react';
 import { ViewState, ActiveRide, SubscriptionTier, MarketplaceOrder } from '../types';
 
 interface HomeViewProps {
@@ -88,6 +88,8 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
             { id: 'maraude', icon: Smartphone, label: 'Radar', color: 'bg-blue-50 text-blue-600' },
             { id: 'wallet', icon: CreditCard, label: 'Wallet', color: 'bg-emerald-50 text-emerald-600' },
             { id: 'sos', icon: AlertTriangle, label: 'Urgence', color: 'bg-red-50 text-red-600' },
+            { id: 'lawyers', icon: ShieldCheck, label: 'Avocats', color: 'bg-slate-100 text-slate-800' },
+            { id: 'bailiffs', icon: Gavel, label: 'Huissiers', color: 'bg-slate-100 text-slate-700' },
             { id: 'client-dashboard', icon: UserIcon, label: 'Compte', color: 'bg-slate-50 text-slate-400' },
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id as ViewState)} className="flex flex-col items-center gap-2 transition-transform hover:scale-105 active:scale-95">

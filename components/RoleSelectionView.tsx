@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { User, Car, Hammer, Store, Truck, Stethoscope, ArrowRight, Pill } from 'lucide-react';
+import { User, Car, Hammer, Store, Truck, Stethoscope, ArrowRight, Pill, ShieldCheck, Gavel } from 'lucide-react';
 import { UserRole, ViewState } from '../types';
 
 interface RoleSelectionViewProps {
@@ -15,6 +15,8 @@ const ROLE_OPTIONS = [
   { id: 'PHARMACY', label: 'Pharmacie', icon: Pill, color: 'bg-pink-500', desc: 'Vendre des médicaments et gérer les ordonnances.' },
   { id: 'DELIVERY', label: 'Livreur', icon: Truck, color: 'bg-pink-500', desc: 'Effectuer des livraisons rapides.' },
   { id: 'DOCTOR', label: 'Médecin', icon: Stethoscope, color: 'bg-emerald-500', desc: 'Consultations et avis médicaux.' },
+  { id: 'LAWYER', label: 'Avocat', icon: ShieldCheck, color: 'bg-slate-800', desc: 'Conseils juridiques et défense.' },
+  { id: 'BAILIFF', label: 'Huissier', icon: Gavel, color: 'bg-slate-700', desc: 'Significations et exécutions.' },
 ];
 
 const RoleSelectionView: React.FC<RoleSelectionViewProps> = ({ onSelect }) => {

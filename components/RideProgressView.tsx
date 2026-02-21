@@ -33,6 +33,12 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
     <div className="flex flex-col h-full bg-slate-50 animate-in fade-in duration-500 relative overflow-hidden">
       <div className="relative flex-1 bg-slate-200">
         <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/map/800/1200')] bg-cover opacity-50"></div>
+        {/* Hidden simulation button for driver arrival */}
+        <div 
+          onClick={handleConfirmFinish}
+          className="absolute top-0 right-0 w-12 h-12 opacity-0 cursor-pointer z-[100]"
+          title="Simuler Arrivée"
+        />
         <div className="absolute top-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-emerald-500/20 flex items-center justify-between z-10">
            <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white">

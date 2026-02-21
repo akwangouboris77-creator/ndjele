@@ -130,8 +130,8 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
               </div>
             </div>
             <div className="space-y-4">
-              <input type="text" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white border border-slate-100 rounded-[1.5rem] font-bold outline-none" />
-              <input type="text" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} placeholder="Nom de famille" className="w-full p-5 bg-white border border-slate-100 rounded-[1.5rem] font-bold outline-none" />
+              <input type="text" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white border border-slate-100 rounded-[1.5rem] font-bold outline-none text-slate-900" />
+              <input type="text" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} placeholder="Nom de famille" className="w-full p-5 bg-white border border-slate-100 rounded-[1.5rem] font-bold outline-none text-slate-900" />
             </div>
           </div>
         )}
@@ -208,7 +208,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
                </div>
                <div className="relative">
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                  <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="074..." className="w-full pl-11 pr-4 py-4 bg-slate-50 rounded-2xl font-bold outline-none focus:bg-white" />
+                  <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="074..." className="w-full pl-11 pr-4 py-4 bg-slate-50 rounded-2xl font-bold outline-none focus:bg-white text-slate-900" />
                </div>
             </div>
           </div>

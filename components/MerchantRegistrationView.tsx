@@ -98,8 +98,8 @@ const MerchantRegistrationView: React.FC<MerchantRegistrationViewProps> = ({ onN
               <User className="w-6 h-6 text-violet-600" />
               <div><h4 className="font-bold">Gérant</h4><p className="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Propriétaire du commerce.</p></div>
             </div>
-            <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm" />
-            <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} placeholder="Nom" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm" />
+            <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm text-slate-900" />
+            <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} placeholder="Nom" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm text-slate-900" />
           </div>
         )}
 
@@ -109,8 +109,8 @@ const MerchantRegistrationView: React.FC<MerchantRegistrationViewProps> = ({ onN
                 <Store className="w-6 h-6 text-amber-600" />
                 <div><h4 className="font-bold">Enseigne</h4><p className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Détails de la boutique.</p></div>
              </div>
-             <input type="text" value={formData.shopName} onChange={e => setFormData({...formData, shopName: e.target.value})} placeholder="Nom de la Boutique" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm" />
-             <input type="text" value={formData.neighborhood} onChange={e => setFormData({...formData, neighborhood: e.target.value})} placeholder="Quartier" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm" />
+             <input type="text" value={formData.shopName} onChange={e => setFormData({...formData, shopName: e.target.value})} placeholder="Nom de la Boutique" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm text-slate-900" />
+             <input type="text" value={formData.neighborhood} onChange={e => setFormData({...formData, neighborhood: e.target.value})} placeholder="Quartier" className="w-full p-5 bg-white rounded-2xl font-bold border-none shadow-sm text-slate-900" />
           </div>
         )}
 
@@ -147,7 +147,7 @@ const MerchantRegistrationView: React.FC<MerchantRegistrationViewProps> = ({ onN
                    <button onClick={() => setSelectedProvider('AIRTEL')} className={`flex-1 py-3 rounded-2xl border-2 font-black text-[10px] uppercase ${selectedProvider === 'AIRTEL' ? 'border-red-500 text-red-600' : 'border-slate-50'}`}>Airtel</button>
                    <button onClick={() => setSelectedProvider('MOOV')} className={`flex-1 py-3 rounded-2xl border-2 font-black text-[10px] uppercase ${selectedProvider === 'MOOV' ? 'border-blue-500 text-blue-600' : 'border-slate-50'}`}>Moov</button>
                 </div>
-                <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)} placeholder="074 / 066..." className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none" />
+                <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)} placeholder="074 / 066..." className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
              </div>
           </div>
         )}

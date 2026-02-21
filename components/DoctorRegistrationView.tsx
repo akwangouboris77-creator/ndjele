@@ -82,14 +82,14 @@ const DoctorRegistrationView: React.FC<DoctorRegistrationViewProps> = ({ onNavig
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Nom complet (ex: Dr. Marc Obiang)"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500 text-slate-900"
                 />
                 <input
                   type="text"
                   value={formData.licenseNumber}
                   onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                   placeholder="N° d'Ordre des Médecins"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500 text-slate-900"
                 />
               </div>
             </div>
@@ -112,14 +112,14 @@ const DoctorRegistrationView: React.FC<DoctorRegistrationViewProps> = ({ onNavig
                   value={formData.neighborhood}
                   onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
                   placeholder="Quartier du Cabinet"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500 text-slate-900"
                 />
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="Téléphone Professionnel"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500 text-slate-900"
                 />
               </div>
             </div>

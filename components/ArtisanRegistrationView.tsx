@@ -135,8 +135,8 @@ const ArtisanRegistrationView: React.FC<ArtisanRegistrationViewProps> = ({ onNav
                 {formData.avatar ? <img src={formData.avatar} className="w-full h-full object-cover" /> : <div className="w-full h-full flex flex-col items-center justify-center text-slate-300"><ImageIcon className="w-10 h-10" /></div>}
                 <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center"><Camera className="w-8 h-8 text-white" /></div>
               </div>
-              <input type="text" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} placeholder="Prénom" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none" />
-              <input type="text" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} placeholder="Nom" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none" />
+              <input type="text" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} placeholder="Prénom" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
+              <input type="text" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} placeholder="Nom" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
             </div>
           </div>
         )}
@@ -152,7 +152,7 @@ const ArtisanRegistrationView: React.FC<ArtisanRegistrationViewProps> = ({ onNav
                  <button key={c.id} onClick={() => setFormData({ ...formData, category: c.id })} className={`p-4 rounded-3xl border-2 font-black text-xs ${formData.category === c.id ? 'border-indigo-500 bg-indigo-50 text-indigo-600' : 'bg-white border-slate-100 text-slate-400'}`}>{c.label}</button>
                ))}
              </div>
-             <input type="text" value={formData.neighborhood} onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })} placeholder="Quartier principal" className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold" />
+             <input type="text" value={formData.neighborhood} onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })} placeholder="Quartier principal" className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold text-slate-900" />
           </div>
         )}
 
@@ -189,7 +189,7 @@ const ArtisanRegistrationView: React.FC<ArtisanRegistrationViewProps> = ({ onNav
                    <button onClick={() => setSelectedProvider('AIRTEL')} className={`flex-1 py-3 rounded-2xl font-black text-[10px] uppercase border-2 ${selectedProvider === 'AIRTEL' ? 'border-red-500 text-red-600' : 'border-slate-50'}`}>Airtel</button>
                    <button onClick={() => setSelectedProvider('MOOV')} className={`flex-1 py-3 rounded-2xl font-black text-[10px] uppercase border-2 ${selectedProvider === 'MOOV' ? 'border-blue-500 text-blue-600' : 'border-slate-50'}`}>Moov</button>
                 </div>
-                <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)} placeholder="N° Mobile Money" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none" />
+                <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)} placeholder="N° Mobile Money" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
              </div>
           </div>
         )}

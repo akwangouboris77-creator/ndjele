@@ -200,7 +200,7 @@ const App: React.FC = () => {
         </header>
       )}
 
-      <main className="flex-1 overflow-y-auto relative bg-slate-50/30 z-0 hide-scrollbar">
+      <main className={`flex-1 overflow-y-auto relative bg-slate-50/30 z-0 hide-scrollbar ${user && activeView !== 'role-selection' && activeView !== 'one-pager' ? 'pb-32' : ''}`}>
         {renderView()}
       </main>
 

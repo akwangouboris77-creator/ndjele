@@ -97,8 +97,8 @@ const DeliveryRegistrationView: React.FC<DeliveryRegistrationViewProps> = ({ onN
               <User className="w-6 h-6 text-pink-600" />
               <div><h4 className="font-bold">Identité</h4><p className="text-[10px] text-pink-700 font-bold uppercase tracking-wider mt-1">Vos informations pour Ndjele Express.</p></div>
             </div>
-            <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white rounded-[1.5rem] font-bold border-none shadow-sm" />
-            <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} placeholder="Nom" className="w-full p-5 bg-white rounded-[1.5rem] font-bold border-none shadow-sm" />
+            <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white rounded-[1.5rem] font-bold border-none shadow-sm text-slate-900" />
+            <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} placeholder="Nom" className="w-full p-5 bg-white rounded-[1.5rem] font-bold border-none shadow-sm text-slate-900" />
           </div>
         )}
 
@@ -148,7 +148,7 @@ const DeliveryRegistrationView: React.FC<DeliveryRegistrationViewProps> = ({ onN
                    <button onClick={() => setSelectedProvider('AIRTEL')} className={`flex-1 py-3 rounded-2xl border-2 font-black text-[10px] uppercase ${selectedProvider === 'AIRTEL' ? 'border-red-500 text-red-600' : 'border-slate-50'}`}>Airtel</button>
                    <button onClick={() => setSelectedProvider('MOOV')} className={`flex-1 py-3 rounded-2xl border-2 font-black text-[10px] uppercase ${selectedProvider === 'MOOV' ? 'border-blue-500 text-blue-600' : 'border-slate-50'}`}>Moov</button>
                 </div>
-                <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)} placeholder="074..." className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none outline-none" />
+                <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)} placeholder="074..." className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none outline-none text-slate-900" />
              </div>
           </div>
         )}

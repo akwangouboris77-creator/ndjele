@@ -76,14 +76,14 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
                   value={formData.pharmacistName}
                   onChange={(e) => setFormData({ ...formData, pharmacistName: e.target.value })}
                   placeholder="Nom du Pharmacien Titulaire"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500 text-slate-900"
                 />
                 <input
                   type="text"
                   value={formData.licenseNumber}
                   onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                   placeholder="N° de Licence d'Exploitation"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500 text-slate-900"
                 />
               </div>
             </div>
@@ -106,21 +106,21 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
                   value={formData.pharmacyName}
                   onChange={(e) => setFormData({ ...formData, pharmacyName: e.target.value })}
                   placeholder="Nom de la Pharmacie"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500 text-slate-900"
                 />
                 <input
                   type="text"
                   value={formData.neighborhood}
                   onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
                   placeholder="Quartier de l'officine"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500 text-slate-900"
                 />
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="Téléphone Urgence"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-pink-500 text-slate-900"
                 />
               </div>
             </div>

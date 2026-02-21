@@ -107,10 +107,10 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
       {/* Banner Santé */}
       <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Health" />
-         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent p-8 flex flex-col justify-end">
-            <h4 className="text-xl font-black text-slate-900 leading-tight">Vivre en bonne santé</h4>
-            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mt-1">Médecins & Pharmacies de garde.</p>
-            <button onClick={() => onNavigate('doctors')} className="mt-4 gradient-emerald text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-emerald-200">
+         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent p-8 flex flex-col justify-end">
+            <h4 className="text-xl font-black text-white leading-tight">Vivre en bonne santé</h4>
+            <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mt-1">Médecins & Pharmacies de garde.</p>
+            <button onClick={() => onNavigate('doctors')} className="mt-4 gradient-emerald text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-emerald-500/20">
               Découvrir Ndjele Santé
             </button>
          </div>

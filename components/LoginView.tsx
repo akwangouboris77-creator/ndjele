@@ -86,7 +86,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
     setIsProcessing(true);
     setStep('loading');
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const mockUser: UserProfile = {
         id: selectedRole.toLowerCase() + '-user-' + Math.random().toString(36).substr(2, 5),
         name: selectedRole === 'CLIENT' ? 'Client ' + phoneNumber.slice(-4) : 'Prestataire ' + phoneNumber.slice(-4),
@@ -95,6 +95,17 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
         photo: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?fit=crop&w=150&h=150',
         role: selectedRole
       };
+
+      try {
+        await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(mockUser)
+        });
+      } catch (e) {
+        console.error("Failed to sync user to DB", e);
+      }
+
       onLogin(mockUser);
     }, 2000);
   };

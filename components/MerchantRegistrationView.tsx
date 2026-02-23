@@ -39,7 +39,7 @@ const MerchantRegistrationView: React.FC<MerchantRegistrationViewProps> = ({ onN
   const finalize = () => {
     setShowUssd(false);
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const newMerchant: Merchant = {
         id: 'mer-' + Math.random().toString(36).substr(2, 5),
         ownerName: `${formData.firstName} ${formData.lastName}`,
@@ -51,6 +51,17 @@ const MerchantRegistrationView: React.FC<MerchantRegistrationViewProps> = ({ onN
         isVerified: true,
         products: []
       };
+
+      try {
+        await fetch('/api/merchants/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newMerchant)
+        });
+      } catch (e) {
+        console.error("Failed to sync merchant to DB", e);
+      }
+
       setIsSubmitting(false);
       onRegister(newMerchant);
     }, 2500);

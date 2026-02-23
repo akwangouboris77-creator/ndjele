@@ -86,12 +86,26 @@ const MaraudeView: React.FC<MaraudeViewProps> = ({ onNavigate, onStartRide }) =>
 
   useEffect(() => {
     if (step === 'radar') {
-      const timer = setTimeout(() => {
-        const matches = MOCK_NEARBY_DRIVERS.filter(d => 
-          destination.length > 0 && (d.currentDestination?.toLowerCase().includes(destination.toLowerCase()) || Math.random() > 0.3)
-        );
-        setFoundDrivers(matches);
-      }, 2000);
+      const fetchDrivers = async () => {
+        try {
+          const response = await fetch('/api/drivers/nearby');
+          const drivers = await response.json();
+          // Filter by destination if needed, or just show all nearby
+          const matches = drivers.filter((d: any) => 
+            destination.length > 0 && (d.currentDestination?.toLowerCase().includes(destination.toLowerCase()) || Math.random() > 0.3)
+          );
+          setFoundDrivers(matches);
+        } catch (e) {
+          console.error("Failed to fetch drivers", e);
+          // Fallback to mock logic if API fails
+          const matches = MOCK_NEARBY_DRIVERS.filter(d => 
+            destination.length > 0 && (d.currentDestination?.toLowerCase().includes(destination.toLowerCase()) || Math.random() > 0.3)
+          );
+          setFoundDrivers(matches);
+        }
+      };
+
+      const timer = setTimeout(fetchDrivers, 2000);
       return () => clearTimeout(timer);
     }
   }, [step, destination]);

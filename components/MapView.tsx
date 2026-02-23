@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { ArrowLeft, MapPin, Navigation, Search, Layers, Compass, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, MapPin, Navigation, Search, Layers, Compass, Info, Loader2 } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface MapViewProps {
@@ -8,6 +8,40 @@ interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = ({ onNavigate }) => {
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setIsLoading(false);
+        },
+        (err) => {
+          console.error("Error getting location:", err);
+          setError("Permission refusée ou erreur GPS. Utilisation de la vue par défaut.");
+          setIsLoading(false);
+          // Default to Libreville center if error
+          setUserLocation({ lat: 0.39, lng: 9.45 });
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      setError("La géolocalisation n'est pas supportée par votre navigateur.");
+      setIsLoading(false);
+      setUserLocation({ lat: 0.39, lng: 9.45 });
+    }
+  }, []);
+
+  const mapUrl = userLocation 
+    ? `https://www.openstreetmap.org/export/embed.html?bbox=${userLocation.lng - 0.05},${userLocation.lat - 0.05},${userLocation.lng + 0.05},${userLocation.lat + 0.05}&layer=mapnik&marker=${userLocation.lat},${userLocation.lng}`
+    : "https://www.openstreetmap.org/export/embed.html?bbox=9.3900,0.3500,9.5500,0.4500&layer=mapnik&marker=0.39,9.45";
+
   return (
     <div className="h-full flex flex-col bg-slate-50">
       {/* Header */}
@@ -19,9 +53,12 @@ const MapView: React.FC<MapViewProps> = ({ onNavigate }) => {
           <h2 className="text-lg font-black text-slate-900 tracking-tighter uppercase">Carte Ndjele</h2>
           <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Libreville, Gabon</p>
         </div>
-        <button className="p-2 bg-slate-50 rounded-full">
-          <Layers className="w-5 h-5 text-slate-400" />
-        </button>
+        <div className="flex items-center gap-2">
+          {isLoading && <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />}
+          <button className="p-2 bg-slate-50 rounded-full">
+            <Layers className="w-5 h-5 text-slate-400" />
+          </button>
+        </div>
       </header>
 
       {/* Search Bar Overlay */}
@@ -52,13 +89,22 @@ const MapView: React.FC<MapViewProps> = ({ onNavigate }) => {
           scrolling="no" 
           marginHeight={0} 
           marginWidth={0} 
-          src="https://www.openstreetmap.org/export/embed.html?bbox=9.3900,0.3500,9.5500,0.4500&layer=mapnik&marker=0.39,9.45"
+          src={mapUrl}
           className="grayscale-[0.2] contrast-[1.1]"
         ></iframe>
 
         {/* Floating Action Buttons */}
         <div className="absolute bottom-28 right-6 flex flex-col gap-3">
-          <button className="w-12 h-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-600 active:scale-95 transition-transform border border-slate-100">
+          <button 
+            onClick={() => {
+              setIsLoading(true);
+              navigator.geolocation.getCurrentPosition((pos) => {
+                setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                setIsLoading(false);
+              });
+            }}
+            className="w-12 h-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-600 active:scale-95 transition-transform border border-slate-100"
+          >
             <Navigation className="w-6 h-6" />
           </button>
           <button className="w-12 h-12 bg-slate-900 rounded-2xl shadow-xl flex items-center justify-center text-white active:scale-95 transition-transform">
@@ -66,16 +112,18 @@ const MapView: React.FC<MapViewProps> = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* Info Card */}
+        {/* Info Card / Error Message */}
         <div className="absolute bottom-6 left-6 right-6 bg-white p-5 rounded-[2.5rem] shadow-2xl border border-slate-100 animate-in slide-in-from-bottom-10">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 shrink-0">
+            <div className={`w-12 h-12 ${error ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600'} rounded-2xl flex items-center justify-center shrink-0`}>
               <Info className="w-6 h-6" />
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">Zone de Service Active</h3>
+              <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight">
+                {error ? 'Attention' : 'Zone de Service Active'}
+              </h3>
               <p className="text-[10px] text-slate-500 font-bold leading-relaxed mt-1">
-                Vous êtes dans la zone de couverture Ndjele. Les chauffeurs sont disponibles à Louis, Akanda et Nzeng-Ayong.
+                {error || "Vous êtes dans la zone de couverture Ndjele. Les chauffeurs sont disponibles à Louis, Akanda et Nzeng-Ayong."}
               </p>
             </div>
           </div>

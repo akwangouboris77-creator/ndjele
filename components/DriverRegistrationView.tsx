@@ -55,9 +55,22 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
   const confirmPayment = () => {
     setShowUssd(false);
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const ns = 'NS-' + Math.floor(1000 + Math.random() * 9000);
       setGeneratedNS(ns);
+      
+      const driverData = { ...formData, nsNumber: ns, id: 'dr-' + Math.random().toString(36).substr(2, 5) };
+      
+      try {
+        await fetch('/api/drivers/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(driverData)
+        });
+      } catch (e) {
+        console.error("Failed to sync driver to DB", e);
+      }
+
       setIsSubmitting(false);
       setShowSuccess(true);
     }, 2500);

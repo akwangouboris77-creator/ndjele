@@ -63,7 +63,7 @@ const ArtisanRegistrationView: React.FC<ArtisanRegistrationViewProps> = ({ onNav
   const finalizeRegistration = () => {
     setShowUssd(false);
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const newArtisan: Artisan = {
         id: 'art-' + Math.random().toString(36).substr(2, 5),
         name: `${formData.firstName} ${formData.lastName}`,
@@ -78,6 +78,17 @@ const ArtisanRegistrationView: React.FC<ArtisanRegistrationViewProps> = ({ onNav
         phone: formData.phone,
         neighborhood: formData.neighborhood
       };
+
+      try {
+        await fetch('/api/artisans/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newArtisan)
+        });
+      } catch (e) {
+        console.error("Failed to sync artisan to DB", e);
+      }
+
       setIsSubmitting(false);
       onRegister(newArtisan);
     }, 2500);

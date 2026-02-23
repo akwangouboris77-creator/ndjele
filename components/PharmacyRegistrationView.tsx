@@ -25,7 +25,7 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
 
   const handleSubmit = () => {
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const newPharmacy: Pharmacy = {
         id: 'ph-' + Math.random().toString(36).substr(2, 5),
         name: formData.pharmacyName,
@@ -36,6 +36,17 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
         rating: 5.0,
         medications: []
       };
+
+      try {
+        await fetch('/api/pharmacies/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newPharmacy)
+        });
+      } catch (e) {
+        console.error("Failed to sync pharmacy to DB", e);
+      }
+
       setIsSubmitting(false);
       onRegister(newPharmacy);
     }, 2000);

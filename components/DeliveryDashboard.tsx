@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Package, MapPin, Zap, Smartphone, Check, Clock, TrendingUp, Wallet, Star, Navigation, AlertTriangle, ChevronRight, CheckCircle2, X, Store, ArrowRight } from 'lucide-react';
+import { Package, MapPin, Zap, Smartphone, Check, Clock, TrendingUp, Wallet, Star, Navigation, AlertTriangle, ChevronRight, CheckCircle2, X, Store, ArrowRight, Pill } from 'lucide-react';
 import { ViewState, Livreur, ActiveRide, MarketplaceOrder } from '../types';
 
 interface DeliveryDashboardProps {
@@ -86,10 +86,14 @@ const DeliveryDashboard: React.FC<DeliveryDashboardProps> = ({
               <div key={order.id} className="bg-white border-2 border-violet-100 p-6 rounded-[2.5rem] shadow-sm space-y-4 animate-in slide-in-from-right-4">
                 <div className="flex justify-between items-start">
                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-violet-50 rounded-2xl flex items-center justify-center text-2xl shadow-inner">📦</div>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-inner ${order.orderType === 'PHARMACY' ? 'bg-pink-50' : 'bg-violet-50'}`}>
+                        {order.orderType === 'PHARMACY' ? <Pill className="w-6 h-6 text-pink-500" /> : '📦'}
+                      </div>
                       <div>
                         <h4 className="font-bold text-slate-800 text-sm leading-tight">{order.productName}</h4>
-                        <p className="text-[10px] font-black text-violet-500 uppercase">{order.merchantName}</p>
+                        <p className={`text-[10px] font-black uppercase ${order.orderType === 'PHARMACY' ? 'text-pink-500' : 'text-violet-500'}`}>
+                          {order.merchantName} {order.orderType === 'PHARMACY' && '• PHARMACIE'}
+                        </p>
                       </div>
                    </div>
                    <div className="text-right">

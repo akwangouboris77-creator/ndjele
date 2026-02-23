@@ -50,21 +50,37 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigate, doctorNam
       </div>
 
       <section className="space-y-4">
-        <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest flex items-center gap-2 px-2">
-          <Clock className="w-4 h-4 text-emerald-600" />
-          Prochains Rendez-vous
-        </h3>
+        <div className="flex items-center justify-between px-2">
+          <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest flex items-center gap-2">
+            <Clock className="w-4 h-4 text-emerald-600" />
+            Mes Rendez-vous
+          </h3>
+          <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">Aujourd'hui</span>
+        </div>
         <div className="space-y-3">
           {[
-            { id: 1, patient: 'Marc Mba', time: '14:30', type: 'Consultation' },
-            { id: 2, patient: 'Sarah B.', time: '15:15', type: 'Suivi' },
+            { id: 1, patient: 'Marc Mba', time: '14:30', type: 'Consultation Générale', status: 'CONFIRMED', neighborhood: 'Akanda' },
+            { id: 2, patient: 'Sarah B.', time: '15:15', type: 'Suivi Post-Op', status: 'CONFIRMED', neighborhood: 'Louis' },
+            { id: 3, patient: 'Jean-Paul N.', time: '16:00', type: 'Urgence', status: 'PENDING', neighborhood: 'Nzeng-Ayong' },
           ].map(rdv => (
-            <div key={rdv.id} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
-              <div>
-                <h4 className="font-bold text-slate-800 text-sm">{rdv.patient}</h4>
-                <p className="text-[10px] text-slate-400 font-bold uppercase">{rdv.type} • {rdv.time}</p>
+            <div key={rdv.id} className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group hover:border-emerald-200 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 font-black text-xs">
+                  {rdv.time}
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 text-sm">{rdv.patient}</h4>
+                  <p className="text-[9px] text-slate-400 font-bold uppercase">{rdv.type} • {rdv.neighborhood}</p>
+                </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-slate-300" />
+              <div className="flex items-center gap-2">
+                {rdv.status === 'PENDING' ? (
+                  <div className="px-3 py-1 bg-amber-50 text-amber-600 text-[8px] font-black uppercase rounded-full border border-amber-100 animate-pulse">En attente</div>
+                ) : (
+                  <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase rounded-full border border-emerald-100">Confirmé</div>
+                )}
+                <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-colors" />
+              </div>
             </div>
           ))}
         </div>

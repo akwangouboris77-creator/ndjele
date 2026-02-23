@@ -69,6 +69,7 @@ export interface MarketplaceOrder {
   livreurName?: string;
   status: OrderStatus;
   timestamp: number;
+  orderType: 'MARKETPLACE' | 'PHARMACY';
 }
 
 export type ArtisanCategory = 'plomberie' | 'electricite' | 'froid' | 'maconnerie' | 'menuiserie' | 'mecanique' | 'carrelage' | 'menage' | 'nettoyage' | 'charpenterie' | 'elagage';
@@ -191,6 +192,53 @@ export interface MerchantRegistration {
   phone: string;
   neighborhood: string;
   category: string;
+}
+
+export interface Lawyer {
+  id: string;
+  name: string;
+  specialty: string;
+  rating: number;
+  distance: number;
+  neighborhood: string;
+  experience: number;
+  avatar: string;
+  isVerified: boolean;
+  licenseNumber?: string;
+  balance?: number;
+}
+
+export interface Bailiff {
+  id: string;
+  name: string;
+  office: string;
+  rating: number;
+  neighborhood: string;
+  experience: number;
+  avatar: string;
+  isVerified: boolean;
+  licenseNumber?: string;
+  balance?: number;
+}
+
+export interface LawyerRegistration {
+  firstName: string;
+  lastName: string;
+  specialty: string;
+  phone: string;
+  neighborhood: string;
+  avatar: string;
+  licenseNumber: string;
+}
+
+export interface BailiffRegistration {
+  firstName: string;
+  lastName: string;
+  office: string;
+  phone: string;
+  neighborhood: string;
+  avatar: string;
+  licenseNumber: string;
 }
 
 export interface ActiveRide {

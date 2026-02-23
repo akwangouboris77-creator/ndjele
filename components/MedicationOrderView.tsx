@@ -2,11 +2,13 @@
 import React, { useState, useRef } from 'react';
 // Added ChevronRight to imports
 import { ArrowLeft, Pill, Search, Camera, Upload, CheckCircle2, ShieldCheck, CreditCard, Loader2, X, Plus, AlertCircle, ChevronRight } from 'lucide-react';
-import { ViewState, Pharmacy, Medication } from '../types';
+import { ViewState, Pharmacy, Medication, MarketplaceOrder } from '../types';
 
 interface MedicationOrderViewProps {
   onNavigate: (view: ViewState) => void;
   pharmacy: Pharmacy;
+  onCreateOrder: (order: MarketplaceOrder) => void;
+  clientName: string;
 }
 
 const MOCK_MEDS: Medication[] = [
@@ -16,7 +18,7 @@ const MOCK_MEDS: Medication[] = [
   { id: 'm4', name: 'Vogalène', price: 2800, needsPrescription: true, category: 'Nausées' },
 ];
 
-const MedicationOrderView: React.FC<MedicationOrderViewProps> = ({ onNavigate, pharmacy }) => {
+const MedicationOrderView: React.FC<MedicationOrderViewProps> = ({ onNavigate, pharmacy, onCreateOrder, clientName }) => {
   const [cart, setCart] = useState<Medication[]>([]);
   const [step, setStep] = useState<'browse' | 'prescription' | 'checkout' | 'success'>('browse');
   const [prescriptionImage, setPrescriptionImage] = useState<string | null>(null);
@@ -66,6 +68,23 @@ const MedicationOrderView: React.FC<MedicationOrderViewProps> = ({ onNavigate, p
   const finalizeOrder = () => {
     setIsProcessing(true);
     setTimeout(() => {
+      const newOrder: MarketplaceOrder = {
+        id: 'MED-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+        productId: 'MEDS',
+        productName: cart.map(m => m.name).join(', '),
+        productPrice: total,
+        deliveryFee: deliveryFee,
+        totalPrice: total + deliveryFee,
+        merchantId: pharmacy.id,
+        merchantName: pharmacy.name,
+        merchantNeighborhood: pharmacy.neighborhood,
+        clientName: clientName,
+        clientNeighborhood: 'Libreville',
+        status: 'PENDING_DELIVERY',
+        timestamp: Date.now(),
+        orderType: 'PHARMACY'
+      };
+      onCreateOrder(newOrder);
       setIsProcessing(false);
       setStep('success');
     }, 2500);

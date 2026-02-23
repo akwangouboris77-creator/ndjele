@@ -128,7 +128,15 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
       </section>
 
       <div className="space-y-4">
-        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Artisans certifiés à proximité</h3>
+        <div className="flex items-center justify-between px-2">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Artisans certifiés à proximité</h3>
+          <button 
+            onClick={() => onNavigate('artisan-registration')}
+            className="text-[9px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100"
+          >
+            Devenir Artisan NS
+          </button>
+        </div>
         {artisansList.map((artisan) => (
           <div key={artisan.id} className="bg-white border border-slate-100 p-5 rounded-[2.5rem] shadow-sm flex flex-col gap-4">
             <div className="flex items-center gap-4">

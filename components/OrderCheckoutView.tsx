@@ -49,7 +49,8 @@ const OrderCheckoutView: React.FC<OrderCheckoutViewProps> = ({ onNavigate, produ
         clientName: clientName,
         clientNeighborhood: 'Akanda',
         status: 'PENDING_DELIVERY',
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        orderType: 'MARKETPLACE'
       };
       onCreateOrder(newOrder);
       setIsProcessing(false);

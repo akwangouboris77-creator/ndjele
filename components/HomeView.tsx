@@ -116,6 +116,18 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
             </button>
          </div>
       </section>
+
+      {/* Banner Artisan Enrollment */}
+      <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
+         <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Artisan" />
+         <div className="absolute inset-0 bg-gradient-to-t from-indigo-900 via-indigo-900/40 to-transparent p-8 flex flex-col justify-end">
+            <h4 className="text-xl font-black text-white leading-tight">Gagnez plus avec Ndjele</h4>
+            <p className="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau d'artisans certifiés.</p>
+            <button onClick={() => onNavigate('artisan-registration')} className="mt-4 bg-white text-indigo-600 px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg">
+              Devenir Artisan Pro
+            </button>
+         </div>
+      </section>
     </div>
   );
 };

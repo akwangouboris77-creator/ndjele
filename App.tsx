@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info
 } from 'lucide-react';
-import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor } from './types';
+import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor, Lawyer, Bailiff } from './types';
 
 // Imports des vues
 import HomeView from './components/HomeView';
@@ -40,6 +40,10 @@ import BusinessDashboard from './components/BusinessDashboard';
 import OnePagerView from './components/OnePagerView';
 import LawyerView from './components/LawyerView';
 import BailiffView from './components/BailiffView';
+import LawyerRegistrationView from './components/LawyerRegistrationView';
+import BailiffRegistrationView from './components/BailiffRegistrationView';
+import LawyerDashboard from './components/LawyerDashboard';
+import BailiffDashboard from './components/BailiffDashboard';
 
 const DEFAULT_ARTISANS: Artisan[] = [
   { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong' },
@@ -91,6 +95,8 @@ const App: React.FC = () => {
   const [registeredArtisanPro, setRegisteredArtisanPro] = useState<Artisan | null>(null);
   const [registeredDoctor, setRegisteredDoctor] = useState<Doctor | null>(null);
   const [registeredPharmacy, setRegisteredPharmacy] = useState<Pharmacy | null>(null);
+  const [registeredLawyer, setRegisteredLawyer] = useState<Lawyer | null>(null);
+  const [registeredBailiff, setRegisteredBailiff] = useState<Bailiff | null>(null);
 
   const [selectedPharmacy, setSelectedPharmacy] = useState<Pharmacy | null>(null);
   const [checkoutData, setCheckoutData] = useState<{product: Product, merchant: Merchant} | null>(null);
@@ -132,11 +138,21 @@ const App: React.FC = () => {
     if (activeView === 'home') {
       switch (user.role) {
         case 'DRIVER': return <DriverDashboard onNavigate={navigateProtected} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} registeredDriver={registeredDriver} />;
-        case 'DELIVERY': return <DeliveryDashboard onNavigate={setActiveView} registeredLivreur={registeredLivreur} marketplaceOrders={orders} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} onAcceptOrder={() => {}} onMarkDelivered={() => {}} onUpdateOrder={(id, updates) => setOrders(orders.map(o => o.id === id ? { ...o, ...updates } : o))} />;
+        case 'DELIVERY': return <DeliveryDashboard 
+          onNavigate={setActiveView} 
+          registeredLivreur={registeredLivreur} 
+          marketplaceOrders={orders} 
+          onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} 
+          onAcceptOrder={(id, name) => setOrders(orders.map(o => o.id === id ? { ...o, status: 'PICKED_UP', livreurName: name } : o))} 
+          onMarkDelivered={(id) => setOrders(orders.map(o => o.id === id ? { ...o, status: 'DELIVERED' } : o))} 
+          onUpdateOrder={(id, updates) => setOrders(orders.map(o => o.id === id ? { ...o, ...updates } : o))} 
+        />;
         case 'MERCHANT': return <MerchantDashboard onNavigate={setActiveView} registeredMerchant={registeredMerchant} onUpdateMerchant={setRegisteredMerchant} />;
         case 'DOCTOR': return registeredDoctor ? <DoctorDashboard onNavigate={setActiveView} doctorName={user.name} /> : <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => {setRegisteredDoctor(d); setActiveView('home');}} />;
         case 'PHARMACY': return registeredPharmacy ? <PharmacyDashboard onNavigate={setActiveView} pharmacy={registeredPharmacy} /> : <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
-        case 'ARTISAN': return registeredArtisanPro ? <ArtisanDashboard onNavigate={setActiveView} artisan={registeredArtisanPro} /> : <ArtisansView onNavigate={setActiveView} registeredArtisan={null} artisansList={artisans} onRateArtisan={() => {}} />;
+        case 'ARTISAN': return registeredArtisanPro ? <ArtisanDashboard onNavigate={setActiveView} artisan={registeredArtisanPro} /> : <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
+        case 'LAWYER': return registeredLawyer ? <LawyerDashboard onNavigate={setActiveView} lawyer={registeredLawyer} /> : <LawyerRegistrationView onNavigate={setActiveView} onRegister={(l) => { setRegisteredLawyer(l); setActiveView('home'); }} />;
+        case 'BAILIFF': return registeredBailiff ? <BailiffDashboard onNavigate={setActiveView} bailiff={registeredBailiff} /> : <BailiffRegistrationView onNavigate={setActiveView} onRegister={(b) => { setRegisteredBailiff(b); setActiveView('home'); }} />;
         case 'CLIENT':
         default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} />;
       }
@@ -146,7 +162,7 @@ const App: React.FC = () => {
       case 'business-dashboard': return <BusinessDashboard onNavigate={setActiveView} />;
       case 'pharmacies': return <PharmacyView onNavigate={setActiveView} onSelectPharmacy={(p) => { setSelectedPharmacy(p); setActiveView('medication-order'); }} registeredPharmacy={registeredPharmacy} />;
       case 'pharmacy-registration': return <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
-      case 'medication-order': return selectedPharmacy ? <MedicationOrderView onNavigate={setActiveView} pharmacy={selectedPharmacy} /> : null;
+      case 'medication-order': return selectedPharmacy ? <MedicationOrderView onNavigate={setActiveView} pharmacy={selectedPharmacy} onCreateOrder={(o) => setOrders([o, ...orders])} clientName={user.name} /> : null;
       case 'doctor-registration': return <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => { setRegisteredDoctor(d); setActiveView('home'); }} />;
       case 'client-dashboard': return <ClientDashboard onNavigate={setActiveView} user={user} subscriptionTier={subscriptionTier} orders={orders} walletBalance={walletBalance} onUpdateProfile={(u) => {setUser(u); localStorage.setItem('ndjele_user', JSON.stringify(u));}} />;
       case 'driver-registration': return <DriverRegistrationView onNavigate={navigateProtected} onRegister={(d) => { setRegisteredDriver(d); setActiveView('home'); }} />;
@@ -163,6 +179,8 @@ const App: React.FC = () => {
       case 'delivery': return <DeliveryView onNavigate={setActiveView} registeredLivreur={registeredLivreur} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
       case 'lawyers': return <LawyerView onNavigate={setActiveView} />;
       case 'bailiffs': return <BailiffView onNavigate={setActiveView} />;
+      case 'lawyer-registration': return <LawyerRegistrationView onNavigate={setActiveView} onRegister={(l) => { setRegisteredLawyer(l); setActiveView('home'); }} />;
+      case 'bailiff-registration': return <BailiffRegistrationView onNavigate={setActiveView} onRegister={(b) => { setRegisteredBailiff(b); setActiveView('home'); }} />;
       case 'artisan-registration': return <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
       case 'delivery-registration': return <DeliveryRegistrationView onNavigate={navigateProtected} onRegister={(l) => { setRegisteredLivreur(l); setActiveView('home'); }} />;
       case 'merchant-registration': return <MerchantRegistrationView onNavigate={navigateProtected} onRegister={(m) => { setRegisteredMerchant(m); setActiveView('home'); }} />;

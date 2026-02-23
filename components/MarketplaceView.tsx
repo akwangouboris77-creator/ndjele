@@ -53,7 +53,8 @@ const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onNavigate, registere
         clientName: 'Jean Dupont',
         clientNeighborhood: 'Akanda',
         status: 'PENDING_DELIVERY',
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        orderType: 'MARKETPLACE'
       };
       
       onCreateOrder(newOrder);

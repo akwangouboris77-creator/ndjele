@@ -13,6 +13,7 @@ type LoginStep = 'phone' | 'role' | 'otp' | 'loading';
 const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
   const [step, setStep] = useState<LoginStep>('phone');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole>('CLIENT');
   const [otpCode, setOtpCode] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(60);
@@ -26,14 +27,36 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
     return () => clearInterval(interval);
   }, [step, timer]);
 
+  const isValidGabonNumber = (num: string) => {
+    // Gabon 9 digits: 0 + (1/6/7) + 7 digits
+    const regex = /^0[167][0-9]{7}$/;
+    return regex.test(num);
+  };
+
   const detectOperator = (num: string) => {
-    if (num.startsWith('074') || num.startsWith('077')) return { name: 'Airtel', color: 'text-red-500' };
-    if (num.startsWith('066') || num.startsWith('062')) return { name: 'Moov', color: 'text-blue-500' };
+    if (num.startsWith('074') || num.startsWith('077') || num.startsWith('076')) return { name: 'Airtel', color: 'text-red-500' };
+    if (num.startsWith('066') || num.startsWith('062') || num.startsWith('065')) return { name: 'Moov', color: 'text-blue-500' };
+    if (num.startsWith('011')) return { name: 'Gabon Telecom', color: 'text-emerald-500' };
     return null;
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, '').slice(0, 9);
+    setPhoneNumber(val);
+    
+    if (val.length === 9 && isValidGabonNumber(val)) {
+      // Auto-generate OTP when number is complete and valid
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(code);
+      // Simulate sending
+      setTimeout(() => {
+        alert(`Ndjele: Votre code de vérification est ${code}`);
+      }, 500);
+    }
+  };
+
   const handleGoToRole = () => {
-    if (phoneNumber.length < 8) return;
+    if (!isValidGabonNumber(phoneNumber)) return;
     setStep('role');
   };
 
@@ -115,7 +138,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
                 <input 
                   type="tel" 
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={handlePhoneChange}
                   placeholder="074 00 00 00"
                   className="w-full pl-24 pr-4 py-5 bg-white/10 border border-white/10 rounded-2xl text-white font-black text-lg outline-none"
                 />
@@ -123,7 +146,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
             </div>
 
             <div className="space-y-3">
-               <button onClick={handleGoToRole} disabled={phoneNumber.length < 8} className="w-full bg-white text-slate-900 py-5 rounded-[2.2rem] font-black flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50">
+               <button onClick={handleGoToRole} disabled={!isValidGabonNumber(phoneNumber)} className="w-full bg-white text-slate-900 py-5 rounded-[2.2rem] font-black flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50">
                  Continuer <ArrowRight className="w-5 h-5" />
                </button>
                <button 
@@ -169,7 +192,10 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
                   <input key={i} id={`otp-${i}`} type="number" maxLength={1} value={val} onChange={(e) => handleOtpChange(i, e.target.value)} className="w-12 h-16 bg-white/10 border border-white/10 rounded-2xl text-center text-2xl font-black text-white outline-none" />
                 ))}
               </div>
-              <p className="text-[8px] text-slate-500 font-bold uppercase">Code envoyé au +241 {phoneNumber}</p>
+              <div className="space-y-1">
+                <p className="text-[8px] text-slate-500 font-bold uppercase">Code envoyé au +241 {phoneNumber}</p>
+                {generatedOtp && <p className="text-[10px] text-emerald-400 font-black uppercase">Code de test: {generatedOtp}</p>}
+              </div>
             </div>
             <button onClick={handleVerifyOtp} disabled={otpCode.some(v => v === '')} className="w-full bg-emerald-500 text-white py-5 rounded-[2.2rem] font-black uppercase text-xs active:scale-95 disabled:opacity-50">Vérifier et entrer</button>
           </div>

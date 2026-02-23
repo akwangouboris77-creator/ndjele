@@ -211,7 +211,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ onNavigate, regis
                          value={newProduct.name}
                          onChange={e => setNewProduct({...newProduct, name: e.target.value})}
                          placeholder="Ex: Sac de Riz 5kg" 
-                         className="w-full p-4 bg-slate-50 rounded-2xl font-bold outline-none border-2 border-transparent focus:border-violet-500 transition-all shadow-inner"
+                         className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-900 outline-none border-2 border-transparent focus:border-violet-500 transition-all shadow-inner"
                        />
                     </div>
                     <div className="group space-y-1">
@@ -224,7 +224,7 @@ const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ onNavigate, regis
                             value={newProduct.price}
                             onChange={e => setNewProduct({...newProduct, price: e.target.value})}
                             placeholder="Ex: 4500" 
-                            className="w-full pl-11 pr-4 py-4 bg-slate-50 rounded-2xl font-black text-lg outline-none border-2 border-transparent focus:border-violet-500 transition-all shadow-inner"
+                            className="w-full pl-11 pr-4 py-4 bg-slate-50 rounded-2xl font-black text-slate-900 text-lg outline-none border-2 border-transparent focus:border-violet-500 transition-all shadow-inner"
                           />
                        </div>
                     </div>

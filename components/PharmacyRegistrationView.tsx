@@ -33,7 +33,8 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
         phone: formData.phone,
         isOpen24h: formData.isOpen24h,
         isVerified: true,
-        rating: 5.0
+        rating: 5.0,
+        medications: []
       };
       setIsSubmitting(false);
       onRegister(newPharmacy);

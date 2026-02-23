@@ -17,6 +17,7 @@ const ROLE_OPTIONS = [
   { id: 'DOCTOR', label: 'Médecin', icon: Stethoscope, color: 'bg-emerald-500', desc: 'Consultations et avis médicaux.' },
   { id: 'LAWYER', label: 'Avocat', icon: ShieldCheck, color: 'bg-slate-800', desc: 'Conseils juridiques et défense.' },
   { id: 'BAILIFF', label: 'Huissier', icon: Gavel, color: 'bg-slate-700', desc: 'Significations et exécutions.' },
+  { id: 'ADMIN', label: 'Administrateur', icon: ShieldCheck, color: 'bg-red-600', desc: 'Gestion globale de la plateforme.' },
 ];
 
 const RoleSelectionView: React.FC<RoleSelectionViewProps> = ({ onSelect }) => {

@@ -11,7 +11,7 @@ export enum TransportType {
 }
 
 export type SubscriptionTier = 'FREE' | 'PREMIUM';
-export type UserRole = 'CLIENT' | 'DRIVER' | 'ARTISAN' | 'MERCHANT' | 'DELIVERY' | 'DOCTOR' | 'PHARMACY' | 'LAWYER' | 'BAILIFF';
+export type UserRole = 'CLIENT' | 'DRIVER' | 'ARTISAN' | 'MERCHANT' | 'DELIVERY' | 'DOCTOR' | 'PHARMACY' | 'LAWYER' | 'BAILIFF' | 'ADMIN';
 
 export interface UserProfile {
   id: string;
@@ -32,6 +32,7 @@ export interface Pharmacy {
   isOpen24h: boolean;
   isVerified: boolean;
   rating: number;
+  medications: Medication[];
 }
 
 export interface Medication {
@@ -255,7 +256,7 @@ export interface ActiveRide {
   hasLuggage?: boolean;
 }
 
-export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs';
+export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map';
 
 export interface Contact {
   id: string;

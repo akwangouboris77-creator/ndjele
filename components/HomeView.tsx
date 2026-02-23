@@ -88,6 +88,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
             { id: 'maraude', icon: Smartphone, label: 'Radar', color: 'bg-blue-50 text-blue-600' },
             { id: 'wallet', icon: CreditCard, label: 'Wallet', color: 'bg-emerald-50 text-emerald-600' },
             { id: 'sos', icon: AlertTriangle, label: 'Urgence', color: 'bg-red-50 text-red-600' },
+            { id: 'map', icon: MapPin, label: 'Carte', color: 'bg-blue-50 text-blue-600' },
             { id: 'business-dashboard', icon: BarChart3, label: 'Business', color: 'bg-indigo-50 text-indigo-600' },
             { id: 'lawyers', icon: ShieldCheck, label: 'Avocats', color: 'bg-slate-100 text-slate-800' },
             { id: 'bailiffs', icon: Gavel, label: 'Huissiers', color: 'bg-slate-100 text-slate-700' },

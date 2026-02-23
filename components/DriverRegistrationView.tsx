@@ -37,8 +37,18 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
     else onNavigate('home');
   };
 
+  const isValidGabonNumber = (num: string) => {
+    const regex = /^0[167][0-9]{7}$/;
+    return regex.test(num);
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, '').slice(0, 9);
+    setPhoneNumber(val);
+  };
+
   const handlePayment = () => {
-    if (phoneNumber.length < 8) return;
+    if (!isValidGabonNumber(phoneNumber)) return;
     setShowUssd(true);
   };
 
@@ -208,7 +218,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
                </div>
                <div className="relative">
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                  <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="074..." className="w-full pl-11 pr-4 py-4 bg-slate-50 rounded-2xl font-bold outline-none focus:bg-white text-slate-900" />
+                  <input type="tel" value={phoneNumber} onChange={handlePhoneChange} placeholder="074..." className="w-full pl-11 pr-4 py-4 bg-slate-50 rounded-2xl font-bold outline-none focus:bg-white text-slate-900" />
                </div>
             </div>
           </div>

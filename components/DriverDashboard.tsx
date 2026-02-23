@@ -68,10 +68,24 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptR
   const [filterPeriod, setFilterPeriod] = useState<FilterPeriod>('day');
   
   const [currentDirection, setCurrentDirection] = useState('');
+  const [currentLocation, setCurrentLocation] = useState<{ lat: number, lng: number, neighborhood: string } | null>(null);
   const [isDetecting, setIsDetecting] = useState(false);
   const [showDirectionSaved, setShowDirectionSaved] = useState(false);
 
   const COMMISSION_RATE = 0.09;
+
+  const handleSimulatePosition = () => {
+    setIsDetecting(true);
+    setTimeout(() => {
+      // Simulation requested: 0.39, 9.45 -> Louis / Batterie IV
+      setCurrentLocation({
+        lat: 0.39,
+        lng: 9.45,
+        neighborhood: 'Louis / Batterie IV'
+      });
+      setIsDetecting(false);
+    }, 1500);
+  };
 
   // Filtrage intelligent des notifications selon la direction (Optimisé)
   const matchedRequests = useMemo(() => {
@@ -158,9 +172,45 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptR
         <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Ma Direction IA */}
+      {/* Ma Position & Direction IA */}
       <section className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
         <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center">
+              <MapPin className="w-4 h-4 text-emerald-500" />
+            </div>
+            <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Ma Position Actuelle</h3>
+          </div>
+          {currentLocation && (
+            <span className="text-[9px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">GPS ACTIF</span>
+          )}
+        </div>
+
+        <div className="flex gap-3 items-center">
+          <div className="flex-1 p-4 bg-slate-50 rounded-2xl border border-transparent flex items-center gap-3">
+            <div className={`w-2 h-2 rounded-full ${currentLocation ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`}></div>
+            <div>
+              <p className="text-[9px] font-black text-slate-400 uppercase">Quartier détecté</p>
+              <p className="text-sm font-black text-slate-800">
+                {currentLocation ? currentLocation.neighborhood : 'Position non détectée'}
+              </p>
+              {currentLocation && (
+                <p className="text-[8px] text-slate-400 font-bold">Lat: {currentLocation.lat} • Lng: {currentLocation.lng}</p>
+              )}
+            </div>
+          </div>
+          <button 
+            onClick={handleSimulatePosition}
+            disabled={isDetecting}
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-lg ${isDetecting ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-900 text-emerald-400'}`}
+          >
+            {isDetecting ? <Loader2 className="w-6 h-6 animate-spin" /> : <RefreshCw className="w-6 h-6" />}
+          </button>
+        </div>
+
+        <div className="h-px bg-slate-100 mx-2"></div>
+
+        <div className="flex items-center justify-between px-2 pt-2">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center">
               <Compass className="w-4 h-4 text-indigo-500" />

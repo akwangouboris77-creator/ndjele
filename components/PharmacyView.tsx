@@ -10,9 +10,9 @@ interface PharmacyViewProps {
 }
 
 const MOCK_PHARMACIES: Pharmacy[] = [
-  { id: 'ph1', name: 'Pharmacie de l\'Aéroport', neighborhood: 'Aéroport', phone: '074 12 34 56', isOpen24h: true, isVerified: true, rating: 4.9 },
-  { id: 'ph2', name: 'Pharmacie Okala', neighborhood: 'Okala', phone: '066 98 76 54', isOpen24h: false, isVerified: true, rating: 4.7 },
-  { id: 'ph3', name: 'Pharmacie de Louis', neighborhood: 'Louis', phone: '077 11 22 33', isOpen24h: true, isVerified: true, rating: 4.8 },
+  { id: 'ph1', name: 'Pharmacie de l\'Aéroport', neighborhood: 'Aéroport', phone: '074 12 34 56', isOpen24h: true, isVerified: true, rating: 4.9, medications: [] },
+  { id: 'ph2', name: 'Pharmacie Okala', neighborhood: 'Okala', phone: '066 98 76 54', isOpen24h: false, isVerified: true, rating: 4.7, medications: [] },
+  { id: 'ph3', name: 'Pharmacie de Louis', neighborhood: 'Louis', phone: '077 11 22 33', isOpen24h: true, isVerified: true, rating: 4.8, medications: [] },
 ];
 
 const PharmacyView: React.FC<PharmacyViewProps> = ({ onNavigate, onSelectPharmacy, registeredPharmacy }) => {

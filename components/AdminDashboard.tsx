@@ -5,7 +5,7 @@ import {
   BarChart3, Search, Filter, MoreVertical, CheckCircle2, 
   XCircle, AlertTriangle, ArrowUpRight, ArrowDownRight,
   Settings, Bell, LogOut, LayoutDashboard, Database,
-  Stethoscope, Pill, Scale, Gavel
+  Stethoscope, Pill, Scale, Gavel, Dog, Calculator
 } from 'lucide-react';
 import { ViewState, UserProfile, MarketplaceOrder, ActiveRide, Artisan } from '../types';
 
@@ -281,17 +281,66 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-slate-900 text-white rounded-xl"><Scale className="w-5 h-5" /></div>
-                <h3 className="font-black text-xs uppercase tracking-widest text-slate-800">Justice</h3>
+                <h3 className="font-black text-xs uppercase tracking-widest text-slate-800">Justice & Conseil</h3>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span className="text-slate-400">Dossiers juridiques</span>
-                  <span className="text-slate-900">6</span>
+                  <span className="text-slate-400">Avocats & Huissiers</span>
+                  <span className="text-slate-900">9</span>
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span className="text-slate-400">Huissiers en mission</span>
+                  <span className="text-slate-400">Notaires & Comptables</span>
+                  <span className="text-slate-900">4</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-50 text-orange-600 rounded-xl"><Dog className="w-5 h-5" /></div>
+                <h3 className="font-black text-xs uppercase tracking-widest text-slate-800">Spécialités Diverses</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between text-[10px] font-bold">
+                  <span className="text-slate-400">Vétérinaires</span>
+                  <span className="text-slate-900">2</span>
+                </div>
+                <div className="flex justify-between text-[10px] font-bold">
+                  <span className="text-slate-400">Architectes</span>
                   <span className="text-slate-900">3</span>
                 </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4 md:col-span-2 lg:col-span-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-slate-100 text-slate-600 rounded-xl"><Database className="w-5 h-5" /></div>
+                  <h3 className="font-black text-xs uppercase tracking-widest text-slate-800">Breakdown des Spécialités NS</h3>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {[
+                  { label: 'Généralistes', count: 12, color: 'bg-emerald-500' },
+                  { label: 'Pédiatres', count: 5, color: 'bg-blue-500' },
+                  { label: 'Gynécologues', count: 4, color: 'bg-pink-500' },
+                  { label: 'Cardiologues', count: 2, color: 'bg-red-500' },
+                  { label: 'Dermatologues', count: 1, color: 'bg-orange-500' },
+                  { label: 'Neurologues', count: 1, color: 'bg-purple-500' },
+                  { label: 'Dentistes', count: 3, color: 'bg-indigo-500' },
+                  { label: 'Ophtalmos', count: 2, color: 'bg-cyan-500' },
+                  { label: 'Urologues', count: 1, color: 'bg-slate-500' },
+                  { label: 'Kinés', count: 4, color: 'bg-teal-500' },
+                  { label: 'Sages-femmes', count: 6, color: 'bg-rose-500' },
+                  { label: 'Urgentistes', count: 8, color: 'bg-red-600' },
+                ].map((spec, i) => (
+                  <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className={`w-2 h-2 rounded-full ${spec.color}`}></div>
+                      <span className="text-sm font-black text-slate-900">{spec.count}</span>
+                    </div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-tight">{spec.label}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

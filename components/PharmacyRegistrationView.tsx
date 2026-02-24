@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, User, Pill, Phone, MapPin, ChevronRight, ShieldCheck, Loader2, Award, Clock } from 'lucide-react';
 import { ViewState, Pharmacy } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface PharmacyRegistrationViewProps {
   onNavigate: (view: ViewState) => void;
@@ -38,6 +39,7 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
       };
 
       try {
+        await dbService.pushData('pharmacies', newPharmacy);
         await fetch('/api/pharmacies/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

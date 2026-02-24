@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, User, ShoppingBag, Phone, MapPin, ChevronRight, Store, Loader2, CreditCard, Tag, Crown } from 'lucide-react';
 import { ViewState, MerchantRegistration, Merchant } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface MerchantRegistrationViewProps {
   onNavigate: (view: ViewState) => void;
@@ -53,6 +54,7 @@ const MerchantRegistrationView: React.FC<MerchantRegistrationViewProps> = ({ onN
       };
 
       try {
+        await dbService.pushData('merchants', newMerchant);
         await fetch('/api/merchants/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

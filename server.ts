@@ -29,6 +29,7 @@ async function startServer() {
     merchants: [] as any[],
     artisans: [] as any[],
     pharmacies: [] as any[],
+    doctors: [] as any[],
     orders: [] as any[],
     deliveries: {} as Record<string, { lat: number, lng: number, status: string }>
   };
@@ -109,6 +110,12 @@ async function startServer() {
     const pharmacy = req.body;
     db.pharmacies.push(pharmacy);
     res.json({ success: true, pharmacy });
+  });
+
+  app.post("/api/doctors/register", (req, res) => {
+    const doctor = req.body;
+    db.doctors.push(doctor);
+    res.json({ success: true, doctor });
   });
 
   // Vite middleware for development

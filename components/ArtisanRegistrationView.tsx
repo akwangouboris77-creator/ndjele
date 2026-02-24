@@ -80,6 +80,7 @@ const ArtisanRegistrationView: React.FC<ArtisanRegistrationViewProps> = ({ onNav
       };
 
       try {
+        await dbService.pushData('artisans', newArtisan);
         await fetch('/api/artisans/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

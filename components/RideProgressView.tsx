@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { ShieldCheck, Navigation2, MessageSquare, AlertTriangle, X, CheckCircle2, ShieldAlert, HeartCrack, Loader2 } from 'lucide-react';
 import { ActiveRide, ChatMessage, Contact } from '../types';
 
@@ -33,20 +34,61 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
     <div className="flex flex-col h-full bg-slate-50 animate-in fade-in duration-500 relative overflow-hidden">
       <div className="relative flex-1 bg-slate-200">
         <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/map/800/1200')] bg-cover opacity-50"></div>
+        
+        {/* Animated Path Simulation */}
+        <div className="absolute inset-0 pointer-events-none">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path 
+              d="M 20 80 Q 50 50 80 20" 
+              stroke="white" 
+              strokeWidth="2" 
+              fill="none" 
+              strokeDasharray="4 4"
+              className="opacity-30"
+            />
+            <motion.circle
+              r="1.5"
+              fill="#10b981"
+              animate={{
+                cx: [20, 50, 80],
+                cy: [80, 50, 20],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            />
+          </svg>
+        </div>
+
         {/* Hidden simulation button for driver arrival */}
         <div 
           onClick={handleConfirmFinish}
           className="absolute top-0 right-0 w-12 h-12 opacity-0 cursor-pointer z-[100]"
           title="Simuler Arrivée"
         />
-        <div className="absolute top-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-emerald-500/20 flex items-center justify-between z-10">
-           <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white">
-                 <ShieldCheck className="w-5 h-5" />
-              </div>
-              <p className="text-[10px] font-black uppercase text-emerald-700 tracking-widest">Pré-paiement Sécurisé</p>
-           </div>
-           <span className="text-xs font-black text-slate-800">{ride.price + platformFees} F</span>
+        
+        <div className="absolute top-4 left-4 right-4 flex flex-col gap-2 z-10">
+          <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-emerald-500/20 flex items-center justify-between">
+             <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white">
+                   <ShieldCheck className="w-5 h-5" />
+                </div>
+                <p className="text-[10px] font-black uppercase text-emerald-700 tracking-widest">Pré-paiement Sécurisé</p>
+             </div>
+             <span className="text-xs font-black text-slate-800">{ride.price + platformFees} F</span>
+          </div>
+          
+          <div className="bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/10 flex items-center gap-3">
+            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-emerald-400">
+              <Navigation2 className="w-4 h-4 animate-pulse" />
+            </div>
+            <div className="flex-1">
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destination</p>
+              <p className="text-[10px] font-bold text-white truncate">{ride.destination}</p>
+            </div>
+          </div>
         </div>
       </div>
 

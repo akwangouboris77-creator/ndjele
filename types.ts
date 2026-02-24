@@ -127,7 +127,7 @@ export interface Doctor {
   id: string;
   name: string;
   specialty: string;
-  category: 'generaliste' | 'pediatre' | 'gynecologue' | 'dentiste' | 'ophtalmo' | 'urologue' | 'diabetologue' | 'urgence';
+  category: 'generaliste' | 'pediatre' | 'gynecologue' | 'dentiste' | 'ophtalmo' | 'urologue' | 'diabetologue' | 'urgence' | 'cardiologue' | 'dermatologue' | 'kine' | 'sage-femme' | 'neurologue' | 'psychiatre' | 'orl' | 'gastro' | 'rhumato' | 'endocrino' | 'onco' | 'radio';
   rating: number;
   distance: number;
   isVerified: boolean;
@@ -256,7 +256,7 @@ export interface ActiveRide {
   hasLuggage?: boolean;
 }
 
-export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map';
+export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map' | 'notaries' | 'accountants' | 'notary-registration' | 'accountant-registration';
 
 export interface Contact {
   id: string;

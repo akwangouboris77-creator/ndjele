@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, User, Package, Phone, MapPin, ChevronRight, Truck, Bike, Calendar, CheckCircle2, Loader2, CreditCard, Crown } from 'lucide-react';
 import { ViewState, TransportType, DeliveryRegistration, Livreur } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface DeliveryRegistrationViewProps {
   onNavigate: (view: ViewState) => void;

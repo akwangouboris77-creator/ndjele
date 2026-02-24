@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Loader2, Sparkles, Phone, ArrowRight, Smartphone, MessageSquare, ArrowLeft, CheckCircle2, User, Car, Hammer, Store, Truck, Info } from 'lucide-react';
 import { UserProfile, UserRole } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface LoginViewProps {
   onLogin: (user: UserProfile) => void;
@@ -97,6 +98,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
       };
 
       try {
+        await dbService.pushData('users', mockUser);
         await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

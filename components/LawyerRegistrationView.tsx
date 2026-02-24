@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, User, ShieldCheck, Phone, MapPin, ChevronRight, Loader2, Camera, Image as ImageIcon, Scale, Crown, CreditCard, Award } from 'lucide-react';
 import { ViewState, LawyerRegistration, Lawyer } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface LawyerRegistrationViewProps {
   onNavigate: (view: ViewState) => void;
@@ -57,7 +58,7 @@ const LawyerRegistrationView: React.FC<LawyerRegistrationViewProps> = ({ onNavig
   const finalizeRegistration = () => {
     setShowUssd(false);
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const newLawyer: Lawyer = {
         id: 'law-' + Math.random().toString(36).substr(2, 5),
         name: `Me. ${formData.firstName} ${formData.lastName}`,
@@ -70,6 +71,13 @@ const LawyerRegistrationView: React.FC<LawyerRegistrationViewProps> = ({ onNavig
         isVerified: true,
         licenseNumber: formData.licenseNumber
       };
+
+      try {
+        await dbService.pushData('lawyers', newLawyer);
+      } catch (e) {
+        console.error("Firebase Lawyer Error:", e);
+      }
+
       setIsSubmitting(false);
       onRegister(newLawyer);
     }, 2500);

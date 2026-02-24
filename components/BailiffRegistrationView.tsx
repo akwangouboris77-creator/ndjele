@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, User, Gavel, Phone, MapPin, ChevronRight, Loader2, Camera, Image as ImageIcon, FileText, Crown, CreditCard, Award } from 'lucide-react';
 import { ViewState, BailiffRegistration, Bailiff } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface BailiffRegistrationViewProps {
   onNavigate: (view: ViewState) => void;
@@ -48,7 +49,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
   const finalizeRegistration = () => {
     setShowUssd(false);
     setIsSubmitting(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       const newBailiff: Bailiff = {
         id: 'bai-' + Math.random().toString(36).substr(2, 5),
         name: `Me. ${formData.firstName} ${formData.lastName}`,
@@ -60,6 +61,13 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
         isVerified: true,
         licenseNumber: formData.licenseNumber
       };
+
+      try {
+        await dbService.pushData('bailiffs', newBailiff);
+      } catch (e) {
+        console.error("Firebase Bailiff Error:", e);
+      }
+
       setIsSubmitting(false);
       onRegister(newBailiff);
     }, 2500);

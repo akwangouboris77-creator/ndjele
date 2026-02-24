@@ -3,12 +3,21 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
+  const httpServer = createServer(app);
+  const io = new Server(httpServer, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
+  });
   const PORT = 3000;
 
   app.use(express.json());
@@ -21,7 +30,33 @@ async function startServer() {
     artisans: [] as any[],
     pharmacies: [] as any[],
     orders: [] as any[],
+    deliveries: {} as Record<string, { lat: number, lng: number, status: string }>
   };
+
+  // Socket.io Logic
+  io.on("connection", (socket) => {
+    console.log("Client connected:", socket.id);
+
+    socket.on("join-delivery", (deliveryId) => {
+      socket.join(`delivery-${deliveryId}`);
+      console.log(`Socket ${socket.id} joined delivery-${deliveryId}`);
+      
+      // Send initial position if exists
+      if (db.deliveries[deliveryId]) {
+        socket.emit("delivery-update", db.deliveries[deliveryId]);
+      }
+    });
+
+    socket.on("update-delivery-location", ({ deliveryId, lat, lng, status }) => {
+      db.deliveries[deliveryId] = { lat, lng, status };
+      io.to(`delivery-${deliveryId}`).emit("delivery-update", { lat, lng, status });
+      console.log(`Delivery ${deliveryId} updated:`, { lat, lng, status });
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Client disconnected:", socket.id);
+    });
+  });
 
   // API Routes
   app.post("/api/register", (req, res) => {
@@ -90,7 +125,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  httpServer.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }

@@ -46,6 +46,7 @@ import LawyerDashboard from './components/LawyerDashboard';
 import BailiffDashboard from './components/BailiffDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import MapView from './components/MapView';
+import DeliveryTrackingView from './components/DeliveryTrackingView';
 
 const DEFAULT_ARTISANS: Artisan[] = [
   { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong' },
@@ -102,6 +103,7 @@ const App: React.FC = () => {
 
   const [selectedPharmacy, setSelectedPharmacy] = useState<Pharmacy | null>(null);
   const [checkoutData, setCheckoutData] = useState<{product: Product, merchant: Merchant} | null>(null);
+  const [selectedOrderForTracking, setSelectedOrderForTracking] = useState<MarketplaceOrder | null>(null);
 
   useEffect(() => {
     localStorage.setItem('ndjele_wallet', walletBalance.toString());
@@ -167,7 +169,7 @@ const App: React.FC = () => {
       case 'pharmacy-registration': return <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
       case 'medication-order': return selectedPharmacy ? <MedicationOrderView onNavigate={setActiveView} pharmacy={selectedPharmacy} onCreateOrder={(o) => setOrders([o, ...orders])} clientName={user.name} /> : null;
       case 'doctor-registration': return <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => { setRegisteredDoctor(d); setActiveView('home'); }} />;
-      case 'client-dashboard': return <ClientDashboard onNavigate={setActiveView} user={user} subscriptionTier={subscriptionTier} orders={orders} walletBalance={walletBalance} onUpdateProfile={(u) => {setUser(u); localStorage.setItem('ndjele_user', JSON.stringify(u));}} />;
+      case 'client-dashboard': return <ClientDashboard onNavigate={setActiveView} user={user} subscriptionTier={subscriptionTier} orders={orders} walletBalance={walletBalance} onUpdateProfile={(u) => {setUser(u); localStorage.setItem('ndjele_user', JSON.stringify(u));}} onTrackOrder={(o) => { setSelectedOrderForTracking(o); setActiveView('order-tracking'); }} />;
       case 'driver-registration': return <DriverRegistrationView onNavigate={navigateProtected} onRegister={(d) => { setRegisteredDriver(d); setActiveView('home'); }} />;
       case 'artisans': return <ArtisansView onNavigate={setActiveView} registeredArtisan={registeredArtisanPro} artisansList={artisans} onRateArtisan={() => {}} />;
       case 'doctors': return <DoctorView onNavigate={setActiveView} />;
@@ -178,6 +180,7 @@ const App: React.FC = () => {
       case 'booking': return <BookingView onNavigate={setActiveView} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
       case 'waiting-validation': return pendingRide ? <WaitingValidationView pendingRide={pendingRide} onCancel={() => { setPendingRide(null); setActiveView('booking'); }} onSimulateAccept={() => { setActiveRide({...pendingRide, status: 'ACCEPTED'}); setPendingRide(null); setActiveView('ride-progress'); }} onSimulateReject={() => { setPendingRide(null); setActiveView('booking'); }} /> : null;
       case 'marketplace': return <MarketplaceView onNavigate={setActiveView} registeredMerchant={registeredMerchant} onCreateOrder={(o) => setOrders([o, ...orders])} onBuyNow={(p, m) => { setCheckoutData({product: p, merchant: m}); setActiveView('order-checkout'); }} />;
+      case 'order-tracking': return selectedOrderForTracking ? <DeliveryTrackingView order={selectedOrderForTracking} onNavigate={setActiveView} /> : null;
       case 'order-checkout': return checkoutData ? <OrderCheckoutView onNavigate={setActiveView} product={checkoutData.product} merchant={checkoutData.merchant} onCreateOrder={(o) => setOrders([o, ...orders])} clientName={user.name} /> : null;
       case 'delivery': return <DeliveryView onNavigate={setActiveView} registeredLivreur={registeredLivreur} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
       case 'lawyers': return <LawyerView onNavigate={setActiveView} />;

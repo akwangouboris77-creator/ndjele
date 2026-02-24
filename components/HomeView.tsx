@@ -53,6 +53,35 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
         </section>
       )}
 
+      {activeOrders.filter(o => o.status !== 'DELIVERED').length > 0 && (
+        <section className="space-y-4">
+          <h3 className="font-black text-[10px] text-slate-400 uppercase tracking-widest px-2">Suivi de vos commandes</h3>
+          <div className="space-y-3">
+            {activeOrders.filter(o => o.status !== 'DELIVERED').map((order) => (
+              <div 
+                key={order.id} 
+                onClick={() => onNavigate('client-dashboard')}
+                className="bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm flex items-center justify-between group cursor-pointer hover:border-emerald-200 transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                    <Package className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Commande #{order.id.slice(-5)}</p>
+                    <p className="font-bold text-slate-900">{order.status === 'PENDING' ? 'En préparation' : 'En livraison'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black text-emerald-600 uppercase">Voir</span>
+                  <ChevronRight className="w-5 h-5 text-emerald-600" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Services Grid */}
       <section className="space-y-4">
         <h3 className="font-black text-[10px] text-slate-400 uppercase tracking-widest px-2">Services les plus utilisés</h3>

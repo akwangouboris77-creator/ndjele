@@ -5,7 +5,7 @@ import {
   ChevronRight, ArrowLeft, Star, Wallet, Settings, Bell, 
   CheckCircle2, HelpCircle, LogOut, Trophy, CreditCard,
   History, ShieldCheck, Heart, Zap, Camera, X, ShieldAlert, Info,
-  Smartphone, Languages, Moon, Volume2, MessageSquare, PhoneCall, ExternalLink
+  Smartphone, Languages, Moon, Volume2, MessageSquare, PhoneCall, ExternalLink, Truck
 } from 'lucide-react';
 import { ViewState, UserProfile, SubscriptionTier, MarketplaceOrder } from '../types';
 
@@ -16,9 +16,10 @@ interface ClientDashboardProps {
   orders: MarketplaceOrder[];
   onUpdateProfile?: (updatedUser: UserProfile) => void;
   walletBalance: number;
+  onTrackOrder: (order: MarketplaceOrder) => void;
 }
 
-const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate, user, subscriptionTier, orders, onUpdateProfile, walletBalance }) => {
+const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate, user, subscriptionTier, orders, onUpdateProfile, walletBalance, onTrackOrder }) => {
   const isPremium = subscriptionTier === 'PREMIUM';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeModal, setActiveModal] = useState<'settings' | 'payments' | 'help' | null>(null);
@@ -181,6 +182,35 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate, user, sub
           </div>
         </div>
       </section>
+
+      {orders.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Commandes en cours</h3>
+          <div className="space-y-2">
+            {orders.filter(o => o.status !== 'DELIVERED').map((order) => (
+              <button 
+                key={order.id} 
+                onClick={() => onTrackOrder(order)}
+                className="w-full flex items-center justify-between p-5 bg-white border border-slate-100 rounded-[2rem] group hover:border-emerald-200 transition-all shadow-sm"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                    <Truck className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-slate-800 text-sm">Commande #{order.id.slice(-5)}</p>
+                    <p className="text-[10px] text-emerald-600 font-black uppercase tracking-widest">{order.status}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black text-slate-400 uppercase">Suivre</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3">
         <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Paramètres du compte</h3>

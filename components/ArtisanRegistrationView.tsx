@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, User, Hammer, Phone, MapPin, ChevronRight, ShieldCheck, Loader2, Camera, Image as ImageIcon, Upload, Crown, CreditCard } from 'lucide-react';
 import { ViewState, ArtisanRegistration, Artisan, ArtisanCategory } from '../types';
+import { dbService } from '../src/services/dbService';
 
 interface ArtisanRegistrationViewProps {
   onNavigate: (view: ViewState) => void;

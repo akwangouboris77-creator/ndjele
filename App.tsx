@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info
+  Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info, Sparkles
 } from 'lucide-react';
 import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor, Lawyer, Bailiff } from './types';
 
@@ -47,6 +47,8 @@ import BailiffDashboard from './components/BailiffDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import MapView from './components/MapView';
 import DeliveryTrackingView from './components/DeliveryTrackingView';
+import OnboardingOverlay from './components/OnboardingOverlay';
+import { AnimatePresence } from 'motion/react';
 
 const DEFAULT_ARTISANS: Artisan[] = [
   { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong' },
@@ -104,6 +106,9 @@ const App: React.FC = () => {
   const [selectedPharmacy, setSelectedPharmacy] = useState<Pharmacy | null>(null);
   const [checkoutData, setCheckoutData] = useState<{product: Product, merchant: Merchant} | null>(null);
   const [selectedOrderForTracking, setSelectedOrderForTracking] = useState<MarketplaceOrder | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
+    return localStorage.getItem('ndjele_onboarding_completed') !== 'true';
+  });
 
   useEffect(() => {
     localStorage.setItem('ndjele_wallet', walletBalance.toString());
@@ -277,6 +282,9 @@ const App: React.FC = () => {
                  </button>
                ))}
                <div className="pt-6 border-t border-slate-100 mt-4">
+                  <button onClick={() => setShowOnboarding(true)} className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-emerald-50 text-slate-600 font-bold text-xs transition-all">
+                    <Sparkles className="w-4 h-4 text-emerald-500" /> Revoir l'Onboarding
+                  </button>
                   <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-red-50 text-red-500 font-bold text-xs transition-all">
                     <LogOut className="w-4 h-4" /> Déconnexion
                   </button>
@@ -286,6 +294,15 @@ const App: React.FC = () => {
           <div onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-slate-900/40 z-[200] backdrop-blur-sm"></div>
         </>
       )}
+
+      <AnimatePresence>
+        {showOnboarding && (
+          <OnboardingOverlay onComplete={() => {
+            setShowOnboarding(false);
+            localStorage.setItem('ndjele_onboarding_completed', 'true');
+          }} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Loader2, Sparkles, Phone, ArrowRight, Smartphone, MessageSquare, ArrowLeft, CheckCircle2, User, Car, Hammer, Store, Truck, Info } from 'lucide-react';
+import { ShieldCheck, Loader2, Sparkles, Phone, ArrowRight, Smartphone, MessageSquare, ArrowLeft, CheckCircle2, User, Car, Hammer, Store, Truck, Info, Stethoscope, Pill } from 'lucide-react';
 import { UserProfile, UserRole } from '../types';
 import { dbService } from '../src/services/dbService';
 
@@ -120,6 +120,13 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
     { id: 'ARTISAN', label: 'Artisan', icon: Hammer, color: 'bg-indigo-500' },
     { id: 'MERCHANT', label: 'Commerçant', icon: Store, color: 'bg-violet-500' },
     { id: 'DELIVERY', label: 'Livreur', icon: Truck, color: 'bg-pink-500' },
+    { id: 'DOCTOR', label: 'Médecin', icon: Stethoscope, color: 'bg-emerald-500' },
+    { id: 'PHARMACY', label: 'Pharmacie', icon: Pill, color: 'bg-pink-600' },
+    { id: 'LAWYER', label: 'Avocat', icon: ShieldCheck, color: 'bg-slate-800' },
+    { id: 'BAILIFF', label: 'Huissier', icon: ShieldCheck, color: 'bg-slate-700' },
+    { id: 'NOTARY', label: 'Notaire', icon: ShieldCheck, color: 'bg-slate-600' },
+    { id: 'ACCOUNTANT', label: 'Comptable', icon: ShieldCheck, color: 'bg-slate-500' },
+    { id: 'ADMIN', label: 'Admin', icon: ShieldCheck, color: 'bg-red-600' },
   ];
 
   return (
@@ -153,7 +160,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
                   value={phoneNumber}
                   onChange={handlePhoneChange}
                   placeholder="074 00 00 00"
-                  className="w-full pl-24 pr-4 py-5 bg-white/10 border border-white/10 rounded-2xl text-white font-black text-lg outline-none"
+                  className="w-full pl-24 pr-4 py-5 bg-slate-800 border border-white/10 rounded-2xl text-white font-black text-lg outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -202,7 +209,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
               <h3 className="text-white font-black text-sm uppercase tracking-widest">Code de vérification</h3>
               <div className="flex justify-center gap-2">
                 {otpCode.map((val, i) => (
-                  <input key={i} id={`otp-${i}`} type="number" maxLength={1} value={val} onChange={(e) => handleOtpChange(i, e.target.value)} className="w-12 h-16 bg-white/10 border border-white/10 rounded-2xl text-center text-2xl font-black text-white outline-none" />
+                  <input key={i} id={`otp-${i}`} type="number" maxLength={1} value={val} onChange={(e) => handleOtpChange(i, e.target.value)} className="w-12 h-16 bg-slate-800 border border-white/10 rounded-2xl text-center text-2xl font-black text-white outline-none focus:ring-2 focus:ring-emerald-500" />
                 ))}
               </div>
               <div className="space-y-1">

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info, Sparkles
 } from 'lucide-react';
-import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor, Lawyer, Bailiff } from './types';
+import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor, Lawyer, Bailiff, Notary, Accountant } from './types';
 
 // Imports des vues
 import HomeView from './components/HomeView';
@@ -44,6 +44,12 @@ import LawyerRegistrationView from './components/LawyerRegistrationView';
 import BailiffRegistrationView from './components/BailiffRegistrationView';
 import LawyerDashboard from './components/LawyerDashboard';
 import BailiffDashboard from './components/BailiffDashboard';
+import NotaryView from './components/NotaryView';
+import AccountantView from './components/AccountantView';
+import NotaryRegistrationView from './components/NotaryRegistrationView';
+import AccountantRegistrationView from './components/AccountantRegistrationView';
+import NotaryDashboard from './components/NotaryDashboard';
+import AccountantDashboard from './components/AccountantDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import MapView from './components/MapView';
 import DeliveryTrackingView from './components/DeliveryTrackingView';
@@ -102,6 +108,8 @@ const App: React.FC = () => {
   const [registeredPharmacy, setRegisteredPharmacy] = useState<Pharmacy | null>(null);
   const [registeredLawyer, setRegisteredLawyer] = useState<Lawyer | null>(null);
   const [registeredBailiff, setRegisteredBailiff] = useState<Bailiff | null>(null);
+  const [registeredNotary, setRegisteredNotary] = useState<Notary | null>(null);
+  const [registeredAccountant, setRegisteredAccountant] = useState<Accountant | null>(null);
 
   const [selectedPharmacy, setSelectedPharmacy] = useState<Pharmacy | null>(null);
   const [checkoutData, setCheckoutData] = useState<{product: Product, merchant: Merchant} | null>(null);
@@ -162,6 +170,8 @@ const App: React.FC = () => {
         case 'ARTISAN': return registeredArtisanPro ? <ArtisanDashboard onNavigate={setActiveView} artisan={registeredArtisanPro} /> : <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
         case 'LAWYER': return registeredLawyer ? <LawyerDashboard onNavigate={setActiveView} lawyer={registeredLawyer} /> : <LawyerRegistrationView onNavigate={setActiveView} onRegister={(l) => { setRegisteredLawyer(l); setActiveView('home'); }} />;
         case 'BAILIFF': return registeredBailiff ? <BailiffDashboard onNavigate={setActiveView} bailiff={registeredBailiff} /> : <BailiffRegistrationView onNavigate={setActiveView} onRegister={(b) => { setRegisteredBailiff(b); setActiveView('home'); }} />;
+        case 'NOTARY': return registeredNotary ? <NotaryDashboard onNavigate={setActiveView} notary={registeredNotary} /> : <NotaryRegistrationView onNavigate={setActiveView} onRegister={(n) => { setRegisteredNotary(n); setActiveView('home'); }} />;
+        case 'ACCOUNTANT': return registeredAccountant ? <AccountantDashboard onNavigate={setActiveView} accountant={registeredAccountant} /> : <AccountantRegistrationView onNavigate={setActiveView} onRegister={(a) => { setRegisteredAccountant(a); setActiveView('home'); }} />;
         case 'ADMIN': return <AdminDashboard onNavigate={setActiveView} users={user ? [user] : []} orders={orders} rides={activeRide ? [activeRide] : []} artisans={artisans} />;
         case 'CLIENT':
         default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} />;
@@ -190,14 +200,18 @@ const App: React.FC = () => {
       case 'delivery': return <DeliveryView onNavigate={setActiveView} registeredLivreur={registeredLivreur} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
       case 'lawyers': return <LawyerView onNavigate={setActiveView} />;
       case 'bailiffs': return <BailiffView onNavigate={setActiveView} />;
+      case 'notaries': return <NotaryView onNavigate={setActiveView} />;
+      case 'accountants': return <AccountantView onNavigate={setActiveView} />;
       case 'lawyer-registration': return <LawyerRegistrationView onNavigate={setActiveView} onRegister={(l) => { setRegisteredLawyer(l); setActiveView('home'); }} />;
       case 'bailiff-registration': return <BailiffRegistrationView onNavigate={setActiveView} onRegister={(b) => { setRegisteredBailiff(b); setActiveView('home'); }} />;
+      case 'notary-registration': return <NotaryRegistrationView onNavigate={setActiveView} onRegister={(n) => { setRegisteredNotary(n); setActiveView('home'); }} />;
+      case 'accountant-registration': return <AccountantRegistrationView onNavigate={setActiveView} onRegister={(a) => { setRegisteredAccountant(a); setActiveView('home'); }} />;
       case 'admin': return <AdminDashboard onNavigate={setActiveView} users={user ? [user] : []} orders={orders} rides={activeRide ? [activeRide] : []} artisans={artisans} />;
       case 'map': return <MapView onNavigate={setActiveView} />;
       case 'artisan-registration': return <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
       case 'delivery-registration': return <DeliveryRegistrationView onNavigate={navigateProtected} onRegister={(l) => { setRegisteredLivreur(l); setActiveView('home'); }} />;
       case 'merchant-registration': return <MerchantRegistrationView onNavigate={navigateProtected} onRegister={(m) => { setRegisteredMerchant(m); setActiveView('home'); }} />;
-      default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={[]} onUpdateOrder={() => {}} userName={user.name} />;
+      default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} />;
     }
   };
 

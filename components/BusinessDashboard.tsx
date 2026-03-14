@@ -56,7 +56,17 @@ const BusinessDashboard: React.FC<BusinessDashboardProps> = ({ onNavigate }) => 
             <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mt-1">BCEG • AFG • BGFIBank</p>
           </div>
         </div>
-        <button className="p-3 bg-slate-900 text-white rounded-2xl shadow-lg active:scale-95 transition-all">
+        <button 
+          onClick={() => {
+            alert("Téléchargement du dossier bancaire (PDF) en cours...");
+            // Simulate download
+            const link = document.createElement('a');
+            link.href = '#';
+            link.download = 'Dossier_Bancaire_Ndjele.pdf';
+            console.log('Downloading dossier...');
+          }}
+          className="p-3 bg-slate-900 text-white rounded-2xl shadow-lg active:scale-95 transition-all"
+        >
           <Download className="w-5 h-5" />
         </button>
       </div>

@@ -7,7 +7,7 @@ import {
   UserCheck, ShieldCheck, RefreshCw, Filter, ArrowRight, Loader2, Compass
 } from 'lucide-react';
 import { ActiveRide, TransportType, ViewState, DriverRegistration } from '../types';
-import { predictNextDirection } from '../services/geminiService';
+import { predictNextDirection, getNeighborhoodFromCoords } from '../services/geminiService';
 
 interface DriverDashboardProps {
   onNavigate: (view: ViewState) => void;
@@ -18,6 +18,7 @@ interface DriverDashboardProps {
 type FilterPeriod = 'day' | 'week' | 'month';
 type WithdrawStep = 'amount' | 'provider' | 'confirmation' | 'processing' | 'success';
 type MobileProvider = 'AIRTEL' | 'MOOV' | 'FLOOZ' | 'TMONEY';
+type DashboardTab = 'activity' | 'announcements';
 
 interface HistoricRide {
   id: string;
@@ -59,6 +60,12 @@ const PROVIDERS: { id: MobileProvider, name: string, color: string, textColor: s
   { id: 'TMONEY', name: 'TMoney', color: 'bg-yellow-400', textColor: 'text-slate-900' },
 ];
 
+const MOCK_ANNOUNCEMENTS = [
+  { id: 'a1', title: 'Bonus de Nuit', content: 'Gagnez 20% de plus sur toutes les courses entre 22h et 5h du matin.', date: 'Actif', type: 'PROMO' },
+  { id: 'a2', title: 'Zone de Forte Demande', content: 'Forte demande détectée à Akanda. Les tarifs sont majorés de x1.5.', date: 'Maintenant', type: 'ALERT' },
+  { id: 'a3', title: 'Mise à jour Ndjele', content: 'Une nouvelle version de l\'application est disponible. Téléchargez-la pour de meilleures performances.', date: 'Hier', type: 'INFO' },
+];
+
 const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptRequest, registeredDriver }) => {
   const [balance, setBalance] = useState(48750);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
@@ -66,6 +73,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptR
   const [selectedProvider, setSelectedProvider] = useState<MobileProvider | null>(null);
   const [withdrawStep, setWithdrawStep] = useState<WithdrawStep>('amount');
   const [filterPeriod, setFilterPeriod] = useState<FilterPeriod>('day');
+  const [activeTab, setActiveTab] = useState<DashboardTab>('activity');
   
   const [currentDirection, setCurrentDirection] = useState('');
   const [currentLocation, setCurrentLocation] = useState<{ lat: number, lng: number, neighborhood: string } | null>(null);
@@ -74,17 +82,39 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptR
 
   const COMMISSION_RATE = 0.09;
 
-  const handleSimulatePosition = () => {
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      alert("La géolocalisation n'est pas supportée par votre navigateur.");
+      return;
+    }
+    
     setIsDetecting(true);
-    setTimeout(() => {
-      // Simulation requested: 0.39, 9.45 -> Louis / Batterie IV
-      setCurrentLocation({
-        lat: 0.39,
-        lng: 9.45,
-        neighborhood: 'Louis / Batterie IV'
-      });
-      setIsDetecting(false);
-    }, 1500);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const neighborhood = await getNeighborhoodFromCoords(position.coords.latitude, position.coords.longitude);
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            neighborhood: neighborhood || 'Position détectée'
+          });
+        } catch (e) {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            neighborhood: 'Position GPS'
+          });
+        } finally {
+          setIsDetecting(false);
+        }
+      },
+      (error) => {
+        console.error("Geo Error:", error);
+        setIsDetecting(false);
+        alert("Impossible de détecter votre position. Veuillez vérifier vos permissions GPS.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   // Filtrage intelligent des notifications selon la direction (Optimisé)
@@ -200,7 +230,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptR
             </div>
           </div>
           <button 
-            onClick={handleSimulatePosition}
+            onClick={handleDetectLocation}
             disabled={isDetecting}
             className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-lg ${isDetecting ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-900 text-emerald-400'}`}
           >
@@ -272,41 +302,93 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ onNavigate, onAcceptR
         </section>
       )}
 
-      {/* Historique avec filtre */}
+      {/* Historique avec filtre ou Annonces */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between px-2">
-          <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Courses Récentes</h3>
-          <div className="flex bg-slate-100 p-1 rounded-xl">
-            {(['day', 'week', 'month'] as FilterPeriod[]).map(p => (
-              <button 
-                key={p}
-                onClick={() => setFilterPeriod(p)}
-                className={`px-3 py-1 rounded-lg text-[10px] font-black transition-all ${filterPeriod === p ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`}
-              >
-                {p === 'day' ? 'Jour' : p === 'week' ? 'Semaine' : 'Mois'}
-              </button>
-            ))}
-          </div>
+        <div className="flex gap-2 p-1 bg-slate-200/50 rounded-2xl">
+          <button 
+            onClick={() => setActiveTab('activity')}
+            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase transition-all flex items-center justify-center gap-2 ${activeTab === 'activity' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+          >
+            <HistoryIcon className="w-3 h-3" />
+            Activité Récente
+          </button>
+          <button 
+            onClick={() => setActiveTab('announcements')}
+            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase transition-all flex items-center justify-center gap-2 ${activeTab === 'announcements' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+          >
+            <Bell className="w-3 h-3" />
+            Annonces
+          </button>
         </div>
 
-        <div className="space-y-3">
-          {filteredHistory.map(ride => (
-            <div key={ride.id} className="bg-white p-4 rounded-[2rem] border border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
-                  <HistoryIcon className="w-5 h-5 text-slate-400" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-slate-800">{ride.destination}</div>
-                  <div className="text-[10px] text-slate-400 font-medium">
-                    {ride.date.toLocaleDateString('fr-FR')} • {ride.type}
-                  </div>
-                </div>
+        {activeTab === 'activity' ? (
+          <div className="space-y-4 animate-in slide-in-from-left-4">
+            <div className="flex items-center justify-between px-2">
+              <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Courses Récentes</h3>
+              <div className="flex bg-slate-100 p-1 rounded-xl">
+                {(['day', 'week', 'month'] as FilterPeriod[]).map(p => (
+                  <button 
+                    key={p}
+                    onClick={() => setFilterPeriod(p)}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-black transition-all ${filterPeriod === p ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`}
+                  >
+                    {p === 'day' ? 'Jour' : p === 'week' ? 'Semaine' : 'Mois'}
+                  </button>
+                ))}
               </div>
-              <div className="font-black text-slate-800 text-sm">+{ride.price}</div>
             </div>
-          ))}
-        </div>
+
+            <div className="space-y-3">
+              {filteredHistory.map(ride => (
+                <div key={ride.id} className="bg-white p-4 rounded-[2rem] border border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
+                      <HistoryIcon className="w-5 h-5 text-slate-400" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800">{ride.destination}</div>
+                      <div className="text-[10px] text-slate-400 font-medium">
+                        {ride.date.toLocaleDateString('fr-FR')} • {ride.type}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="font-black text-slate-800 text-sm">+{ride.price}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 animate-in slide-in-from-right-4">
+            <div className="px-2">
+              <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Annonces à venir</h3>
+            </div>
+            <div className="space-y-3">
+              {MOCK_ANNOUNCEMENTS.map(announcement => (
+                <div key={announcement.id} className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                        announcement.type === 'PROMO' ? 'bg-emerald-50 text-emerald-600' : 
+                        announcement.type === 'ALERT' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'
+                      }`}>
+                        {announcement.type === 'PROMO' ? <Zap className="w-4 h-4" /> : 
+                         announcement.type === 'ALERT' ? <AlertCircle className="w-4 h-4" /> : <Info className="w-4 h-4" />}
+                      </div>
+                      <h4 className="font-black text-slate-800 text-sm">{announcement.title}</h4>
+                    </div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase">{announcement.date}</span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                    {announcement.content}
+                  </p>
+                  <button className="w-full py-3 bg-slate-50 rounded-xl text-[10px] font-black text-slate-600 uppercase tracking-widest hover:bg-slate-100 transition-colors">
+                    En savoir plus
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

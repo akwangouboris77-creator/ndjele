@@ -65,7 +65,7 @@ const LawyerView: React.FC<LawyerViewProps> = ({ onNavigate }) => {
             <input 
               type="text" 
               placeholder="Chercher une spécialité..." 
-              className="w-full bg-white/10 border border-white/20 rounded-2xl px-6 py-4 text-sm font-bold text-white outline-none focus:bg-white/20 transition-all"
+              className="w-full bg-slate-800 border border-white/20 rounded-2xl px-6 py-4 text-sm font-bold text-white outline-none focus:bg-slate-900 transition-all"
             />
             <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           </div>

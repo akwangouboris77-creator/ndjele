@@ -116,6 +116,8 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
             { id: 'marketplace', icon: ShoppingBag, label: 'Marché', color: 'bg-violet-50 text-violet-600' },
             { id: 'lawyers', icon: ShieldCheck, label: 'Avocats', color: 'bg-slate-100 text-slate-800' },
             { id: 'bailiffs', icon: Gavel, label: 'Huissiers', color: 'bg-slate-100 text-slate-700' },
+            { id: 'notaries', icon: Scale, label: 'Notaires', color: 'bg-slate-100 text-slate-900' },
+            { id: 'accountants', icon: Calculator, label: 'Comptables', color: 'bg-slate-100 text-slate-800' },
             { id: 'maraude', icon: Smartphone, label: 'Radar', color: 'bg-blue-50 text-blue-600' },
             { id: 'wallet', icon: CreditCard, label: 'Wallet', color: 'bg-emerald-50 text-emerald-600' },
             { id: 'sos', icon: AlertTriangle, label: 'Urgence', color: 'bg-red-50 text-red-600' },
@@ -166,6 +168,30 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
             <h4 className="text-xl font-black text-white leading-tight">Chauffeur ? Inscrivez-vous</h4>
             <p className="text-[10px] text-amber-300 font-bold uppercase tracking-widest mt-1">Obtenez votre matricule NS officiel.</p>
             <button onClick={() => onNavigate('driver-registration')} className="mt-4 bg-amber-500 text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-amber-500/20">
+              S'enrôler Maintenant
+            </button>
+         </div>
+      </section>
+
+      {/* Banner Notary Enrollment */}
+      <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
+         <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Notary" />
+         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent p-8 flex flex-col justify-end">
+            <h4 className="text-xl font-black text-white leading-tight">Notaires : Digitalisez votre étude</h4>
+            <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau Justice NS.</p>
+            <button onClick={() => onNavigate('notary-registration')} className="mt-4 bg-white text-slate-900 px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg">
+              S'enrôler Maintenant
+            </button>
+         </div>
+      </section>
+
+      {/* Banner Accountant Enrollment */}
+      <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
+         <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Accountant" />
+         <div className="absolute inset-0 bg-gradient-to-t from-slate-800 via-slate-800/40 to-transparent p-8 flex flex-col justify-end">
+            <h4 className="text-xl font-black text-white leading-tight">Experts Comptables : Gérez vos missions</h4>
+            <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Optimisez votre cabinet avec Expertise NS.</p>
+            <button onClick={() => onNavigate('accountant-registration')} className="mt-4 bg-slate-900 text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-slate-900/20">
               S'enrôler Maintenant
             </button>
          </div>

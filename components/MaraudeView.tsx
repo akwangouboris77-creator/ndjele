@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { QrCode, Wifi, ArrowLeft, MapPin, ShieldCheck, Share2, Search, Navigation, CheckCircle2, MessageSquareQuote, X, Smartphone, Clock, ArrowRight, Star, Loader2, MapPinIcon } from 'lucide-react';
+import { QrCode, Wifi, ArrowLeft, MapPin, ShieldCheck, Share2, Search, Navigation, CheckCircle2, MessageSquareQuote, X, Smartphone, Clock, ArrowRight, Star, Loader2, MapPinIcon, RefreshCw } from 'lucide-react';
 import { ViewState, ActiveRide, TransportType, Driver } from '../types';
 import { negotiatePrice, getNeighborhoodFromCoords } from '../services/geminiService';
 
@@ -196,8 +196,15 @@ const MaraudeView: React.FC<MaraudeViewProps> = ({ onNavigate, onStartRide }) =>
                   }}
                   onFocus={() => setShowSuggestions(true)}
                   placeholder="Ex: Charbonnages, PK12..." 
-                  className="w-full pl-11 pr-4 py-4 bg-white rounded-2xl text-slate-800 font-bold text-sm outline-none shadow-inner"
+                  className="w-full pl-11 pr-12 py-4 bg-white rounded-2xl text-slate-800 font-bold text-sm outline-none shadow-inner"
                 />
+                <button 
+                  onClick={handleDetectLocation}
+                  disabled={isLocating}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-slate-50 text-slate-400 rounded-xl hover:text-amber-500 transition-colors"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isLocating ? 'animate-spin' : ''}`} />
+                </button>
               </div>
 
               {showSuggestions && (

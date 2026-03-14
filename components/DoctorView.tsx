@@ -109,7 +109,7 @@ const DoctorView: React.FC<DoctorViewProps> = ({ onNavigate }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Ex: J'ai mal à la gorge..."
-              className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-4 py-4 text-sm font-bold text-white placeholder:text-emerald-100 outline-none focus:bg-white/20 transition-all shadow-inner"
+              className="flex-1 bg-emerald-700 border border-white/20 rounded-2xl px-4 py-4 text-sm font-bold text-white placeholder:text-emerald-100 outline-none focus:bg-emerald-800 transition-all shadow-inner"
             />
             <button 
               onClick={handleOrientation}

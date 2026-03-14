@@ -43,7 +43,34 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
   });
 
   const handleNext = () => {
-    if (step === 4) setStep(5); // Go to Review
+    // Validation per step
+    if (step === 1) {
+      if (!formData.firstName.trim() || !formData.lastName.trim()) {
+        alert("Veuillez renseigner votre prénom et votre nom.");
+        return;
+      }
+      if (!formData.profilePhoto) {
+        alert("Veuillez ajouter une photo de profil.");
+        return;
+      }
+    }
+    if (step === 3) {
+      if (!formData.plate.trim()) {
+        alert("Veuillez renseigner votre numéro de matricule.");
+        return;
+      }
+      if (!formData.vehiclePhoto) {
+        alert("Veuillez ajouter une photo de votre véhicule.");
+        return;
+      }
+    }
+    if (step === 4) {
+      if (!formData.licensePhoto) {
+        alert("Veuillez scanner votre permis de conduire.");
+        return;
+      }
+      setStep(5); // Go to Review
+    }
     else if (step === 5) setStep(6); // Go to Payment
     else setStep(step + 1);
   };

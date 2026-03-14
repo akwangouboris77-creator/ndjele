@@ -5,7 +5,7 @@ import {
   BarChart3, Search, Filter, MoreVertical, CheckCircle2, 
   XCircle, AlertTriangle, ArrowUpRight, ArrowDownRight,
   Settings, Bell, LogOut, LayoutDashboard, Database,
-  Stethoscope, Pill, Scale, Gavel, Dog, Calculator
+  Stethoscope, Pill, Scale, Gavel, Dog, Calculator, Plus
 } from 'lucide-react';
 import { ViewState, UserProfile, MarketplaceOrder, ActiveRide, Artisan } from '../types';
 
@@ -20,7 +20,7 @@ interface AdminDashboardProps {
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
   onNavigate, users, orders, rides, artisans 
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'services' | 'security'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'services' | 'security' | 'announcements'>('overview');
   const [searchQuery, setSearchQuery] = useState('');
 
   const stats = [
@@ -172,6 +172,58 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     </div>
   );
 
+  const renderAnnouncements = () => (
+    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+      <div className="flex items-center justify-between px-2">
+        <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest">Gestion des Annonces</h3>
+        <button className="bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center gap-2">
+          <Plus className="w-4 h-4" /> Créer une Annonce
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { id: 1, title: 'Bonus de Nuit', target: 'Chauffeurs', status: 'Actif', type: 'PROMO', date: '25 Fév 2026' },
+          { id: 2, title: 'Maintenance Système', target: 'Tous', status: 'Programmé', type: 'INFO', date: '28 Fév 2026' },
+          { id: 3, title: 'Zone de Forte Demande', target: 'Chauffeurs', status: 'Actif', type: 'ALERT', date: 'En cours' },
+        ].map(announcement => (
+          <div key={announcement.id} className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                  announcement.type === 'PROMO' ? 'bg-emerald-50 text-emerald-600' : 
+                  announcement.type === 'ALERT' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'
+                }`}>
+                  <Bell className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-black text-slate-800 text-sm">{announcement.title}</h4>
+                  <p className="text-[9px] font-black text-slate-400 uppercase">Cible: {announcement.target}</p>
+                </div>
+              </div>
+              <span className={`text-[8px] font-black px-2 py-1 rounded-full uppercase ${
+                announcement.status === 'Actif' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'
+              }`}>
+                {announcement.status}
+              </span>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[9px] font-bold text-slate-400 uppercase">{announcement.date}</span>
+              <div className="flex gap-2">
+                <button className="p-2 bg-slate-50 text-slate-400 rounded-lg hover:text-slate-900 transition-colors">
+                  <Settings className="w-4 h-4" />
+                </button>
+                <button className="p-2 bg-slate-50 text-pink-400 rounded-lg hover:text-pink-600 transition-colors">
+                  <XCircle className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-slate-50/50 pb-24">
       {/* Admin Header */}
@@ -204,6 +256,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {[
             { id: 'overview', label: 'Vue d\'ensemble', icon: LayoutDashboard },
             { id: 'users', label: 'Utilisateurs', icon: Users },
+            { id: 'announcements', label: 'Annonces', icon: Bell },
             { id: 'services', label: 'Services', icon: Database },
             { id: 'security', label: 'Sécurité', icon: ShieldCheck },
           ].map(tab => (
@@ -225,6 +278,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {/* Content Area */}
         {activeTab === 'overview' && renderOverview()}
         {activeTab === 'users' && renderUsers()}
+        {activeTab === 'announcements' && renderAnnouncements()}
         {activeTab === 'services' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">

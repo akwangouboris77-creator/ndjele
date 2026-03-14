@@ -68,6 +68,7 @@ const DoctorRegistrationView: React.FC<DoctorRegistrationViewProps> = ({ onNavig
     neighborhood: '',
     experience: '5',
     licenseNumber: '',
+    insuranceId: '',
     avatar: ''
   });
 
@@ -111,7 +112,8 @@ const DoctorRegistrationView: React.FC<DoctorRegistrationViewProps> = ({ onNavig
         neighborhood: formData.neighborhood,
         experience: parseInt(formData.experience),
         availability: 'disponible',
-        licenseNumber: formData.licenseNumber
+        licenseNumber: formData.licenseNumber,
+        insuranceId: formData.insuranceId
       };
 
       try {
@@ -237,6 +239,17 @@ const DoctorRegistrationView: React.FC<DoctorRegistrationViewProps> = ({ onNavig
                     value={formData.licenseNumber}
                     onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                     placeholder="N° d'Ordre des Médecins"
+                    className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500 text-slate-900"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">N° Assurance Maladie (CNAMGS)</label>
+                  <input
+                    type="text"
+                    value={formData.insuranceId}
+                    onChange={(e) => setFormData({ ...formData, insuranceId: e.target.value })}
+                    placeholder="N° d'Identification Assurance"
                     className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-emerald-500 text-slate-900"
                   />
                 </div>

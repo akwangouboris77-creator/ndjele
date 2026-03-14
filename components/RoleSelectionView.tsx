@@ -17,6 +17,8 @@ const ROLE_OPTIONS = [
   { id: 'DOCTOR', label: 'Médecin', icon: Stethoscope, color: 'bg-emerald-500', desc: 'Consultations et avis médicaux.' },
   { id: 'LAWYER', label: 'Avocat', icon: ShieldCheck, color: 'bg-slate-800', desc: 'Conseils juridiques et défense.' },
   { id: 'BAILIFF', label: 'Huissier', icon: Gavel, color: 'bg-slate-700', desc: 'Significations et exécutions.' },
+  { id: 'NOTARY', label: 'Notaire', icon: ShieldCheck, color: 'bg-slate-600', desc: 'Actes notariés et contrats.' },
+  { id: 'ACCOUNTANT', label: 'Comptable', icon: ShieldCheck, color: 'bg-slate-500', desc: 'Expertise comptable et fiscale.' },
   { id: 'ADMIN', label: 'Administrateur', icon: ShieldCheck, color: 'bg-red-600', desc: 'Gestion globale de la plateforme.' },
 ];
 

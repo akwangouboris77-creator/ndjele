@@ -79,22 +79,36 @@ const BailiffDashboard: React.FC<BailiffDashboardProps> = ({ onNavigate, bailiff
             { id: 2, client: 'Me. Ndong', task: 'Constat Chantier', price: 75000, date: 'Hier', status: 'PAID' },
             { id: 3, client: 'Mr. Pierre', task: 'Commandement Payer', price: 45000, date: '2 jours', status: 'PAID' },
           ].map(job => (
-            <div key={job.id} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between group">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
-                  <FileText className="w-5 h-5" />
+            <div key={job.id} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-4 group">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-sm">{job.client}</h4>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase">{job.task} • {job.date}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-slate-800 text-sm">{job.client}</h4>
-                  <p className="text-[9px] font-bold text-slate-400 uppercase">{job.task} • {job.date}</p>
+                <div className="text-right">
+                  <p className={`font-black text-sm ${job.status === 'PENDING' ? 'text-amber-500' : 'text-slate-700'}`}>
+                    {job.price.toLocaleString()} F
+                  </p>
+                  {job.status === 'PENDING' && <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse ml-auto mt-1"></div>}
                 </div>
               </div>
-              <div className="text-right">
-                <p className={`font-black text-sm ${job.status === 'PENDING' ? 'text-amber-500' : 'text-slate-700'}`}>
-                  {job.price.toLocaleString()} F
-                </p>
-                {job.status === 'PENDING' && <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse ml-auto mt-1"></div>}
-              </div>
+              
+              {job.client.includes('Banque') && (
+                <button 
+                  onClick={() => {
+                    alert("Téléchargement du dossier bancaire (PDF) en cours...");
+                    console.log("Downloading dossier...");
+                  }}
+                  className="w-full py-2.5 bg-slate-50 text-slate-600 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-slate-100 transition-colors"
+                >
+                  <TrendingUp className="w-3.5 h-3.5" /> Télécharger Dossier Bancaire
+                </button>
+              )}
             </div>
           ))}
         </div>

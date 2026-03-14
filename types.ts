@@ -11,7 +11,7 @@ export enum TransportType {
 }
 
 export type SubscriptionTier = 'FREE' | 'PREMIUM';
-export type UserRole = 'CLIENT' | 'DRIVER' | 'ARTISAN' | 'MERCHANT' | 'DELIVERY' | 'DOCTOR' | 'PHARMACY' | 'LAWYER' | 'BAILIFF' | 'ADMIN';
+export type UserRole = 'CLIENT' | 'DRIVER' | 'ARTISAN' | 'MERCHANT' | 'DELIVERY' | 'DOCTOR' | 'PHARMACY' | 'LAWYER' | 'BAILIFF' | 'ADMIN' | 'NOTARY' | 'ACCOUNTANT';
 
 export interface UserProfile {
   id: string;
@@ -136,6 +136,7 @@ export interface Doctor {
   experience: number;
   availability: 'disponible' | 'occupe' | 'urgence_uniquement';
   licenseNumber?: string;
+  insuranceId?: string;
   balance?: number;
 }
 
@@ -222,6 +223,33 @@ export interface Bailiff {
   balance?: number;
 }
 
+export interface Notary {
+  id: string;
+  name: string;
+  office: string;
+  rating: number;
+  neighborhood: string;
+  experience: number;
+  avatar: string;
+  isVerified: boolean;
+  licenseNumber?: string;
+  balance?: number;
+}
+
+export interface Accountant {
+  id: string;
+  name: string;
+  firm: string;
+  specialty: string;
+  rating: number;
+  neighborhood: string;
+  experience: number;
+  avatar: string;
+  isVerified: boolean;
+  licenseNumber?: string;
+  balance?: number;
+}
+
 export interface LawyerRegistration {
   firstName: string;
   lastName: string;
@@ -256,7 +284,7 @@ export interface ActiveRide {
   hasLuggage?: boolean;
 }
 
-export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map' | 'notaries' | 'accountants' | 'notary-registration' | 'accountant-registration';
+export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map' | 'notaries' | 'accountants' | 'notary-registration' | 'accountant-registration' | 'notary-dashboard' | 'accountant-dashboard';
 
 export interface Contact {
   id: string;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, ArrowLeft, ArrowUpRight, ArrowDownLeft, RefreshCcw, Smartphone, CreditCard, X, Loader2, Info, CheckCircle2, ShieldAlert, ShieldCheck, Copy, CheckCircle } from 'lucide-react';
+import { Plus, ArrowLeft, ArrowUpRight, ArrowDownLeft, RefreshCcw, Smartphone, CreditCard, X, Loader2, Info, CheckCircle2, ShieldAlert, ShieldCheck, Copy, CheckCircle, Car, Hammer, ShoppingBag } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface WalletViewProps {
@@ -21,9 +21,10 @@ const WalletView: React.FC<WalletViewProps> = ({ onNavigate, balance, onUpdateBa
   const [isProcessing, setIsProcessing] = useState(false);
 
   const transactions = [
-    { id: '1', title: 'Reliquat Digital Taxi', amount: 150, type: 'credit', date: 'Aujourd\'hui' },
-    { id: '2', title: 'Paiement Séquestre Artisan', amount: -15000, type: 'debit', date: 'Hier' },
-    { id: '3', title: 'Recharge Airtel Money', amount: 5000, type: 'credit', date: 'Hier' },
+    { id: '1', title: 'Reliquat Digital Taxi', amount: 150, type: 'credit', date: 'Aujourd\'hui', details: 'Course #TX-8829 • Akanda vers Louis', icon: Car },
+    { id: '2', title: 'Paiement Séquestre Artisan', amount: -15000, type: 'debit', date: 'Hier', details: 'Réparation Clim • Mme Ntoutoume', icon: Hammer },
+    { id: '3', title: 'Recharge Airtel Money', amount: 5000, type: 'credit', date: 'Hier', details: 'Ref: AM-99201-GAB', icon: Smartphone },
+    { id: '4', title: 'Achat Marketplace', amount: -2500, type: 'debit', date: '2 jours', details: 'Boutique "Chez Maman" • Pain & Lait', icon: ShoppingBag },
   ];
 
   const handleStartRecharge = () => {
@@ -87,16 +88,20 @@ const WalletView: React.FC<WalletViewProps> = ({ onNavigate, balance, onUpdateBa
         <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs px-2">Activités Récentes</h3>
         <div className="space-y-3">
           {transactions.map((t) => (
-            <div key={t.id} className="flex items-center gap-4 bg-white p-4 rounded-[1.5rem] border border-slate-100 shadow-sm">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${t.type === 'credit' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
-                {t.type === 'credit' ? <Plus className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
+            <div key={t.id} className="flex items-center gap-4 bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm group hover:border-emerald-200 transition-all">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm ${t.type === 'credit' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-600'}`}>
+                {t.icon ? <t.icon className="w-6 h-6" /> : t.type === 'credit' ? <Plus className="w-6 h-6" /> : <ShieldCheck className="w-6 h-6" />}
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-slate-800 text-sm leading-none mb-1">{t.title}</h4>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t.date}</p>
+                <h4 className="font-black text-slate-800 text-sm leading-none mb-1.5">{t.title}</h4>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">{t.date}</p>
+                <p className="text-[9px] text-slate-500 font-medium leading-tight">{t.details}</p>
               </div>
-              <div className={`font-black text-sm ${t.type === 'credit' ? 'text-emerald-600' : 'text-slate-800'}`}>
-                {t.amount > 0 ? '+' : ''}{t.amount.toLocaleString()} F
+              <div className={`text-right ${t.type === 'credit' ? 'text-emerald-600' : 'text-slate-900'}`}>
+                <p className="font-black text-sm">
+                  {t.amount > 0 ? '+' : ''}{t.amount.toLocaleString()} F
+                </p>
+                <span className="text-[8px] font-black uppercase opacity-40">Validé</span>
               </div>
             </div>
           ))}

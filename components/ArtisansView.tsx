@@ -118,7 +118,7 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
             <input 
               type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Ex: Panne clim, fuite..."
-              className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-4 py-4 text-sm font-bold text-white placeholder:text-indigo-200 outline-none"
+              className="flex-1 bg-indigo-700 border border-white/20 rounded-2xl px-4 py-4 text-sm font-bold text-white placeholder:text-indigo-200 outline-none focus:bg-indigo-800 transition-all"
             />
             <button onClick={handleDiagnosis} disabled={isDiagnosing} className="bg-white p-4 rounded-2xl shadow-lg">
               {isDiagnosing ? <Loader2 className="w-6 h-6 animate-spin text-indigo-600" /> : <Search className="w-6 h-6 text-indigo-600" />}

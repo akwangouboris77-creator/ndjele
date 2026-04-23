@@ -18,10 +18,10 @@ const OnePagerView: React.FC<OnePagerViewProps> = ({ onNavigate }) => {
 
         <div className="relative z-10 space-y-6 animate-in fade-in slide-in-from-bottom-10 duration-700">
            <div className="w-20 h-20 gradient-brand rounded-[2rem] flex items-center justify-center text-white mx-auto shadow-2xl shadow-emerald-500/20 animate-float">
-             <span className="text-3xl font-black">NS</span>
+             <span className="text-3xl font-black">MA</span>
            </div>
            <h1 className="text-5xl font-black text-white tracking-tighter leading-[0.9]">
-             NDJELE <br/><span className="text-emerald-400">SOLUTION</span>
+             MARAUDE <br/><span className="text-emerald-400">SOLUTION</span>
            </h1>
            <p className="text-slate-400 font-bold text-sm uppercase tracking-[0.3em]">La Confiance Digitalisée au Gabon</p>
            
@@ -43,7 +43,7 @@ const OnePagerView: React.FC<OnePagerViewProps> = ({ onNavigate }) => {
       {/* Trust Factors */}
       <section className="p-8 space-y-12 bg-white rounded-t-[4rem] text-slate-900">
          <div className="text-center space-y-2">
-            <h2 className="text-3xl font-black tracking-tighter">Pourquoi Ndjele ?</h2>
+            <h2 className="text-3xl font-black tracking-tighter">Pourquoi Maraude ?</h2>
             <p className="text-slate-500 font-medium">Le nouveau standard de sécurité au Gabon.</p>
          </div>
 
@@ -54,7 +54,7 @@ const OnePagerView: React.FC<OnePagerViewProps> = ({ onNavigate }) => {
                </div>
                <div className="space-y-1">
                   <h4 className="font-black text-lg">Paiement Séquestre</h4>
-                  <p className="text-sm text-slate-500 leading-relaxed">Votre argent est bloqué par Ndjele. Le prestataire n'est payé qu'une fois le travail fini et validé par vous.</p>
+                  <p className="text-sm text-slate-500 leading-relaxed">Votre argent est bloqué par Maraude. Le prestataire n'est payé qu'une fois le travail fini et validé par vous.</p>
                </div>
             </div>
 
@@ -63,8 +63,8 @@ const OnePagerView: React.FC<OnePagerViewProps> = ({ onNavigate }) => {
                   <Zap className="text-amber-600 w-8 h-8" />
                </div>
                <div className="space-y-1">
-                  <h4 className="font-black text-lg">Numéro NS Unique</h4>
-                  <p className="text-sm text-slate-500 leading-relaxed">Chaque taxi certifié porte son numéro NS sur la portière. Identifiez et notez vos chauffeurs en un clin d'œil.</p>
+                  <h4 className="font-black text-lg">Numéro MA Unique</h4>
+                  <p className="text-sm text-slate-500 leading-relaxed">Chaque taxi certifié porte son numéro MA sur la portière. Identifiez et notez vos chauffeurs en un clin d'œil.</p>
                </div>
             </div>
 
@@ -90,18 +90,18 @@ const OnePagerView: React.FC<OnePagerViewProps> = ({ onNavigate }) => {
          <div className="grid grid-cols-2 gap-4">
             <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-4">
                <Car className="text-amber-500 w-8 h-8" />
-               <h5 className="font-black text-xs uppercase">Ndjele Go</h5>
+               <h5 className="font-black text-xs uppercase">Maraude Go</h5>
                <p className="text-[10px] text-slate-400 font-bold leading-tight">Taxi & Clando avec prix négocié par IA.</p>
             </div>
             <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-4">
                <Stethoscope className="text-emerald-500 w-8 h-8" />
-               <h5 className="font-black text-xs uppercase">Ndjele Santé</h5>
+               <h5 className="font-black text-xs uppercase">Maraude Santé</h5>
                <p className="text-[10px] text-slate-400 font-bold leading-tight">Médecins & Pharmacies de garde livrées.</p>
             </div>
             <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-4">
                <Hammer className="text-indigo-500 w-8 h-8" />
                <h5 className="font-black text-xs uppercase">Artisans Pro</h5>
-               <p className="text-[10px] text-slate-400 font-bold leading-tight">Plomberie, Clim, Élec certifiés NS.</p>
+               <p className="text-[10px] text-slate-400 font-bold leading-tight">Plomberie, Clim, Élec certifiés MA.</p>
             </div>
             <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-4">
                <ShoppingBag className="text-violet-500 w-8 h-8" />
@@ -114,7 +114,7 @@ const OnePagerView: React.FC<OnePagerViewProps> = ({ onNavigate }) => {
             <div className="bg-slate-900 p-8 rounded-[3rem] text-white text-center space-y-6 shadow-2xl">
                <Heart className="w-12 h-12 text-red-500 mx-auto fill-red-500 animate-pulse" />
                <h3 className="text-xl font-black">Prêt à changer de vie ?</h3>
-               <p className="text-xs text-slate-400 leading-relaxed">Rejoignez les milliers de Gabonais qui font confiance à Ndjele pour simplifier leur quotidien.</p>
+               <p className="text-xs text-slate-400 leading-relaxed">Rejoignez les milliers de Gabonais qui font confiance à Maraude pour simplifier leur quotidien.</p>
                <button 
                  onClick={() => onNavigate('login')}
                  className="w-full py-5 gradient-primary text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl shadow-emerald-500/20"

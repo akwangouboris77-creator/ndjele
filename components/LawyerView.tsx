@@ -1,15 +1,15 @@
 
 import React, { useState } from 'react';
 import { ArrowLeft, ShieldCheck, Scale, Phone, MapPin, ChevronRight, Gavel, Loader2, Award, Search, MessageSquare, Send, X, UserPlus } from 'lucide-react';
-import { ViewState, UserProfile, ChatMessage } from '../types';
+import { ViewState, UserProfile, ChatMessage, Lawyer } from '../types';
 
 interface LawyerViewProps {
   onNavigate: (view: ViewState) => void;
 }
 
-const MOCK_LAWYERS = [
-  { id: 'l1', name: 'Me. Jean-Pierre Mba', specialty: 'Droit des Affaires', rating: 4.9, distance: 1.2, neighborhood: 'Louis', experience: 15, avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?fit=crop&w=150&h=150' },
-  { id: 'l2', name: 'Me. Sylvie Ndong', specialty: 'Droit de la Famille', rating: 4.8, distance: 3.5, neighborhood: 'Akanda', experience: 10, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?fit=crop&w=150&h=150' },
+const MOCK_LAWYERS: Lawyer[] = [
+  { id: 'l1', name: 'Me. Jean-Pierre Mba', specialty: 'Droit des Affaires', phone: '074 12 12 12', rating: 4.9, distance: 1.2, neighborhood: 'Louis', experience: 15, avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?fit=crop&w=150&h=150', isVerified: true },
+  { id: 'l2', name: 'Me. Sylvie Ndong', specialty: 'Droit de la Famille', phone: '066 33 44 55', rating: 4.8, distance: 3.5, neighborhood: 'Akanda', experience: 10, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?fit=crop&w=150&h=150', isVerified: true },
 ];
 
 const LawyerView: React.FC<LawyerViewProps> = ({ onNavigate }) => {
@@ -17,12 +17,18 @@ const LawyerView: React.FC<LawyerViewProps> = ({ onNavigate }) => {
   const [chatLawyer, setChatLawyer] = useState<any>(null);
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [contactingId, setContactingId] = useState<string | null>(null);
 
   const handleStartChat = (lawyer: any) => {
     setChatLawyer(lawyer);
     setMessages([
       { id: '1', sender: 'DRIVER', text: `Bonjour, ici le cabinet de ${lawyer.name}. En quoi pouvons-nous vous assister ?`, timestamp: Date.now() }
     ]);
+  };
+
+  const handleContact = (lawyer: Lawyer, type: 'tel' | 'sms') => {
+    window.location.href = `${type}:${lawyer.phone.replace(/\s/g, '')}`;
+    setContactingId(null);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -44,7 +50,7 @@ const LawyerView: React.FC<LawyerViewProps> = ({ onNavigate }) => {
           <button onClick={() => onNavigate('home')} className="p-2 bg-white rounded-full shadow-sm text-slate-600 border border-slate-100">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Justice NS</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Justice Maraude</h2>
         </div>
         <button 
           onClick={() => onNavigate('lawyer-registration')}
@@ -76,7 +82,7 @@ const LawyerView: React.FC<LawyerViewProps> = ({ onNavigate }) => {
         <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Avocats à proximité</h3>
         <div className="space-y-4">
           {MOCK_LAWYERS.map(lawyer => (
-            <div key={lawyer.id} className="bg-white border border-slate-100 p-5 rounded-[2.5rem] shadow-sm flex flex-col gap-4">
+            <div key={lawyer.id} className="bg-white border border-slate-100 p-5 rounded-[2.5rem] shadow-sm flex flex-col gap-4 relative">
               <div className="flex items-center gap-4">
                 <img src={lawyer.avatar} className="w-16 h-16 rounded-2xl object-cover shadow-sm" />
                 <div className="flex-1">
@@ -88,12 +94,46 @@ const LawyerView: React.FC<LawyerViewProps> = ({ onNavigate }) => {
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => handleStartChat(lawyer)}
-                className="w-full py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2"
-              >
-                <MessageSquare className="w-3.5 h-3.5" /> Consulter le cabinet
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => handleStartChat(lawyer)}
+                  className="flex-1 py-3 bg-slate-50 text-slate-600 rounded-xl font-black text-[10px] uppercase flex items-center justify-center gap-2 transition-all active:scale-95"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" /> Consulter
+                </button>
+                <button 
+                  onClick={() => setContactingId(contactingId === lawyer.id ? null : lawyer.id)}
+                  className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95"
+                >
+                  <Phone className="w-3.5 h-3.5" /> Contacter
+                </button>
+              </div>
+
+              {contactingId === lawyer.id && (
+                <div className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-[2.5rem] flex flex-col items-center justify-center p-6 space-y-4 animate-in fade-in zoom-in-95 z-10">
+                  <button onClick={() => setContactingId(null)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-900">
+                    <X className="w-5 h-5" />
+                  </button>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 text-center">Cabinet {lawyer.name}</p>
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <button 
+                      onClick={() => handleContact(lawyer, 'tel')}
+                      className="flex flex-col items-center justify-center p-4 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 active:scale-95 transition-all"
+                    >
+                      <Phone className="w-6 h-6 mb-2" />
+                      <span className="text-[10px] font-black uppercase">Appeler</span>
+                    </button>
+                    <button 
+                      onClick={() => handleContact(lawyer, 'sms')}
+                      className="flex flex-col items-center justify-center p-4 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100 active:scale-95 transition-all"
+                    >
+                      <MessageSquare className="w-6 h-6 mb-2" />
+                      <span className="text-[10px] font-black uppercase">SMS</span>
+                    </button>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400">{lawyer.phone}</p>
+                </div>
+              )}
             </div>
           ))}
         </div>

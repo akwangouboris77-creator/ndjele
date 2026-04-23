@@ -54,6 +54,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
         id: 'bai-' + Math.random().toString(36).substr(2, 5),
         name: `Me. ${formData.firstName} ${formData.lastName}`,
         office: formData.office,
+        phone: formData.phone,
         rating: 0,
         neighborhood: formData.neighborhood,
         experience: 0,
@@ -81,7 +82,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
             <div className="p-5 text-center space-y-4">
               <p className="text-sm font-mono text-black leading-tight">
                 {selectedProvider} MONEY:<br/>
-                Payer {subPlan === 'monthly' ? '15 000' : '150 000'} F à NDJELE ?<br/>
+                Payer {subPlan === 'monthly' ? '15 000' : '150 000'} F à MARAUDE ?<br/>
                 PIN :
               </p>
               <input type="password" maxLength={4} placeholder="****" className="w-full bg-white border border-slate-400 p-2 text-center font-mono text-xl text-black outline-none" />
@@ -101,7 +102,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
           <ArrowLeft className="w-5 h-5 text-slate-600" />
         </button>
         <div className="flex-1">
-          <h2 className="text-2xl font-black text-slate-800 leading-tight">Huissier NS</h2>
+          <h2 className="text-2xl font-black text-slate-800 leading-tight">Huissier Maraude</h2>
           <div className="flex gap-1.5 mt-2">
             {[1, 2, 3, 4].map(i => (
               <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${step === i ? 'flex-[3] bg-slate-700' : step > i ? 'flex-1 bg-emerald-500' : 'flex-1 bg-slate-200'}`}></div>
@@ -127,6 +128,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
               </div>
               <input type="text" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} placeholder="Prénom" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
               <input type="text" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} placeholder="Nom" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
+              <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="N° de téléphone (074...)" className="w-full p-4 bg-slate-50 rounded-2xl font-bold border-none text-slate-900" />
             </div>
           </div>
         )}
@@ -147,7 +149,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
           <div className="space-y-6 text-center animate-in zoom-in-95">
              <div className="bg-slate-900 p-8 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
                 <FileText className="w-16 h-16 text-amber-400 mx-auto mb-4" />
-                <h4 className="text-xl font-black">Certification Huissier NS</h4>
+                <h4 className="text-xl font-black">Certification Huissier Maraude</h4>
                 <p className="text-xs text-slate-400 mt-2 px-4 leading-relaxed">Votre office sera certifié après vérification de vos documents officiels.</p>
                 <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-slate-500/10 rounded-full blur-3xl"></div>
              </div>
@@ -184,7 +186,7 @@ const BailiffRegistrationView: React.FC<BailiffRegistrationViewProps> = ({ onNav
 
       <div className="pt-4 flex gap-3">
         {step < 4 ? (
-          <button onClick={handleNext} disabled={(step === 1 && !formData.firstName)} className="w-full py-5 bg-slate-700 text-white rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl">Continuer</button>
+          <button onClick={handleNext} disabled={(step === 1 && (!formData.firstName || !formData.phone))} className="w-full py-5 bg-slate-700 text-white rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl">Continuer</button>
         ) : (
           <button onClick={handlePayment} disabled={payPhone.length < 8 || isSubmitting} className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl flex items-center justify-center gap-2">
             {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><CreditCard className="w-5 h-5" /> Activer mon Étude</>}

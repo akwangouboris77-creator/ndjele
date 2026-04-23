@@ -24,7 +24,7 @@ const TermsView: React.FC<TermsViewProps> = ({ onAccept }) => {
         <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600 mx-auto mb-2">
           <ScrollText className="w-8 h-8" />
         </div>
-        <h2 className="text-2xl font-black text-slate-800">Contrat Ndjele</h2>
+        <h2 className="text-2xl font-black text-slate-800">Contrat Maraude</h2>
         <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Conditions Générales d'Utilisation</p>
       </div>
 
@@ -37,14 +37,14 @@ const TermsView: React.FC<TermsViewProps> = ({ onAccept }) => {
             <h4 className="font-black text-slate-800 flex items-center gap-2">
               <FileText className="w-3 h-3" /> 1. OBJET DU SERVICE
             </h4>
-            <p>Ndjele Solution est une plateforme technologique mettant en relation des utilisateurs avec des prestataires de transport (taxis, clando) et des artisans qualifiés en République Gabonaise.</p>
+            <p>Maraude Solution est une plateforme technologique mettant en relation des utilisateurs avec des prestataires de transport (taxis, clando) et des artisans qualifiés en République Gabonaise.</p>
           </section>
 
           <section className="space-y-2">
             <h4 className="font-black text-slate-800 flex items-center gap-2">
               <Gavel className="w-3 h-3" /> 2. ABONNEMENT OBLIGATOIRE
             </h4>
-            <p>L'accès à tous les services Ndjele (Transport, Artisans, Livraison) est strictement conditionné par un abonnement mensuel de 5 000 FCFA. Cet abonnement est personnel, non transférable et renouvelable chaque mois.</p>
+            <p>L'accès à tous les services Maraude (Transport, Artisans, Livraison) est strictement conditionné par un abonnement mensuel de 5 000 FCFA. Cet abonnement est personnel, non transférable et renouvelable chaque mois.</p>
           </section>
 
           <section className="space-y-2">
@@ -58,14 +58,14 @@ const TermsView: React.FC<TermsViewProps> = ({ onAccept }) => {
             <h4 className="font-black text-slate-800 flex items-center gap-2">
               <Wallet className="w-3 h-3" /> 4. EXCLUSIVITÉ DES PAIEMENTS
             </h4>
-            <p>Tous les paiements relatifs aux services gérés par Ndjele (Trajets, Prestations d'artisans, Livraisons) doivent impérativement être effectués via la plateforme (Portefeuille NS, Mobile Money intégré ou QR Code). Tout paiement direct non enregistré sur l'application est strictement interdit, dégage Ndjele de toute responsabilité en cas de litige et peut entraîner la suspension du compte.</p>
+            <p>Tous les paiements relatifs aux services gérés par Maraude (Trajets, Prestations d'artisans, Livraisons) doivent impérativement être effectués via la plateforme (Portefeuille MA, Mobile Money intégré ou QR Code). Tout paiement direct non enregistré sur l'application est strictement interdit, dégage Maraude de toute responsabilité en cas de litige et peut entraîner la suspension du compte.</p>
           </section>
 
           <section className="space-y-2">
             <h4 className="font-black text-slate-800 flex items-center gap-2">
               <CheckCircle2 className="w-3 h-3" /> 5. RESPONSABILITÉ
             </h4>
-            <p>Ndjele Solution s'engage à vérifier l'identité des chauffeurs et artisans (Numéro NS). Cependant, Ndjele n'est pas responsable des dommages survenant lors d'une prestation, mais fournit un support de médiation et une assistance via le bouton SOS pour les services payés via la plateforme.</p>
+            <p>Maraude Solution s'engage à vérifier l'identité des chauffeurs et artisans (Numéro MA). Cependant, Maraude n'est pas responsable des dommages survenant lors d'une prestation, mais fournit un support de médiation et une assistance via le bouton SOS pour les services payés via la plateforme.</p>
           </section>
 
           <section className="space-y-2">
@@ -90,7 +90,7 @@ const TermsView: React.FC<TermsViewProps> = ({ onAccept }) => {
             className="mt-1 w-4 h-4 rounded text-amber-500 border-slate-300 focus:ring-amber-500"
           />
           <span className="text-[11px] font-bold text-slate-600 leading-tight">
-            Je confirme avoir lu et j'accepte sans réserve les conditions générales d'utilisation de Ndjele Solution, incluant l'obligation de paiement via la plateforme.
+            Je confirme avoir lu et j'accepte sans réserve les conditions générales d'utilisation de Maraude Solution, incluant l'obligation de paiement via la plateforme.
           </span>
         </label>
 

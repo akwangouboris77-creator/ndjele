@@ -50,7 +50,7 @@ const MapView: React.FC<MapViewProps> = ({ onNavigate }) => {
           <ArrowLeft className="w-5 h-5 text-slate-600" />
         </button>
         <div className="flex-1">
-          <h2 className="text-lg font-black text-slate-900 tracking-tighter uppercase">Carte Ndjele</h2>
+          <h2 className="text-lg font-black text-slate-900 tracking-tighter uppercase">Carte Maraude</h2>
           <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Libreville, Gabon</p>
         </div>
         <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ const MapView: React.FC<MapViewProps> = ({ onNavigate }) => {
                 {error ? 'Attention' : 'Zone de Service Active'}
               </h3>
               <p className="text-[10px] text-slate-500 font-bold leading-relaxed mt-1">
-                {error || "Vous êtes dans la zone de couverture Ndjele. Les chauffeurs sont disponibles à Louis, Akanda et Nzeng-Ayong."}
+                {error || "Vous êtes dans la zone de couverture Maraude. Les chauffeurs sont disponibles à Louis, Akanda et Nzeng-Ayong."}
               </p>
             </div>
           </div>

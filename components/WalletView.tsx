@@ -8,7 +8,7 @@ interface WalletViewProps {
   onUpdateBalance: (newBalance: number) => void;
 }
 
-const NDJELE_NUMBERS = {
+const MARAUDE_NUMBERS = {
   AIRTEL: '077 21 89 76',
   MOOV: '062 70 23 74'
 };
@@ -19,6 +19,8 @@ const WalletView: React.FC<WalletViewProps> = ({ onNavigate, balance, onUpdateBa
   const [selectedProvider, setSelectedProvider] = useState<'AIRTEL' | 'MOOV' | null>(null);
   const [rechargeAmount, setRechargeAmount] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'AIRTEL' | 'MOOV' | 'MARAUDE'>('MARAUDE');
 
   const transactions = [
     { id: '1', title: 'Reliquat Digital Taxi', amount: 150, type: 'credit', date: 'Aujourd\'hui', details: 'Course #TX-8829 • Akanda vers Louis', icon: Car },
@@ -85,6 +87,46 @@ const WalletView: React.FC<WalletViewProps> = ({ onNavigate, balance, onUpdateBa
       </div>
 
       <section className="space-y-4">
+        <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs px-2">Mode de Paiement Préféré</h3>
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { id: 'AIRTEL', label: 'Airtel', color: 'bg-red-600', icon: 'A', number: '077 21 89 XX' },
+            { id: 'MOOV', label: 'Moov', color: 'bg-blue-600', icon: 'M', number: '062 70 23 XX' },
+            { id: 'MARAUDE', label: 'Wallet', color: 'bg-emerald-600', icon: 'W', number: 'Solde Maraude' },
+          ].map((method) => (
+            <button
+              key={method.id}
+              onClick={() => setSelectedPaymentMethod(method.id as any)}
+              className={`p-4 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 relative ${
+                selectedPaymentMethod === method.id
+                  ? 'border-emerald-500 bg-emerald-50/50 shadow-md'
+                  : 'border-slate-100 bg-white hover:border-slate-200'
+              }`}
+            >
+              <div className={`w-10 h-10 ${method.color} rounded-xl flex items-center justify-center text-white font-black text-sm shadow-sm`}>
+                {method.icon}
+              </div>
+              <div className="text-center">
+                <span className={`text-[9px] font-black uppercase tracking-tighter block ${
+                  selectedPaymentMethod === method.id ? 'text-emerald-700' : 'text-slate-400'
+                }`}>
+                  {method.label}
+                </span>
+                <span className="text-[7px] font-bold text-slate-400 block truncate max-w-[60px]">
+                  {method.number}
+                </span>
+              </div>
+              {selectedPaymentMethod === method.id && (
+                <div className="absolute top-2 right-2">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
         <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs px-2">Activités Récentes</h3>
         <div className="space-y-3">
           {transactions.map((t) => (
@@ -137,7 +179,7 @@ const WalletView: React.FC<WalletViewProps> = ({ onNavigate, balance, onUpdateBa
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Envoyez {parseInt(rechargeAmount).toLocaleString()} F vers :</p>
                       <div className="flex items-center justify-center gap-4">
                         <h4 className="text-3xl font-black text-white tracking-widest">
-                          {selectedProvider === 'AIRTEL' ? NDJELE_NUMBERS.AIRTEL : NDJELE_NUMBERS.MOOV}
+                          {selectedProvider === 'AIRTEL' ? MARAUDE_NUMBERS.AIRTEL : MARAUDE_NUMBERS.MOOV}
                         </h4>
                         <button className="p-2 bg-white/10 rounded-xl text-emerald-400"><Copy className="w-4 h-4" /></button>
                       </div>
@@ -162,7 +204,7 @@ const WalletView: React.FC<WalletViewProps> = ({ onNavigate, balance, onUpdateBa
                    <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner"><CheckCircle2 className="w-10 h-10" /></div>
                    <div className="space-y-1">
                       <h4 className="text-2xl font-black text-slate-800 uppercase tracking-tighter">Recharge Validée !</h4>
-                      <p className="text-xs text-slate-400 font-medium">Votre portefeuille Ndjele a été crédité.</p>
+                      <p className="text-xs text-slate-400 font-medium">Votre portefeuille Maraude a été crédité.</p>
                    </div>
                    <button onClick={resetModal} className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-xs">Terminer</button>
                 </div>

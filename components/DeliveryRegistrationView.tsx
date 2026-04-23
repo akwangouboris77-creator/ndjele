@@ -64,7 +64,7 @@ const DeliveryRegistrationView: React.FC<DeliveryRegistrationViewProps> = ({ onN
             <div className="p-5 text-center space-y-4">
               <p className="text-sm font-mono text-black leading-tight">
                 {selectedProvider} MONEY:<br/>
-                Payer {subPlan === 'monthly' ? '5 000' : '50 000'} F à NDJELE ?<br/>
+                Payer {subPlan === 'monthly' ? '5 000' : '50 000'} F à MARAUDE ?<br/>
                 PIN :
               </p>
               <input type="password" maxLength={4} className="w-full bg-white border border-slate-400 p-2 text-center text-black outline-none" />
@@ -82,7 +82,7 @@ const DeliveryRegistrationView: React.FC<DeliveryRegistrationViewProps> = ({ onN
           <ArrowLeft className="w-5 h-5 text-slate-600" />
         </button>
         <div className="flex-1">
-          <h2 className="text-2xl font-black text-slate-800">Livreur NS</h2>
+          <h2 className="text-2xl font-black text-slate-800">Livreur Maraude</h2>
           <div className="flex gap-1 mt-2">
             {[1, 2, 3, 4].map(i => (
               <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${step === i ? 'flex-[3] bg-pink-500' : step > i ? 'flex-1 bg-emerald-500' : 'flex-1 bg-slate-200'}`}></div>
@@ -96,7 +96,7 @@ const DeliveryRegistrationView: React.FC<DeliveryRegistrationViewProps> = ({ onN
           <div className="space-y-6">
             <div className="bg-pink-50 p-6 rounded-[2.5rem] flex items-center gap-4">
               <User className="w-6 h-6 text-pink-600" />
-              <div><h4 className="font-bold">Identité</h4><p className="text-[10px] text-pink-700 font-bold uppercase tracking-wider mt-1">Vos informations pour Ndjele Express.</p></div>
+              <div><h4 className="font-bold">Identité</h4><p className="text-[10px] text-pink-700 font-bold uppercase tracking-wider mt-1">Vos informations pour Maraude Express.</p></div>
             </div>
             <input type="text" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} placeholder="Prénom" className="w-full p-5 bg-white rounded-[1.5rem] font-bold border-none shadow-sm text-slate-900" />
             <input type="text" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} placeholder="Nom" className="w-full p-5 bg-white rounded-[1.5rem] font-bold border-none shadow-sm text-slate-900" />

@@ -17,46 +17,46 @@ interface OnboardingStep {
 
 const STEPS: OnboardingStep[] = [
   {
-    title: "Bienvenue sur Ndjele",
+    title: "Bienvenue sur Maraude",
     description: "La super-app gabonaise qui simplifie votre quotidien. Transport, santé, justice et commerce dans une seule main.",
     icon: Sparkles,
     color: "bg-emerald-500",
-    image: "https://picsum.photos/seed/ndjele1/800/600"
+    image: "https://picsum.photos/seed/maraude1/800/600"
   },
   {
     title: "Transport Intelligent",
     description: "Commandez un taxi ou un clando en quelques secondes. Négociez le prix directement avec le chauffeur via notre IA.",
     icon: Car,
     color: "bg-amber-500",
-    image: "https://picsum.photos/seed/ndjele2/800/600"
+    image: "https://picsum.photos/seed/maraude2/800/600"
   },
   {
     title: "Santé à Portée de Main",
     description: "Trouvez les pharmacies de garde, consultez des médecins certifiés et commandez vos médicaments en ligne.",
     icon: Stethoscope,
     color: "bg-pink-500",
-    image: "https://picsum.photos/seed/ndjele3/800/600"
+    image: "https://picsum.photos/seed/maraude3/800/600"
   },
   {
     title: "Justice & Conseil",
     description: "Accédez facilement à des avocats, huissiers et experts pour protéger vos droits et vos intérêts.",
     icon: Scale,
     color: "bg-indigo-500",
-    image: "https://picsum.photos/seed/ndjele4/800/600"
+    image: "https://picsum.photos/seed/maraude4/800/600"
   },
   {
     title: "Marketplace Locale",
     description: "Soutenez les commerçants de votre quartier. Achetez des produits frais et faites-vous livrer rapidement.",
     icon: ShoppingBag,
     color: "bg-violet-500",
-    image: "https://picsum.photos/seed/ndjele5/800/600"
+    image: "https://picsum.photos/seed/maraude5/800/600"
   },
   {
     title: "Paiements Sécurisés",
-    description: "Gérez votre budget avec le portefeuille Ndjele. Payez via Airtel Money ou Moov Money en toute sécurité.",
+    description: "Gérez votre budget avec le portefeuille Maraude. Payez via Airtel Money ou Moov Money en toute sécurité.",
     icon: Wallet,
     color: "bg-blue-500",
-    image: "https://picsum.photos/seed/ndjele6/800/600"
+    image: "https://picsum.photos/seed/maraude6/800/600"
   }
 ];
 

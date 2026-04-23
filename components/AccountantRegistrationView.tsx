@@ -42,6 +42,7 @@ const AccountantRegistrationView: React.FC<AccountantRegistrationViewProps> = ({
         name: `Me. ${formData.firstName} ${formData.lastName}`,
         firm: formData.firm,
         specialty: formData.specialty,
+        phone: formData.phone,
         rating: 5.0,
         neighborhood: formData.neighborhood,
         experience: 0,
@@ -69,7 +70,7 @@ const AccountantRegistrationView: React.FC<AccountantRegistrationViewProps> = ({
         </button>
         <div className="flex-1">
           <h2 className="text-2xl font-black text-slate-800 leading-tight">Enrôlement Comptable</h2>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Expertise & Conseil NS</p>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Expertise & Conseil Maraude</p>
         </div>
       </div>
 
@@ -119,6 +120,13 @@ const AccountantRegistrationView: React.FC<AccountantRegistrationViewProps> = ({
                     className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
                   />
                 </div>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="Numéro de téléphone"
+                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
+                />
               </div>
             </div>
           )}
@@ -166,13 +174,6 @@ const AccountantRegistrationView: React.FC<AccountantRegistrationViewProps> = ({
                   placeholder="Quartier du Cabinet"
                   className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
                 />
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="Téléphone Professionnel"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
-                />
               </div>
             </div>
           )}
@@ -184,7 +185,7 @@ const AccountantRegistrationView: React.FC<AccountantRegistrationViewProps> = ({
           <button onClick={() => step > 1 ? setStep(step - 1) : onNavigate('home')} className="flex-1 py-4 bg-white border border-slate-100 text-slate-500 rounded-2xl font-bold">Retour</button>
           <button
             onClick={() => step < 2 ? setStep(step + 1) : finalizeRegistration()}
-            disabled={step === 1 ? (!formData.firstName || !formData.lastName) : (!formData.firm || !formData.licenseNumber)}
+            disabled={step === 1 ? (!formData.firstName || !formData.lastName || !formData.phone) : (!formData.firm || !formData.licenseNumber)}
             className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
           >
             {step < 2 ? 'Suivant' : 'S\'enregistrer'}

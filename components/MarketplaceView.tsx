@@ -122,7 +122,7 @@ const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onNavigate, registere
                 <div className="text-center space-y-6 py-6 animate-in zoom-in-95">
                   <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner"><CheckCircle2 className="w-12 h-12" /></div>
                   <h3 className="text-2xl font-black text-slate-800">Commande Payée !</h3>
-                  <p className="text-sm text-slate-500 font-medium">L'argent est sécurisé par Ndjele Security. Un livreur va récupérer votre colis sous peu.</p>
+                  <p className="text-sm text-slate-500 font-medium">L'argent est sécurisé par Maraude Security. Un livreur va récupérer votre colis sous peu.</p>
                   <button onClick={() => onNavigate('home')} className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold text-sm shadow-xl active:scale-95">Suivre ma commande</button>
                 </div>
               ) : (
@@ -166,7 +166,7 @@ const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onNavigate, registere
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => onNavigate('home')} className="p-2 bg-white rounded-full shadow-sm"><ArrowLeft className="w-5 h-5 text-slate-600" /></button>
-          <h2 className="text-2xl font-black text-slate-800">Ndjele Market</h2>
+          <h2 className="text-2xl font-black text-slate-800">Maraude Market</h2>
         </div>
         {registeredMerchant ? (
            <button 

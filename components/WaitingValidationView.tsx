@@ -62,7 +62,7 @@ const WaitingValidationView: React.FC<WaitingValidationViewProps> = ({
                <span className="text-xs font-black uppercase tracking-widest">Flash USSD Notification</span>
             </div>
             <p className="text-[10px] font-medium leading-relaxed opacity-90">
-              Notification envoyée au terminal du chauffeur. Priorité maximale Ndjele.
+              Notification envoyée au terminal du chauffeur. Priorité maximale Maraude.
             </p>
           </div>
         )}
@@ -73,7 +73,7 @@ const WaitingValidationView: React.FC<WaitingValidationViewProps> = ({
                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-xl">👨🏾‍✈️</div>
                <div className="text-left">
                  <p className="font-bold text-slate-800 text-sm">{pendingRide.driverName}</p>
-                 <p className="text-[10px] text-slate-400 font-bold uppercase">Chauffeur Ndjele</p>
+                 <p className="text-[10px] text-slate-400 font-bold uppercase">Chauffeur Maraude</p>
                </div>
              </div>
              <ShieldCheck className="w-5 h-5 text-emerald-500" />

@@ -117,7 +117,7 @@ const BailiffDashboard: React.FC<BailiffDashboardProps> = ({ onNavigate, bailiff
       <div className="bg-slate-100 p-6 rounded-[2.5rem] border border-slate-200 flex items-start gap-3">
          <ShieldCheck className="w-5 h-5 text-slate-700 shrink-0" />
          <p className="text-[10px] text-slate-600 font-bold leading-relaxed">
-           En tant qu'officier ministériel certifié Ndjele, vos actes ont une valeur probante renforcée par notre système de traçabilité.
+           En tant qu'officier ministériel certifié Maraude, vos actes ont une valeur probante renforcée par notre système de traçabilité.
          </p>
       </div>
     </div>

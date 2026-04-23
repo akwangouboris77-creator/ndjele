@@ -36,7 +36,10 @@ const QuartierMaisonView: React.FC<QuartierMaisonViewProps> = ({ onNavigate, onS
       destination: selectedSector.name,
       isLocationShared: false,
       price: selectedSector.price,
-      status: 'ACCEPTED'
+      status: 'ACCEPTED',
+      rideMode: 'PRIVATE',
+      isRoadside: false,
+      seatsRequested: 1
     };
     onStartRide(ride);
   };

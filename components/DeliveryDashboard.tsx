@@ -50,7 +50,7 @@ const DeliveryDashboard: React.FC<DeliveryDashboardProps> = ({
       <div className="bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-xl flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold">{registeredLivreur.name}</h3>
-          <p className="text-[10px] font-black uppercase text-pink-400">Certifié NS • {registeredLivreur.neighborhood}</p>
+          <p className="text-[10px] font-black uppercase text-pink-400">Certifié Maraude • {registeredLivreur.neighborhood}</p>
         </div>
         <div className="bg-white/10 px-4 py-2 rounded-2xl text-center"><p className="text-lg font-black tracking-tighter">★ {registeredLivreur.rating}</p></div>
       </div>

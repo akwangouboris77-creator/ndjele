@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, Smartphone, Star, Car, Truck, ChevronRight, Package, Hammer, Crown, ShoppingBag, Plus, CreditCard, ArrowUpRight, CheckCircle2, Clock, Lock, Zap, Home, LayoutDashboard, AlertTriangle, Stethoscope, Pill, User as UserIcon, ShieldCheck, Gavel, BarChart3, Scale, Calculator, Dog, Brain, Ruler } from 'lucide-react';
+import { MapPin, Smartphone, Star, Car, Truck, ChevronRight, Package, Hammer, Crown, ShoppingBag, Plus, CreditCard, ArrowUpRight, CheckCircle2, Clock, Lock, Zap, Home, LayoutDashboard, AlertTriangle, Stethoscope, Pill, User as UserIcon, ShieldCheck, Gavel, BarChart3, Scale, Calculator, Dog, Brain, Ruler, Users, Navigation, ArrowRight } from 'lucide-react';
 import { ViewState, ActiveRide, SubscriptionTier, MarketplaceOrder } from '../types';
 
 interface HomeViewProps {
@@ -92,38 +92,48 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
               <MapPin className="w-7 h-7" />
             </div>
             <div className="text-left">
-              <span className="font-black text-slate-900 text-sm block tracking-tight">RéSERVER TAXI</span>
+              <span className="font-black text-slate-900 text-sm block tracking-tight uppercase">Taxi Privé</span>
               <span className="text-[10px] text-emerald-600 font-black uppercase mt-1">Immédiat</span>
             </div>
           </button>
 
-          <button onClick={() => onNavigate('pharmacies')} className="p-6 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:border-emerald-200 transition-all group flex flex-col items-start gap-4">
-            <div className="w-14 h-14 bg-pink-50 text-pink-600 rounded-[1.5rem] flex items-center justify-center border border-pink-100 group-hover:scale-105 transition-transform">
-              <Pill className="w-7 h-7" />
+          <button onClick={() => onNavigate('booking')} className="p-6 bg-slate-900 border border-slate-800 rounded-[2.5rem] shadow-xl hover:border-emerald-500/50 transition-all group flex flex-col items-start gap-4">
+            <div className="w-14 h-14 bg-emerald-600 text-white rounded-[1.5rem] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform shadow-emerald-500/20">
+              <Users className="w-7 h-7" />
             </div>
             <div className="text-left">
-              <span className="font-black text-slate-900 text-sm block tracking-tight">PHARMACIES</span>
-              <span className="text-[10px] text-pink-600 font-black uppercase mt-1">Achat & Livraison</span>
+              <span className="font-black text-white text-sm block tracking-tight uppercase">Taxi Collectif</span>
+              <span className="text-[10px] text-emerald-400 font-black uppercase mt-1">500 - 1000 F</span>
             </div>
           </button>
         </div>
 
+        <button onClick={() => onNavigate('booking')} className="w-full bg-amber-500 p-6 rounded-[2.5rem] flex items-center justify-between group active:scale-[0.98] transition-all shadow-lg shadow-amber-500/20 border border-amber-400">
+           <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-amber-600 shadow-sm">
+                <Navigation className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-black text-amber-900 uppercase tracking-widest">Au bord de la route ?</p>
+                <p className="font-black text-white text-sm uppercase italic">Signaler ma présence</p>
+              </div>
+           </div>
+           <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
+        </button>
+
         <div className="grid grid-cols-4 gap-4 pt-2">
           {[
             { id: 'doctors', icon: Stethoscope, label: 'Médecins', color: 'bg-emerald-50 text-emerald-600' },
+            { id: 'clando', icon: Car, label: 'Clando', color: 'bg-cyan-50 text-cyan-600' },
+            { id: 'quartier-maison', icon: Home, label: 'Zone', color: 'bg-amber-50 text-amber-600' },
             { id: 'artisans', icon: Hammer, label: 'Artisans', color: 'bg-indigo-50 text-indigo-600' },
             { id: 'delivery', icon: Package, label: 'Livraison', color: 'bg-pink-50 text-pink-600' },
             { id: 'marketplace', icon: ShoppingBag, label: 'Marché', color: 'bg-violet-50 text-violet-600' },
             { id: 'lawyers', icon: ShieldCheck, label: 'Avocats', color: 'bg-slate-100 text-slate-800' },
-            { id: 'bailiffs', icon: Gavel, label: 'Huissiers', color: 'bg-slate-100 text-slate-700' },
-            { id: 'notaries', icon: Scale, label: 'Notaires', color: 'bg-slate-100 text-slate-900' },
-            { id: 'accountants', icon: Calculator, label: 'Comptables', color: 'bg-slate-100 text-slate-800' },
             { id: 'maraude', icon: Smartphone, label: 'Radar', color: 'bg-blue-50 text-blue-600' },
             { id: 'wallet', icon: CreditCard, label: 'Wallet', color: 'bg-emerald-50 text-emerald-600' },
             { id: 'sos', icon: AlertTriangle, label: 'Urgence', color: 'bg-red-50 text-red-600' },
             { id: 'map', icon: MapPin, label: 'Carte', color: 'bg-blue-50 text-blue-600' },
-            { id: 'business-dashboard', icon: BarChart3, label: 'Business', color: 'bg-indigo-50 text-indigo-600' },
-            { id: 'client-dashboard', icon: UserIcon, label: 'Compte', color: 'bg-slate-50 text-slate-400' },
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id as ViewState)} className="flex flex-col items-center gap-2 transition-transform hover:scale-105 active:scale-95">
               <div className={`w-14 h-14 ${item.color} rounded-[1.5rem] flex items-center justify-center shadow-sm border border-black/5`}>
@@ -144,7 +154,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
             <h4 className="text-xl font-black text-white leading-tight">Vivre en bonne santé</h4>
             <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mt-1">Médecins & Pharmacies de garde.</p>
             <button onClick={() => onNavigate('doctors')} className="mt-4 gradient-emerald text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-emerald-500/20">
-              Découvrir Ndjele Santé
+              Découvrir Maraude Santé
             </button>
          </div>
       </section>
@@ -153,10 +163,10 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
       <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
          <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Artisan" />
          <div className="absolute inset-0 bg-gradient-to-t from-indigo-900 via-indigo-900/40 to-transparent p-8 flex flex-col justify-end">
-            <h4 className="text-xl font-black text-white leading-tight">Gagnez plus avec Ndjele</h4>
+            <h4 className="text-xl font-black text-white leading-tight">Gagnez plus avec Maraude</h4>
             <p className="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau d'artisans certifiés.</p>
             <button onClick={() => onNavigate('artisan-registration')} className="mt-4 bg-white text-indigo-600 px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg">
-              Devenir Artisan Pro
+              Devenir Artisan Maraude
             </button>
          </div>
       </section>
@@ -166,7 +176,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
          <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Driver" />
          <div className="absolute inset-0 bg-gradient-to-t from-amber-900 via-amber-900/40 to-transparent p-8 flex flex-col justify-end">
             <h4 className="text-xl font-black text-white leading-tight">Chauffeur ? Inscrivez-vous</h4>
-            <p className="text-[10px] text-amber-300 font-bold uppercase tracking-widest mt-1">Obtenez votre matricule NS officiel.</p>
+            <p className="text-[10px] text-amber-300 font-bold uppercase tracking-widest mt-1">Obtenez votre matricule Maraude officiel.</p>
             <button onClick={() => onNavigate('driver-registration')} className="mt-4 bg-amber-500 text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-amber-500/20">
               S'enrôler Maintenant
             </button>
@@ -178,7 +188,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Notary" />
          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent p-8 flex flex-col justify-end">
             <h4 className="text-xl font-black text-white leading-tight">Notaires : Digitalisez votre étude</h4>
-            <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau Justice NS.</p>
+            <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau Justice Maraude.</p>
             <button onClick={() => onNavigate('notary-registration')} className="mt-4 bg-white text-slate-900 px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg">
               S'enrôler Maintenant
             </button>
@@ -190,7 +200,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Accountant" />
          <div className="absolute inset-0 bg-gradient-to-t from-slate-800 via-slate-800/40 to-transparent p-8 flex flex-col justify-end">
             <h4 className="text-xl font-black text-white leading-tight">Experts Comptables : Gérez vos missions</h4>
-            <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Optimisez votre cabinet avec Expertise NS.</p>
+            <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Optimisez votre cabinet avec Expertise Maraude.</p>
             <button onClick={() => onNavigate('accountant-registration')} className="mt-4 bg-slate-900 text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest w-fit active:scale-95 shadow-lg shadow-slate-900/20">
               S'enrôler Maintenant
             </button>

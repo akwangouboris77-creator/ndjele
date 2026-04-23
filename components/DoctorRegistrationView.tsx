@@ -113,7 +113,8 @@ const DoctorRegistrationView: React.FC<DoctorRegistrationViewProps> = ({ onNavig
         experience: parseInt(formData.experience),
         availability: 'disponible',
         licenseNumber: formData.licenseNumber,
-        insuranceId: formData.insuranceId
+        insuranceId: formData.insuranceId,
+        phone: formData.phone
       };
 
       try {

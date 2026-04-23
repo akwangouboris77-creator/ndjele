@@ -106,7 +106,7 @@ const OrderCheckoutView: React.FC<OrderCheckoutViewProps> = ({ onNavigate, produ
             <div className="p-5 text-center space-y-4">
               <p className="text-sm font-mono text-black leading-tight">
                 {selectedProvider === 'AIRTEL' ? 'Airtel Money' : 'Moov Money'}:<br/>
-                Payer {totalPrice} FCFA à NDJELE MARKET ?<br/>
+                Payer {totalPrice} FCFA à MARAUDE MARKET ?<br/>
                 Entrez votre code secret :
               </p>
               <input 
@@ -206,9 +206,9 @@ const OrderCheckoutView: React.FC<OrderCheckoutViewProps> = ({ onNavigate, produ
         <div className="bg-violet-50 p-6 rounded-[2rem] border border-violet-100 flex items-start gap-4">
           <ShieldCheck className="w-6 h-6 text-violet-600 shrink-0" />
           <div className="space-y-1">
-            <h5 className="font-black text-violet-900 text-xs uppercase">Séquestre Ndjele Solution</h5>
+            <h5 className="font-black text-violet-900 text-xs uppercase">Séquestre Maraude Solution</h5>
             <p className="text-[10px] text-violet-700 font-bold leading-relaxed opacity-80">
-              Votre argent est conservé en sécurité par Ndjele. Le marchand n'est payé que lorsque vous recevez votre colis.
+              Votre argent est conservé en sécurité par Maraude. Le marchand n'est payé que lorsque vous recevez votre colis.
             </p>
           </div>
         </div>

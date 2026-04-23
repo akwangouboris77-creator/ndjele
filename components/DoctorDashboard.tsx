@@ -24,7 +24,7 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigate, doctorNam
       <div className="bg-slate-900 p-8 rounded-[3rem] text-white shadow-2xl relative overflow-hidden text-center">
         <div className="relative z-10 flex flex-col items-center">
           <Wallet className="w-10 h-10 text-emerald-500 mb-2" />
-          <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Honoraires Ndjele Santé</p>
+          <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Honoraires Maraude Santé</p>
           <div className="flex items-end gap-2 mt-2">
             <span className="text-4xl font-black text-emerald-500">{balance.toLocaleString()}</span>
             <span className="text-xl font-medium text-slate-500 mb-1.5">F</span>
@@ -89,7 +89,7 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigate, doctorNam
       <div className="bg-blue-50 p-6 rounded-[2.5rem] border border-blue-100 flex items-start gap-3">
          <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0" />
          <p className="text-[10px] text-blue-800 font-bold leading-relaxed">
-           L'orientation par IA Ndjele vous envoie des patients ciblés selon votre spécialité. Assurez-vous de mettre à jour vos disponibilités.
+           L'orientation par IA Maraude vous envoie des patients ciblés selon votre spécialité. Assurez-vous de mettre à jour vos disponibilités.
          </p>
       </div>
     </div>

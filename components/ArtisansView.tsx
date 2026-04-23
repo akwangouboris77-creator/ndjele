@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Droplet, Zap, Snowflake, ArrowLeft, Star, ShieldCheck, MessageSquare, Sparkles, Loader2, X, CheckCircle2, CreditCard, Info } from 'lucide-react';
+import { Search, Droplet, Zap, Snowflake, ArrowLeft, Star, ShieldCheck, MessageSquare, Sparkles, Loader2, X, CheckCircle2, CreditCard, Info, Phone } from 'lucide-react';
 import { ViewState, Artisan, ChatMessage, ArtisanCategory } from '../types';
 import { getArtisanDiagnosis, getDriverChatResponse } from '../services/geminiService';
 
@@ -23,6 +23,7 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
   const [diagnosis, setDiagnosis] = useState<any>(null);
   const [prePaidArtisanId, setPrePaidArtisanId] = useState<string[]>([]);
   const [payingForId, setPayingForId] = useState<string | null>(null);
+  const [selectedArtisanForContact, setSelectedArtisanForContact] = useState<Artisan | null>(null);
   const [chatArtisan, setChatArtisan] = useState<Artisan | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -75,7 +76,7 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
                        <span>{PROVISION_AMOUNT} F</span>
                     </div>
                     <div className="flex justify-between text-[10px] font-bold">
-                       <span className="text-slate-400">Frais Ndjele (Non-remb.)</span>
+                       <span className="text-slate-400">Frais Maraude (Non-remb.)</span>
                        <span className="text-indigo-600">{fees} F</span>
                     </div>
                     <div className="pt-2 border-t border-slate-200 flex justify-between items-center">
@@ -87,7 +88,7 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
               <div className="flex items-start gap-2 bg-amber-50 p-3 rounded-xl">
                  <Info className="w-4 h-4 text-amber-600 shrink-0" />
                  <p className="text-[9px] text-amber-800 text-left font-bold">
-                   L'acompte est déductible du devis final. Si l'artisan ne vient pas, vous récupérez {PROVISION_AMOUNT}F. Les frais {fees}F restent acquis à Ndjele.
+                   L'acompte est déductible du devis final. Si l'artisan ne vient pas, vous récupérez {PROVISION_AMOUNT}F. Les frais {fees}F restent acquis à Maraude.
                  </p>
               </div>
               <button 
@@ -134,7 +135,7 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
             onClick={() => onNavigate('artisan-registration')}
             className="text-[9px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100"
           >
-            Devenir Artisan NS
+            Devenir Artisan Maraude
           </button>
         </div>
         {artisansList.map((artisan) => (
@@ -149,16 +150,53 @@ const ArtisansView: React.FC<ArtisansViewProps> = ({ onNavigate, artisansList })
                 <p className="text-[9px] text-indigo-500 font-black uppercase">{artisan.job}</p>
               </div>
             </div>
-            <button 
-              onClick={() => handleStartChat(artisan)}
-              className={`w-full py-3 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all flex items-center justify-center gap-2 ${prePaidArtisanId.includes(artisan.id) ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'}`}
-            >
-              <MessageSquare className="w-3.5 h-3.5" />
-              {prePaidArtisanId.includes(artisan.id) ? 'Continuer le Chat' : 'Payer Provision & Contacter'}
-            </button>
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                onClick={() => handleStartChat(artisan)}
+                className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all flex items-center justify-center gap-2 ${prePaidArtisanId.includes(artisan.id) ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'}`}
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                {prePaidArtisanId.includes(artisan.id) ? 'Chat' : 'Payer & Chatter'}
+              </button>
+              <button 
+                onClick={() => setSelectedArtisanForContact(artisan)}
+                className="flex-1 py-3 bg-white border border-slate-200 text-slate-900 rounded-xl font-black text-[10px] uppercase active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Phone className="w-3.5 h-3.5" /> Direct
+              </button>
+            </div>
           </div>
         ))}
       </div>
+
+      {selectedArtisanForContact && (
+        <div className="fixed inset-0 z-[700] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="w-full max-w-sm bg-white rounded-[3rem] p-8 space-y-8 animate-in zoom-in-95 shadow-2xl relative">
+            <button onClick={() => setSelectedArtisanForContact(null)} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full text-slate-400"><X className="w-4 h-4" /></button>
+            <div className="text-center space-y-4 pt-4">
+              <img src={selectedArtisanForContact.avatar} className="w-24 h-24 rounded-[2.5rem] mx-auto object-cover border-4 border-indigo-50 shadow-xl" />
+              <div>
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">{selectedArtisanForContact.name}</h3>
+                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{selectedArtisanForContact.job}</p>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-2xl">
+                <p className="text-sm font-black text-slate-800">{selectedArtisanForContact.phone}</p>
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1">Plateforme Artisan Maraude</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <a href={`tel:${selectedArtisanForContact.phone}`} className="flex flex-col items-center gap-3 p-6 bg-indigo-600 text-white rounded-[2rem] shadow-lg shadow-indigo-200 active:scale-95 transition-transform">
+                <Phone className="w-6 h-6" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Appeler</span>
+              </a>
+              <a href={`sms:${selectedArtisanForContact.phone}`} className="flex flex-col items-center gap-3 p-6 bg-slate-900 text-white rounded-[2rem] shadow-lg active:scale-95 transition-transform">
+                <MessageSquare className="w-6 h-6" />
+                <span className="text-[10px] font-black uppercase tracking-widest">SMS</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {chatArtisan && (
         <div className="fixed inset-0 z-[800] bg-slate-900/40 backdrop-blur-sm flex items-end animate-in fade-in">

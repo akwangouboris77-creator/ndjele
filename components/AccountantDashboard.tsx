@@ -110,7 +110,7 @@ const AccountantDashboard: React.FC<AccountantDashboardProps> = ({ onNavigate, a
       <div className="bg-slate-100 p-6 rounded-[2.5rem] border border-slate-200 flex items-start gap-3">
          <ShieldCheck className="w-5 h-5 text-slate-900 shrink-0" />
          <p className="text-[10px] text-slate-600 font-bold leading-relaxed">
-           Votre cabinet est certifié Expertise NS. Les honoraires sont versés sur votre portefeuille après validation de la mission par le client.
+           Votre cabinet est certifié Expertise Maraude. Les honoraires sont versés sur votre portefeuille après validation de la mission par le client.
          </p>
       </div>
     </div>

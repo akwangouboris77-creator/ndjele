@@ -40,6 +40,7 @@ const NotaryRegistrationView: React.FC<NotaryRegistrationViewProps> = ({ onNavig
         id: 'not-' + Math.random().toString(36).substr(2, 5),
         name: `Me. ${formData.firstName} ${formData.lastName}`,
         office: formData.office,
+        phone: formData.phone,
         rating: 5.0,
         neighborhood: formData.neighborhood,
         experience: 0,
@@ -67,7 +68,7 @@ const NotaryRegistrationView: React.FC<NotaryRegistrationViewProps> = ({ onNavig
         </button>
         <div className="flex-1">
           <h2 className="text-2xl font-black text-slate-800 leading-tight">Enrôlement Notaire</h2>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Justice & Conseil NS</p>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Justice & Conseil Maraude</p>
         </div>
       </div>
 
@@ -116,6 +117,13 @@ const NotaryRegistrationView: React.FC<NotaryRegistrationViewProps> = ({ onNavig
                     placeholder="Nom"
                     className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
                   />
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="Téléphone Professionnel (074...)"
+                    className="w-full col-span-2 p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
+                  />
                 </div>
               </div>
             </div>
@@ -154,13 +162,6 @@ const NotaryRegistrationView: React.FC<NotaryRegistrationViewProps> = ({ onNavig
                   placeholder="Quartier du Cabinet"
                   className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
                 />
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="Téléphone Professionnel"
-                  className="w-full p-5 bg-white border border-slate-100 rounded-2xl font-bold outline-none shadow-sm focus:border-slate-900 text-slate-900"
-                />
               </div>
             </div>
           )}
@@ -172,7 +173,7 @@ const NotaryRegistrationView: React.FC<NotaryRegistrationViewProps> = ({ onNavig
           <button onClick={() => step > 1 ? setStep(step - 1) : onNavigate('home')} className="flex-1 py-4 bg-white border border-slate-100 text-slate-500 rounded-2xl font-bold">Retour</button>
           <button
             onClick={() => step < 2 ? setStep(step + 1) : finalizeRegistration()}
-            disabled={step === 1 ? (!formData.firstName || !formData.lastName) : (!formData.office || !formData.licenseNumber)}
+            disabled={step === 1 ? (!formData.firstName || !formData.lastName || !formData.phone) : (!formData.office || !formData.licenseNumber)}
             className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
           >
             {step < 2 ? 'Suivant' : 'S\'enregistrer'}

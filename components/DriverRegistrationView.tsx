@@ -17,7 +17,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [generatedNS, setGeneratedNS] = useState('');
+  const [generatedMaraude, setGeneratedMaraude] = useState('');
   
   const profilePhotoRef = useRef<HTMLInputElement>(null);
   const vehiclePhotoRef = useRef<HTMLInputElement>(null);
@@ -29,13 +29,14 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showUssd, setShowUssd] = useState(false);
 
-  const [formData, setFormData] = useState<DriverRegistration & { profilePhoto?: string, vehiclePhoto?: string, licensePhoto?: string }>({
+  const [formData, setFormData] = useState<DriverRegistration & { profilePhoto?: string, vehiclePhoto?: string, licensePhoto?: string, licensePlate?: string }>({
     firstName: '',
     lastName: '',
     vehicleType: TransportType.TAXI,
     seats: 4,
     hasAC: true,
-    plate: '',
+    plate: '', // This will be the door number NS if provided, but we'll use nsNumber for generated one
+    licensePlate: '', // The physical car plate
     color: 'Jaune',
     profilePhoto: '',
     vehiclePhoto: '',
@@ -55,8 +56,8 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
       }
     }
     if (step === 3) {
-      if (!formData.plate.trim()) {
-        alert("Veuillez renseigner votre numéro de matricule.");
+      if (!formData.licensePlate?.trim()) {
+        alert("Veuillez renseigner votre numéro de plaque d'immatriculation (Ex: GA-123-AA).");
         return;
       }
       if (!formData.vehiclePhoto) {
@@ -110,10 +111,10 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
     setShowUssd(false);
     setIsSubmitting(true);
     setTimeout(async () => {
-      const ns = 'NS-' + Math.floor(1000 + Math.random() * 9000);
-      setGeneratedNS(ns);
+      const maraudeId = 'MARAUDE-' + Math.floor(1000 + Math.random() * 9000);
+      setGeneratedMaraude(maraudeId);
       
-      const driverData = { ...formData, nsNumber: ns, id: 'dr-' + Math.random().toString(36).substr(2, 5) };
+      const driverData = { ...formData, nsNumber: maraudeId, id: 'dr-' + Math.random().toString(36).substr(2, 5) };
       
       try {
         await dbService.pushData('drivers', driverData);
@@ -144,16 +145,26 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
           </p>
         </div>
 
-        <div className="w-full space-y-4 animate-in slide-in-from-bottom-6 duration-700 delay-200">
-           <div className="bg-amber-400 p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(251,191,36,0.3)] border-[6px] border-slate-900 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 bg-slate-900 text-white px-4 py-1.5 rounded-bl-2xl font-black text-[9px] uppercase tracking-widest">OFFICIEL NDJELE</div>
-              <p className="text-slate-900 font-black text-[10px] uppercase tracking-[0.3em] mb-4 opacity-80 text-center">VOTRE NUMÉRO DE PORTIÈRE</p>
-              <h1 className="text-8xl font-black text-slate-900 tracking-tighter mb-2 drop-shadow-lg">{generatedNS}</h1>
-           </div>
-        </div>
+            <div className="w-full space-y-4 animate-in slide-in-from-bottom-6 duration-700 delay-200">
+               <div className="bg-amber-400 p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(251,191,36,0.3)] border-[6px] border-slate-900 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 bg-slate-900 text-white px-4 py-1.5 rounded-bl-2xl font-black text-[9px] uppercase tracking-widest">OFFICIEL MARAUDE</div>
+                  <div className="flex flex-col items-center">
+                    <p className="text-slate-900 font-black text-[10px] uppercase tracking-[0.3em] mb-2 opacity-80 text-center">NUMÉRO DE PORTIÈRE</p>
+                    <h1 className="text-8xl font-black text-slate-900 tracking-tighter mb-4 drop-shadow-lg">{generatedMaraude}</h1>
+                    <div className="h-px w-full bg-slate-900/10 mb-4"></div>
+                    <p className="text-slate-900 font-black text-[10px] uppercase tracking-[0.2em] opacity-60">PLAQUE : {formData.licensePlate}</p>
+                  </div>
+               </div>
+               <button 
+                onClick={() => window.print()}
+                className="w-full py-4 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"
+               >
+                 <FileText className="w-4 h-4" /> Imprimer mon Badge
+               </button>
+            </div>
 
         <button 
-          onClick={() => onRegister({ ...formData, nsNumber: generatedNS })}
+          onClick={() => onRegister({ ...formData, nsNumber: generatedMaraude })}
           className="w-full py-5 bg-slate-900 text-white rounded-[2.2rem] font-black uppercase text-xs tracking-[0.2em] shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3"
         >
           Ouvrir mon tableau de bord <ChevronRight className="w-5 h-5" />
@@ -174,7 +185,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
             <div className="p-5 text-center space-y-4">
               <p className="text-sm font-mono text-black leading-tight">
                 {selectedProvider} MONEY:<br/>
-                Payer {subPlan === 'monthly' ? '5 000' : '50 000'} F à NDJELE ?<br/>
+                Payer {subPlan === 'monthly' ? '5 000' : '50 000'} F à MARAUDE ?<br/>
                 Entrez votre code secret :
               </p>
               <input type="password" maxLength={4} placeholder="****" className="w-full bg-white border border-slate-400 p-2 text-center font-mono text-xl tracking-widest text-black outline-none" />
@@ -192,7 +203,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
           <ArrowLeft className="w-6 h-6 text-slate-700" />
         </button>
         <div className="flex-1">
-           <h2 className="text-2xl font-black text-slate-800 leading-tight tracking-tighter uppercase">Chauffeur NS</h2>
+           <h2 className="text-2xl font-black text-slate-800 leading-tight tracking-tighter uppercase">Chauffeur Maraude</h2>
            <div className="flex gap-1.5 mt-2">
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${step === i ? 'flex-[3] bg-amber-500' : step > i ? 'flex-1 bg-emerald-500' : 'flex-1 bg-slate-200'}`}></div>
@@ -289,8 +300,25 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Numéro de Matricule</label>
-                <input type="text" value={formData.plate} onChange={(e) => setFormData({...formData, plate: e.target.value.toUpperCase()})} placeholder="GA-000-TX" className="w-full p-6 bg-white border border-slate-100 rounded-[2rem] font-black text-3xl tracking-[0.2em] text-center outline-none focus:border-amber-500 shadow-sm" />
+                <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Plaque d'immatriculation (Ex: GA-123-AA)</label>
+                <input 
+                  type="text" 
+                  value={formData.licensePlate} 
+                  onChange={(e) => setFormData({...formData, licensePlate: e.target.value.toUpperCase()})} 
+                  placeholder="GA-000-AA" 
+                  className="w-full p-6 bg-white border border-slate-100 rounded-[2rem] font-black text-3xl tracking-[0.2em] text-center outline-none focus:border-amber-500 shadow-sm" 
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Numéro de Matricule (NS) si déjà attribué</label>
+                <input 
+                  type="text" 
+                  value={formData.plate} 
+                  onChange={(e) => setFormData({...formData, plate: e.target.value.toUpperCase()})} 
+                  placeholder="NS-0000" 
+                  className="w-full p-6 bg-white border border-slate-100 rounded-[2rem] font-black text-xl tracking-[0.1em] text-center outline-none focus:border-amber-500 shadow-sm opacity-60" 
+                />
               </div>
 
               <div className="space-y-2">
@@ -361,7 +389,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
                 </div>
                 <div>
                   <h4 className="font-black text-slate-900">{formData.firstName} {formData.lastName}</h4>
-                  <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Candidat Chauffeur NS</p>
+                  <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Candidat Chauffeur Maraude</p>
                 </div>
               </div>
 

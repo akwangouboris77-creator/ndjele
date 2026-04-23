@@ -234,7 +234,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-lg font-black text-slate-900 tracking-tighter uppercase">Ndjele Control</h1>
+              <h1 className="text-lg font-black text-slate-900 tracking-tighter uppercase">Maraude Control</h1>
               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Mission Control Center</p>
             </div>
           </div>
@@ -369,7 +369,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-slate-100 text-slate-600 rounded-xl"><Database className="w-5 h-5" /></div>
-                  <h3 className="font-black text-xs uppercase tracking-widest text-slate-800">Breakdown des Spécialités NS</h3>
+                  <h3 className="font-black text-xs uppercase tracking-widest text-slate-800">Breakdown des Spécialités Maraude</h3>
                 </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">

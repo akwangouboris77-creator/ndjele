@@ -30,7 +30,10 @@ const ClandoView: React.FC<ClandoViewProps> = ({ onNavigate, onStartRide }) => {
       destination: selectedLine.route.split('→')[1].trim(),
       isLocationShared: false,
       price: selectedLine.price * seats,
-      status: 'ACCEPTED'
+      status: 'ACCEPTED',
+      rideMode: 'COLLECTIVE',
+      isRoadside: false,
+      seatsRequested: seats
     };
     onStartRide(ride);
   };
@@ -42,7 +45,7 @@ const ClandoView: React.FC<ClandoViewProps> = ({ onNavigate, onStartRide }) => {
           <button onClick={() => onNavigate('home')} className="p-2 bg-white rounded-full shadow-sm">
             <ArrowLeft className="w-5 h-5 text-slate-600" />
           </button>
-          <h2 className="text-2xl font-black text-slate-800">Clando Ndjele</h2>
+          <h2 className="text-2xl font-black text-slate-800">Clando Maraude</h2>
         </div>
         <span className="bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
           COLLECTIF

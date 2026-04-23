@@ -229,7 +229,7 @@ const PharmacyDashboard: React.FC<PharmacyDashboardProps> = ({ onNavigate, pharm
       <div className="bg-pink-50 p-6 rounded-[2.5rem] border border-pink-100 flex items-start gap-3">
          <ShieldCheck className="w-5 h-5 text-pink-600 shrink-0" />
          <p className="text-[10px] text-pink-800 font-bold leading-relaxed">
-           Votre officine <b>{pharmacy.name}</b> est certifiée Ndjele Care. Toutes les ventes de médicaments sont tracées pour la sécurité des patients.
+           Votre officine <b>{pharmacy.name}</b> est certifiée Maraude Care. Toutes les ventes de médicaments sont tracées pour la sécurité des patients.
          </p>
       </div>
     </div>

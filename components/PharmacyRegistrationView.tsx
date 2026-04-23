@@ -61,7 +61,7 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
           <ArrowLeft className="w-5 h-5 text-slate-600" />
         </button>
         <div className="flex-1">
-          <h2 className="text-2xl font-black text-slate-800 leading-tight">Officine NS</h2>
+          <h2 className="text-2xl font-black text-slate-800 leading-tight">Officine Maraude</h2>
           <p className="text-[10px] font-black text-pink-600 uppercase tracking-widest">Enrôlement Santé</p>
         </div>
       </div>
@@ -170,7 +170,7 @@ const PharmacyRegistrationView: React.FC<PharmacyRegistrationViewProps> = ({ onN
               <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100 flex items-start gap-3">
                  <Award className="w-5 h-5 text-amber-600 shrink-0" />
                  <p className="text-[10px] text-amber-800 font-bold leading-relaxed">
-                   En vous enregistrant, vous acceptez de traiter les commandes de médicaments avec ordonnance via Ndjele Care.
+                   En vous enregistrant, vous acceptez de traiter les commandes de médicaments avec ordonnance via Maraude Care.
                  </p>
               </div>
             </div>

@@ -250,7 +250,7 @@ const MedicationOrderView: React.FC<MedicationOrderViewProps> = ({ onNavigate, p
            <div className="bg-violet-50 p-6 rounded-[2rem] border border-violet-100 flex items-start gap-4">
               <ShieldCheck className="w-6 h-6 text-violet-600 shrink-0" />
               <p className="text-[10px] text-violet-800 font-bold leading-relaxed">
-                Le paiement est sécurisé par Ndjele. Le pharmacien doit valider votre commande avant que le montant ne soit débité.
+                Le paiement est sécurisé par Maraude. Le pharmacien doit valider votre commande avant que le montant ne soit débité.
               </p>
            </div>
 

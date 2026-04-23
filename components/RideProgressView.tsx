@@ -1,19 +1,80 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Navigation2, MessageSquare, AlertTriangle, X, CheckCircle2, ShieldAlert, HeartCrack, Loader2 } from 'lucide-react';
 import { ActiveRide, ChatMessage, Contact } from '../types';
+import { io, Socket } from 'socket.io-client';
+import GpsMap from './GpsMap';
 
 interface RideProgressViewProps {
   ride: ActiveRide;
   onEndRide: () => void;
   onOpenSOS: () => void;
   contacts: Contact[];
+  user: any;
 }
 
-const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, onOpenSOS }) => {
+const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, onOpenSOS, user }) => {
   const [viewState, setViewState] = useState<'tracking' | 'dispute_pending' | 'refunded' | 'success'>('tracking');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [driverLoc, setDriverLoc] = useState(ride.driverLoc || { lat: 0.39, lng: 9.45 });
+  const [clientLoc, setClientLoc] = useState(ride.clientLoc || { lat: 0.39, lng: 9.45 });
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    const newSocket = io();
+    setSocket(newSocket);
+
+    newSocket.emit('join-trip', ride.id);
+
+    newSocket.on('trip-update', (data) => {
+      if (data.driverLoc) setDriverLoc(data.driverLoc);
+      if (data.clientLoc) setClientLoc(data.clientLoc);
+    });
+
+    // Simulate movement for demo purposes if no real updates
+    const interval = setInterval(() => {
+      const dest = ride.destinationLoc || { lat: 0.4583, lng: 9.4122 };
+      
+      if (user.role === 'DRIVER') {
+        const dLat = (dest.lat - driverLoc.lat) * 0.05;
+        const dLng = (dest.lng - driverLoc.lng) * 0.05;
+        
+        const newLoc = { 
+          lat: driverLoc.lat + dLat + (Math.random() - 0.5) * 0.0001, 
+          lng: driverLoc.lng + dLng + (Math.random() - 0.5) * 0.0001 
+        };
+        setDriverLoc(newLoc);
+        newSocket.emit('update-trip-location', { 
+          tripId: ride.id, 
+          role: 'driver', 
+          lat: newLoc.lat,
+          lng: newLoc.lng
+        });
+      } else if (user.role === 'CLIENT') {
+        // Client moves slightly towards destination (following the taxi)
+        const dLat = (dest.lat - clientLoc.lat) * 0.03;
+        const dLng = (dest.lng - clientLoc.lng) * 0.03;
+        
+        const newLoc = { 
+          lat: clientLoc.lat + dLat + (Math.random() - 0.5) * 0.0001, 
+          lng: clientLoc.lng + dLng + (Math.random() - 0.5) * 0.0001 
+        };
+        setClientLoc(newLoc);
+        newSocket.emit('update-trip-location', { 
+          tripId: ride.id, 
+          role: 'client', 
+          lat: newLoc.lat,
+          lng: newLoc.lng
+        });
+      }
+    }, 4000);
+
+    return () => {
+      newSocket.disconnect();
+      clearInterval(interval);
+    };
+  }, [ride.id, user.role]);
   
   const COMMISSION_RATE = 0.09;
   const platformFees = Math.round(ride.price * COMMISSION_RATE);
@@ -33,35 +94,13 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
   return (
     <div className="flex flex-col h-full bg-slate-50 animate-in fade-in duration-500 relative overflow-hidden">
       <div className="relative flex-1 bg-slate-200">
-        <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/map/800/1200')] bg-cover opacity-50"></div>
+        <GpsMap 
+          clientLoc={clientLoc} 
+          driverLoc={driverLoc} 
+          destinationLoc={ride.destinationLoc}
+          height="100%" 
+        />
         
-        {/* Animated Path Simulation */}
-        <div className="absolute inset-0 pointer-events-none">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path 
-              d="M 20 80 Q 50 50 80 20" 
-              stroke="white" 
-              strokeWidth="2" 
-              fill="none" 
-              strokeDasharray="4 4"
-              className="opacity-30"
-            />
-            <motion.circle
-              r="1.5"
-              fill="#10b981"
-              animate={{
-                cx: [20, 50, 80],
-                cy: [80, 50, 20],
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-          </svg>
-        </div>
-
         {/* Hidden simulation button for driver arrival */}
         <div 
           onClick={handleConfirmFinish}
@@ -80,15 +119,20 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
              <span className="text-xs font-black text-slate-800">{ride.price + platformFees} F</span>
           </div>
           
-          <div className="bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/10 flex items-center gap-3">
-            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-emerald-400">
-              <Navigation2 className="w-4 h-4 animate-pulse" />
-            </div>
-            <div className="flex-1">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destination</p>
-              <p className="text-[10px] font-bold text-white truncate">{ride.destination}</p>
-            </div>
-          </div>
+              <div className="bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/10 flex items-center gap-3">
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-emerald-400">
+                  <Navigation2 className="w-4 h-4 animate-pulse" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destination</p>
+                    {ride.rideMode === 'COLLECTIVE' && (
+                      <span className="text-[7px] font-black bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter">Collectif ({ride.seatsRequested} sièges)</span>
+                    )}
+                  </div>
+                  <p className="text-[10px] font-bold text-white truncate">{ride.destination}</p>
+                </div>
+              </div>
         </div>
       </div>
 
@@ -105,20 +149,50 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
              <button onClick={() => setIsChatOpen(true)} className="w-11 h-11 bg-slate-900 text-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                <MessageSquare className="w-5.5 h-5.5" />
              </button>
-             <button onClick={onOpenSOS} className="w-11 h-11 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center">
-               <AlertTriangle className="w-5.5 h-5.5" />
-             </button>
+             <div className="flex flex-col items-center gap-1">
+               <button onClick={onOpenSOS} className="w-11 h-11 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center">
+                 <AlertTriangle className="w-5.5 h-5.5" />
+               </button>
+               {user?.role?.toUpperCase() === 'CLIENT' && (
+                 <button 
+                   onClick={() => {
+                     // Simple discreet cancellation
+                     onEndRide();
+                   }} 
+                   className="text-[8px] font-black text-slate-400 uppercase tracking-tighter hover:text-red-500 transition-colors"
+                 >
+                   Annuler
+                 </button>
+               )}
+             </div>
            </div>
         </div>
 
         {viewState === 'tracking' && (
           <div className="space-y-4">
-             <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                   <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                   <span className="text-xs font-bold text-slate-600">Course en cours...</span>
+             <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 space-y-4">
+                <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs font-bold text-slate-600">Course en cours...</span>
+                   </div>
+                   <span className="text-[10px] font-black text-slate-400 uppercase">Fonds en séquestre</span>
                 </div>
-                <span className="text-[10px] font-black text-slate-400 uppercase">Fonds en séquestre</span>
+                
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60">
+                   <div className="text-center">
+                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Chauffeur</p>
+                      <p className="text-[10px] font-bold text-slate-800 truncate">{ride.driverName}</p>
+                   </div>
+                   <div className="text-center border-x border-slate-200/60">
+                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Prix Est.</p>
+                      <p className="text-[10px] font-bold text-emerald-600">{ride.price + platformFees} F</p>
+                   </div>
+                   <div className="text-center">
+                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Arrivée</p>
+                      <p className="text-[10px] font-bold text-slate-800">~5 min</p>
+                   </div>
+                </div>
              </div>
              
              <div className="grid grid-cols-2 gap-3">
@@ -141,7 +215,7 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
         {viewState === 'dispute_pending' && (
           <div className="py-8 text-center space-y-4 animate-in fade-in">
              <Loader2 className="w-12 h-12 text-red-500 animate-spin mx-auto" />
-             <h4 className="text-xl font-black text-slate-800 uppercase">Arbitrage Ndjele</h4>
+             <h4 className="text-xl font-black text-slate-800 uppercase">Arbitrage Maraude</h4>
              <p className="text-xs text-slate-500 px-8">Le service client vérifie la position GPS et la prestation. Veuillez patienter...</p>
           </div>
         )}
@@ -157,7 +231,7 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
                   La prestation ({ride.price} F) a été créditée sur votre Wallet.
                 </p>
                 <p className="text-[10px] font-black text-red-600 bg-red-50 py-2 rounded-xl mt-2">
-                  NDJELE NOTE : Les frais de plateforme ({platformFees} F) sont conservés.
+                  MARAUDE NOTE : Les frais de plateforme ({platformFees} F) sont conservés.
                 </p>
              </div>
              <button onClick={onEndRide} className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-xs">Fermer</button>
@@ -187,7 +261,7 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
               </div>
               <div className="flex-1 overflow-y-auto space-y-4">
                 <div className="p-4 bg-emerald-50 rounded-2xl text-xs font-bold text-emerald-800">
-                  🛡️ Chat sécurisé Ndjele. En cas de problème, utilisez le bouton "Signaler Litige" pour être remboursé.
+                  🛡️ Chat sécurisé Maraude. En cas de problème, utilisez le bouton "Signaler Litige" pour être remboursé.
                 </div>
               </div>
            </div>

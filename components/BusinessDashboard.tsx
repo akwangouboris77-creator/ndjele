@@ -15,7 +15,7 @@ interface BusinessDashboardProps {
 const BusinessDashboard: React.FC<BusinessDashboardProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<'plan' | 'treasury'>('plan');
 
-  // --- ESTIMATIONS NDJELE SOLUTION (1 AN) ---
+  // --- ESTIMATIONS MARAUDE SOLUTION (1 AN) ---
   const usersProjection = 3000;
   const subPrice = 5000;
   const commissionRate = 0.09;
@@ -62,7 +62,7 @@ const BusinessDashboard: React.FC<BusinessDashboardProps> = ({ onNavigate }) => 
             // Simulate download
             const link = document.createElement('a');
             link.href = '#';
-            link.download = 'Dossier_Bancaire_Ndjele.pdf';
+            link.download = 'Dossier_Bancaire_Maraude.pdf';
             console.log('Downloading dossier...');
           }}
           className="p-3 bg-slate-900 text-white rounded-2xl shadow-lg active:scale-95 transition-all"
@@ -208,10 +208,10 @@ const BusinessDashboard: React.FC<BusinessDashboardProps> = ({ onNavigate }) => 
       <div className="bg-slate-900 p-8 rounded-[3rem] text-white shadow-xl flex flex-col items-center text-center space-y-4">
         <Smartphone className="w-10 h-10 opacity-40" />
         <p className="text-sm font-bold leading-relaxed px-4">
-          "Le succès de Ndjele repose sur la digitalisation de la confiance au Gabon."
+          "Le succès de Maraude repose sur la digitalisation de la confiance au Gabon."
         </p>
         <div className="h-px w-12 bg-white/20"></div>
-        <p className="text-[8px] font-black uppercase tracking-widest opacity-60">Équipe Stratégie Ndjele Solution</p>
+        <p className="text-[8px] font-black uppercase tracking-widest opacity-60">Équipe Stratégie Maraude Solution</p>
       </div>
     </div>
   );

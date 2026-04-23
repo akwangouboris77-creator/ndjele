@@ -8,7 +8,7 @@ interface SubscriptionViewProps {
   onUpgrade: () => void;
 }
 
-const NDJELE_NUMBERS = {
+const MARAUDE_NUMBERS = {
   AIRTEL: '077 21 89 76',
   MOOV: '062 70 23 74'
 };
@@ -36,7 +36,7 @@ const SubscriptionView: React.FC<SubscriptionViewProps> = ({ currentTier, onUpgr
         <div className="space-y-2">
           <h2 className="text-3xl font-black text-slate-800 tracking-tight">Accès Pro Activé !</h2>
           <p className="text-sm text-slate-500 font-medium px-4">
-            Votre abonnement de 5 000 F a été validé. Bienvenue chez les Membres Ndjele Premium.
+            Votre abonnement de 5 000 F a été validé. Bienvenue chez les Membres Maraude Premium.
           </p>
         </div>
         <button 
@@ -56,7 +56,7 @@ const SubscriptionView: React.FC<SubscriptionViewProps> = ({ currentTier, onUpgr
           <Crown className="w-8 h-8 fill-white" />
         </div>
         <h2 className="text-2xl font-black text-slate-800 leading-tight">Devenez Membre Pro</h2>
-        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Ndjele Premium • 5.000 F / mois</p>
+        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Maraude Premium • 5.000 F / mois</p>
       </div>
 
       <div className="flex-1 space-y-6 overflow-y-auto px-1 hide-scrollbar">
@@ -102,7 +102,7 @@ const SubscriptionView: React.FC<SubscriptionViewProps> = ({ currentTier, onUpgr
                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Transférez les 5 000 F vers :</p>
                <div className="flex items-center justify-center gap-3">
                   <h3 className="text-2xl font-black text-white tracking-widest">
-                    {selectedProvider === 'AIRTEL' ? NDJELE_NUMBERS.AIRTEL : NDJELE_NUMBERS.MOOV}
+                    {selectedProvider === 'AIRTEL' ? MARAUDE_NUMBERS.AIRTEL : MARAUDE_NUMBERS.MOOV}
                   </h3>
                   <button className="p-2 bg-white/10 rounded-lg text-emerald-400"><Copy className="w-4 h-4" /></button>
                </div>

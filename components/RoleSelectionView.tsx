@@ -26,7 +26,7 @@ const RoleSelectionView: React.FC<RoleSelectionViewProps> = ({ onSelect }) => {
   return (
     <div className="p-8 h-full flex flex-col space-y-8 animate-in fade-in duration-500 bg-slate-50">
       <div className="text-center space-y-2 pt-4">
-        <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase">Profil Ndjele</h2>
+        <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase">Profil Maraude</h2>
         <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Comment souhaitez-vous utiliser l'app ?</p>
       </div>
 

@@ -53,7 +53,7 @@ const ArtisanDashboard: React.FC<ArtisanDashboardProps> = ({ onNavigate, artisan
       <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl flex items-start gap-3">
          <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
          <div>
-            <p className="text-[11px] text-amber-900 font-bold leading-tight">Sécurité Ndjele</p>
+            <p className="text-[11px] text-amber-900 font-bold leading-tight">Sécurité Maraude</p>
             <p className="text-[10px] text-amber-700 font-medium mt-1 leading-relaxed">
               L'argent des prestations techniques reste en observation pendant 24h pour garantir l'efficacité de votre travail au client.
             </p>
@@ -92,7 +92,7 @@ const ArtisanDashboard: React.FC<ArtisanDashboardProps> = ({ onNavigate, artisan
       <div className="bg-indigo-50 p-6 rounded-[2.5rem] border border-indigo-100 flex items-start gap-3">
          <ShieldCheck className="w-5 h-5 text-indigo-600 shrink-0" />
          <p className="text-[10px] text-indigo-800 font-bold leading-relaxed">
-           Votre profil est visible par tous les clients Ndjele. Gardez une bonne note pour réduire votre temps d'observation à 12h.
+           Votre profil est visible par tous les clients Maraude. Gardez une bonne note pour réduire votre temps d'observation à 12h.
          </p>
       </div>
     </div>

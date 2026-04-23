@@ -54,11 +54,14 @@ import AdminDashboard from './components/AdminDashboard';
 import MapView from './components/MapView';
 import DeliveryTrackingView from './components/DeliveryTrackingView';
 import OnboardingOverlay from './components/OnboardingOverlay';
+import MaraudeView from './components/MaraudeView';
+import ClandoView from './components/ClandoView';
+import QuartierMaisonView from './components/QuartierMaisonView';
 import { AnimatePresence } from 'motion/react';
 
 const DEFAULT_ARTISANS: Artisan[] = [
-  { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong' },
-  { id: 'a2', name: 'Moussa Plomberie', job: 'Plombier Sanitaire', category: 'plomberie', rating: 4.7, distance: 2.5, isVerified: true, avatar: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?fit=crop&w=150&h=150', completedTasks: 89, yearsOnPlatform: 2, neighborhood: 'Louis' },
+  { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong', phone: '074 11 11 11' },
+  { id: 'a2', name: 'Moussa Plomberie', job: 'Plombier Sanitaire', category: 'plomberie', rating: 4.7, distance: 2.5, isVerified: true, avatar: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?fit=crop&w=150&h=150', completedTasks: 89, yearsOnPlatform: 2, neighborhood: 'Louis', phone: '077 22 22 22' },
 ];
 
 const DEFAULT_CONTACTS: Contact[] = [
@@ -69,22 +72,22 @@ const DEFAULT_CONTACTS: Contact[] = [
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
-      const saved = localStorage.getItem('ndjele_user');
+      const saved = localStorage.getItem('maraude_user');
       return saved ? JSON.parse(saved) : null;
     } catch (e) { return null; }
   });
 
   const [walletBalance, setWalletBalance] = useState<number>(() => {
-    const saved = localStorage.getItem('ndjele_wallet');
+    const saved = localStorage.getItem('maraude_wallet');
     return saved ? parseInt(saved) : 14250;
   });
 
   const [subscriptionTier, setSubscriptionTier] = useState<SubscriptionTier>(() => {
-    return (localStorage.getItem('ndjele_sub') as SubscriptionTier) || 'FREE';
+    return (localStorage.getItem('maraude_sub') as SubscriptionTier) || 'FREE';
   });
 
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState<boolean>(() => {
-    return localStorage.getItem('ndjele_terms_accepted') === 'true';
+    return localStorage.getItem('maraude_terms_accepted') === 'true';
   });
 
   const [activeView, setActiveView] = useState<ViewState>(() => {
@@ -100,7 +103,12 @@ const App: React.FC = () => {
   const [artisans, setArtisans] = useState<Artisan[]>(DEFAULT_ARTISANS);
   const [contacts, setContacts] = useState<Contact[]>(DEFAULT_CONTACTS);
   
-  const [registeredDriver, setRegisteredDriver] = useState<DriverRegistration | null>(null);
+  const [registeredDriver, setRegisteredDriver] = useState<DriverRegistration | null>(() => {
+    try {
+      const saved = localStorage.getItem('maraude_driver_data');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+  });
   const [registeredLivreur, setRegisteredLivreur] = useState<Livreur | null>(null);
   const [registeredMerchant, setRegisteredMerchant] = useState<Merchant | null>(null);
   const [registeredArtisanPro, setRegisteredArtisanPro] = useState<Artisan | null>(null);
@@ -115,15 +123,15 @@ const App: React.FC = () => {
   const [checkoutData, setCheckoutData] = useState<{product: Product, merchant: Merchant} | null>(null);
   const [selectedOrderForTracking, setSelectedOrderForTracking] = useState<MarketplaceOrder | null>(null);
   const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
-    return localStorage.getItem('ndjele_onboarding_completed') !== 'true';
+    return localStorage.getItem('maraude_onboarding_completed') !== 'true';
   });
 
   useEffect(() => {
-    localStorage.setItem('ndjele_wallet', walletBalance.toString());
+    localStorage.setItem('maraude_wallet', walletBalance.toString());
   }, [walletBalance]);
 
   const handleLogin = (profile: UserProfile) => {
-    localStorage.setItem('ndjele_user', JSON.stringify(profile));
+    localStorage.setItem('maraude_user', JSON.stringify(profile));
     setUser(profile);
     if (!profile.role) {
       setActiveView('role-selection');
@@ -136,7 +144,7 @@ const App: React.FC = () => {
     if (user) {
       const updatedUser = { ...user, role };
       setUser(updatedUser);
-      localStorage.setItem('ndjele_user', JSON.stringify(updatedUser));
+      localStorage.setItem('maraude_user', JSON.stringify(updatedUser));
       setActiveView('home');
     }
   };
@@ -150,11 +158,11 @@ const App: React.FC = () => {
     if (activeView === 'one-pager') return <OnePagerView onNavigate={setActiveView} />;
     if (!user) return <LoginView onLogin={handleLogin} onOpenOnePager={() => setActiveView('one-pager')} />;
     if (activeView === 'role-selection') return <RoleSelectionView onSelect={handleSetRole} />;
-    if (!hasAcceptedTerms) return <TermsView onAccept={() => { setHasAcceptedTerms(true); localStorage.setItem('ndjele_terms_accepted', 'true'); setActiveView('home'); }} />;
+    if (!hasAcceptedTerms) return <TermsView onAccept={() => { setHasAcceptedTerms(true); localStorage.setItem('maraude_terms_accepted', 'true'); setActiveView('home'); }} />;
 
     if (activeView === 'home') {
       switch (user.role) {
-        case 'DRIVER': return <DriverDashboard onNavigate={navigateProtected} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} registeredDriver={registeredDriver} />;
+        case 'DRIVER': return <DriverDashboard user={user} onNavigate={navigateProtected} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} registeredDriver={registeredDriver} />;
         case 'DELIVERY': return <DeliveryDashboard 
           onNavigate={setActiveView} 
           registeredLivreur={registeredLivreur} 
@@ -184,17 +192,29 @@ const App: React.FC = () => {
       case 'pharmacy-registration': return <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
       case 'medication-order': return selectedPharmacy ? <MedicationOrderView onNavigate={setActiveView} pharmacy={selectedPharmacy} onCreateOrder={(o) => setOrders([o, ...orders])} clientName={user.name} /> : null;
       case 'doctor-registration': return <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => { setRegisteredDoctor(d); setActiveView('home'); }} />;
-      case 'client-dashboard': return <ClientDashboard onNavigate={setActiveView} user={user} subscriptionTier={subscriptionTier} orders={orders} walletBalance={walletBalance} onUpdateProfile={(u) => {setUser(u); localStorage.setItem('ndjele_user', JSON.stringify(u));}} onTrackOrder={(o) => { setSelectedOrderForTracking(o); setActiveView('order-tracking'); }} />;
-      case 'driver-registration': return <DriverRegistrationView onNavigate={navigateProtected} onRegister={(d) => { setRegisteredDriver(d); setActiveView('home'); }} />;
+      case 'client-dashboard': return <ClientDashboard onNavigate={setActiveView} user={user} subscriptionTier={subscriptionTier} orders={orders} walletBalance={walletBalance} onUpdateProfile={(u) => {setUser(u); localStorage.setItem('maraude_user', JSON.stringify(u));}} onTrackOrder={(o) => { setSelectedOrderForTracking(o); setActiveView('order-tracking'); }} />;
+      case 'driver-registration': return <DriverRegistrationView onNavigate={navigateProtected} onRegister={(d) => { 
+        setRegisteredDriver(d); 
+        localStorage.setItem('maraude_driver_data', JSON.stringify(d)); 
+        if (user) {
+          const updated = { ...user, role: 'DRIVER' as UserRole };
+          setUser(updated);
+          localStorage.setItem('maraude_user', JSON.stringify(updated));
+        }
+        setActiveView('home'); 
+      }} />;
       case 'artisans': return <ArtisansView onNavigate={setActiveView} registeredArtisan={registeredArtisanPro} artisansList={artisans} onRateArtisan={() => {}} />;
       case 'doctors': return <DoctorView onNavigate={setActiveView} />;
-      case 'ride-progress': return activeRide ? <RideProgressView ride={activeRide} onEndRide={() => { setActiveRide(null); setActiveView('home'); }} onOpenSOS={() => setActiveView('sos')} contacts={contacts} /> : null;
+      case 'ride-progress': return activeRide ? <RideProgressView ride={activeRide} onEndRide={() => { setActiveRide(null); setActiveView('home'); }} onOpenSOS={() => setActiveView('sos')} contacts={contacts} user={user} /> : null;
       case 'wallet': return <WalletView onNavigate={setActiveView} balance={walletBalance} onUpdateBalance={setWalletBalance} />;
       case 'sos': return <SOSView onNavigate={setActiveView} contacts={contacts} activeRide={activeRide} onUpdateRide={(r) => setActiveRide(r)} />;
       case 'subscription': return <SubscriptionView onNavigate={setActiveView} currentTier={subscriptionTier} onUpgrade={() => {setSubscriptionTier('PREMIUM'); setActiveView('home');}} />;
       case 'booking': return <BookingView onNavigate={setActiveView} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
       case 'waiting-validation': return pendingRide ? <WaitingValidationView pendingRide={pendingRide} onCancel={() => { setPendingRide(null); setActiveView('booking'); }} onSimulateAccept={() => { setActiveRide({...pendingRide, status: 'ACCEPTED'}); setPendingRide(null); setActiveView('ride-progress'); }} onSimulateReject={() => { setPendingRide(null); setActiveView('booking'); }} /> : null;
       case 'marketplace': return <MarketplaceView onNavigate={setActiveView} registeredMerchant={registeredMerchant} onCreateOrder={(o) => setOrders([o, ...orders])} onBuyNow={(p, m) => { setCheckoutData({product: p, merchant: m}); setActiveView('order-checkout'); }} />;
+      case 'maraude': return <MaraudeView user={user} onNavigate={setActiveView} onStartRide={setActiveRide} />;
+      case 'clando': return <ClandoView onNavigate={setActiveView} onStartRide={setActiveRide} />;
+      case 'quartier-maison': return <QuartierMaisonView onNavigate={setActiveView} onStartRide={setActiveRide} />;
       case 'order-tracking': return selectedOrderForTracking ? <DeliveryTrackingView order={selectedOrderForTracking} onNavigate={setActiveView} /> : null;
       case 'order-checkout': return checkoutData ? <OrderCheckoutView onNavigate={setActiveView} product={checkoutData.product} merchant={checkoutData.merchant} onCreateOrder={(o) => setOrders([o, ...orders])} clientName={user.name} /> : null;
       case 'delivery': return <DeliveryView onNavigate={setActiveView} registeredLivreur={registeredLivreur} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
@@ -219,16 +239,16 @@ const App: React.FC = () => {
     if (!user) return [];
     if (user.role === 'CLIENT') {
       return [
-        { id: 'home', icon: Home },
-        { id: 'booking', icon: MapPin },
-        { id: 'pharmacies', icon: Pill },
-        { id: 'doctors', icon: Stethoscope },
+        { id: 'home', icon: Home, label: 'Accueil' },
+        { id: 'booking', icon: MapPin, label: 'Course' },
+        { id: 'pharmacies', icon: Pill, label: 'Santé' },
+        { id: 'doctors', icon: Stethoscope, label: 'Médecin' },
       ];
     }
     return [
-      { id: 'home', icon: LayoutDashboard },
-      { id: 'wallet', icon: Wallet },
-      { id: 'marketplace', icon: ShoppingBag },
+      { id: 'home', icon: LayoutDashboard, label: 'Dashboard' },
+      { id: 'wallet', icon: Wallet, label: 'Wallet' },
+      { id: 'marketplace', icon: ShoppingBag, label: 'Boutique' },
     ];
   };
 
@@ -239,9 +259,9 @@ const App: React.FC = () => {
           <button onClick={() => setSidebarOpen(true)} className="p-2 hover:bg-slate-100 rounded-2xl transition-all">
             <Menu className="w-5 h-5 text-slate-800" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 gradient-brand rounded-lg flex items-center justify-center text-white font-black text-[9px] shadow-lg shadow-emerald-200">NS</div>
-            <h1 className="text-base font-extrabold text-slate-900 tracking-tight">Ndjele</h1>
+            <div className="flex items-center gap-2">
+            <div className="w-7 h-7 gradient-brand rounded-lg flex items-center justify-center text-white font-black text-[9px] shadow-lg shadow-emerald-200">MA</div>
+            <h1 className="text-base font-extrabold text-slate-900 tracking-tight">Maraude</h1>
           </div>
           <button onClick={() => setActiveView('client-dashboard')} className="w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/20">
             <img src={user.photo} className="w-full h-full object-cover" alt="Profile" />
@@ -254,15 +274,17 @@ const App: React.FC = () => {
       </main>
 
       {user && activeView !== 'role-selection' && activeView !== 'one-pager' && (
-        <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[80%] max-w-[300px] glass-morphism px-1 py-1 flex justify-between items-center rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.1)] z-[50]">
+        <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] glass-morphism px-2 py-2 flex justify-between items-center rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.1)] z-[50]">
           {getBottomNavItems().map((item) => (
-            <button key={item.id} onClick={() => navigateProtected(item.id as ViewState)} className={`flex flex-col items-center gap-1 p-2 rounded-2xl transition-all ${activeView === item.id || (activeView === 'home' && item.id === 'home') ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:text-emerald-600'}`}>
+            <button key={item.id} onClick={() => navigateProtected(item.id as ViewState)} className={`flex flex-col items-center gap-1 p-2 rounded-2xl transition-all min-w-[50px] ${activeView === item.id || (activeView === 'home' && item.id === 'home') ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:text-emerald-600'}`}>
               <item.icon className="w-4 h-4" />
+              <span className="text-[8px] font-black uppercase tracking-tighter">{item.label}</span>
             </button>
           ))}
-          <div className="h-4 w-px bg-slate-200 mx-0.5"></div>
-          <button onClick={() => navigateProtected('sos')} className={`flex flex-col items-center p-2 rounded-2xl ${activeView === 'sos' ? 'bg-red-500 text-white' : 'text-red-400'}`}>
+          <div className="h-6 w-px bg-slate-200 mx-1"></div>
+          <button onClick={() => navigateProtected('sos')} className={`flex flex-col items-center gap-1 p-2 rounded-2xl min-w-[50px] ${activeView === 'sos' ? 'bg-red-500 text-white' : 'text-red-400'}`}>
             <AlertTriangle className="w-4 h-4" />
+            <span className="text-[8px] font-black uppercase tracking-tighter">SOS</span>
           </button>
         </nav>
       )}
@@ -283,7 +305,7 @@ const App: React.FC = () => {
             <div className="p-4 space-y-1">
                {[
                  { id: 'home', icon: Home, label: 'Accueil' },
-                 { id: 'one-pager', icon: Info, label: 'Présentation Ndjele' },
+                 { id: 'one-pager', icon: Info, label: 'Présentation Maraude' },
                  { id: 'business-dashboard', icon: BarChart3, label: 'Projections Business' },
                  { id: 'pharmacies', icon: Pill, label: 'Pharmacie' },
                  { id: 'doctors', icon: Stethoscope, label: 'Médecins' },
@@ -313,7 +335,7 @@ const App: React.FC = () => {
         {showOnboarding && (
           <OnboardingOverlay onComplete={() => {
             setShowOnboarding(false);
-            localStorage.setItem('ndjele_onboarding_completed', 'true');
+            localStorage.setItem('maraude_onboarding_completed', 'true');
           }} />
         )}
       </AnimatePresence>

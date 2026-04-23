@@ -7,7 +7,8 @@ export enum TransportType {
   DELIVERY_MOTO = 'DELIVERY_MOTO',
   DELIVERY_CAR = 'DELIVERY_CAR',
   CLANDO = 'CLANDO',
-  QUARTIER_MAISON = 'QUARTIER_MAISON'
+  QUARTIER_MAISON = 'QUARTIER_MAISON',
+  TAXI_BUS = 'TAXI_BUS'
 }
 
 export type SubscriptionTier = 'FREE' | 'PREMIUM';
@@ -84,9 +85,9 @@ export interface Artisan {
   distance: number;
   isVerified: boolean;
   avatar: string;
+  phone: string;
   completedTasks: number;
   yearsOnPlatform?: number;
-  phone?: string;
   neighborhood?: string;
   balance?: number;
   pendingBalance?: number;
@@ -100,6 +101,8 @@ export interface Driver {
   distance: number;
   location: { lat: number; lng: number };
   currentDestination?: string;
+  operatesAsCollective?: boolean;
+  availableSeats?: number;
 }
 
 export interface DriverRegistration {
@@ -132,6 +135,7 @@ export interface Doctor {
   distance: number;
   isVerified: boolean;
   avatar: string;
+  phone: string;
   neighborhood: string;
   experience: number;
   availability: 'disponible' | 'occupe' | 'urgence_uniquement';
@@ -200,6 +204,7 @@ export interface Lawyer {
   id: string;
   name: string;
   specialty: string;
+  phone: string;
   rating: number;
   distance: number;
   neighborhood: string;
@@ -214,6 +219,7 @@ export interface Bailiff {
   id: string;
   name: string;
   office: string;
+  phone: string;
   rating: number;
   neighborhood: string;
   experience: number;
@@ -227,6 +233,7 @@ export interface Notary {
   id: string;
   name: string;
   office: string;
+  phone: string;
   rating: number;
   neighborhood: string;
   experience: number;
@@ -241,6 +248,7 @@ export interface Accountant {
   name: string;
   firm: string;
   specialty: string;
+  phone: string;
   rating: number;
   neighborhood: string;
   experience: number;
@@ -282,9 +290,16 @@ export interface ActiveRide {
   status: 'IDLE' | 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'COMPLETED' | 'VALIDATED_BY_CLIENT' | 'VALIDATED_BY_DRIVER' | 'OBSERVATION';
   passengers?: number;
   hasLuggage?: boolean;
+  destinationLoc?: { lat: number; lng: number };
+  clientLoc?: { lat: number; lng: number };
+  driverLoc?: { lat: number; lng: number };
+  rideMode: 'PRIVATE' | 'COLLECTIVE';
+  isRoadside: boolean;
+  pickupPointName?: string;
+  seatsRequested: number;
 }
 
-export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map' | 'notaries' | 'accountants' | 'notary-registration' | 'accountant-registration' | 'notary-dashboard' | 'accountant-dashboard';
+export type ViewState = 'login' | 'one-pager' | 'home' | 'booking' | 'maraude' | 'clando' | 'quartier-maison' | 'driver' | 'wallet' | 'sos' | 'ride-progress' | 'waiting-validation' | 'delivery' | 'driver-registration' | 'artisans' | 'artisan-registration' | 'subscription' | 'terms' | 'delivery-registration' | 'delivery-dashboard' | 'marketplace' | 'merchant-registration' | 'merchant-dashboard' | 'order-tracking' | 'order-checkout' | 'client-dashboard' | 'doctors' | 'artisan-dashboard' | 'doctor-dashboard' | 'role-selection' | 'pharmacies' | 'pharmacy-registration' | 'medication-order' | 'doctor-registration' | 'business-dashboard' | 'lawyer-registration' | 'lawyer-dashboard' | 'bailiff-registration' | 'bailiff-dashboard' | 'lawyers' | 'bailiffs' | 'admin' | 'map' | 'notaries' | 'accountants' | 'notary-registration' | 'accountant-registration' | 'notary-dashboard' | 'accountant-dashboard';
 
 export interface Contact {
   id: string;

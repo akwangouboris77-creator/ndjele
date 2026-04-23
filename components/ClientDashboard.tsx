@@ -117,8 +117,8 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate, user, sub
     <div className="space-y-6 animate-in slide-in-from-bottom-4">
       <div className="grid grid-cols-1 gap-3">
         {[
-          { q: "Comment payer ma course ?", a: "Utilisez le Wallet NS crédité via Airtel ou Moov Money." },
-          { q: "Qu'est-ce que le Numéro NS ?", a: "C'est l'identifiant unique peint sur la portière des taxis certifiés." },
+          { q: "Comment payer ma course ?", a: "Utilisez le Wallet Maraude crédité via Airtel ou Moov Money." },
+          { q: "Qu'est-ce que le Numéro Maraude ?", a: "C'est l'identifiant unique peint sur la portière des taxis certifiés." },
           { q: "Ma commande est en retard", a: "Contactez directement le livreur via le chat de suivi." },
         ].map((faq, i) => (
           <div key={i} className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1">

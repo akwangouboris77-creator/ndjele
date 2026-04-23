@@ -1,27 +1,33 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Gavel, MapPin, Search, MessageSquare, X, Send, UserPlus, ShieldCheck, FileText } from 'lucide-react';
-import { ViewState, ChatMessage } from '../types';
+import { ArrowLeft, Gavel, MapPin, Search, MessageSquare, X, Send, UserPlus, ShieldCheck, FileText, Phone } from 'lucide-react';
+import { ViewState, ChatMessage, Bailiff } from '../types';
 
 interface BailiffViewProps {
   onNavigate: (view: ViewState) => void;
 }
 
-const MOCK_BAILIFFS = [
-  { id: 'b1', name: 'Me. Christian Obiang', office: 'Étude Obiang & Associés', rating: 4.7, neighborhood: 'Glass', experience: 20, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=150&h=150' },
-  { id: 'b2', name: 'Me. Alice Bignoumba', office: 'Étude Bignoumba', rating: 4.9, neighborhood: 'Owendo', experience: 12, avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?fit=crop&w=150&h=150' },
+const MOCK_BAILIFFS: Bailiff[] = [
+  { id: 'b1', name: 'Me. Christian Obiang', office: 'Étude Obiang & Associés', phone: '074 88 99 00', rating: 4.7, neighborhood: 'Glass', experience: 20, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?fit=crop&w=150&h=150', isVerified: true },
+  { id: 'b2', name: 'Me. Alice Bignoumba', office: 'Étude Bignoumba', phone: '066 55 44 33', rating: 4.9, neighborhood: 'Owendo', experience: 12, avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?fit=crop&w=150&h=150', isVerified: true },
 ];
 
 const BailiffView: React.FC<BailiffViewProps> = ({ onNavigate }) => {
   const [chatBailiff, setChatBailiff] = useState<any>(null);
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [contactingId, setContactingId] = useState<string | null>(null);
 
   const handleStartChat = (bailiff: any) => {
     setChatBailiff(bailiff);
     setMessages([
       { id: '1', sender: 'DRIVER', text: `Bonjour, Étude de ${bailiff.name}. Comment pouvons-nous vous aider pour vos actes ?`, timestamp: Date.now() }
     ]);
+  };
+
+  const handleContact = (bailiff: Bailiff, type: 'tel' | 'sms') => {
+    window.location.href = `${type}:${bailiff.phone.replace(/\s/g, '')}`;
+    setContactingId(null);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -42,7 +48,7 @@ const BailiffView: React.FC<BailiffViewProps> = ({ onNavigate }) => {
           <button onClick={() => onNavigate('home')} className="p-2 bg-white rounded-full shadow-sm text-slate-600 border border-slate-100">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Huissiers NS</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Huissiers Maraude</h2>
         </div>
         <button 
           onClick={() => onNavigate('bailiff-registration')}
@@ -74,7 +80,7 @@ const BailiffView: React.FC<BailiffViewProps> = ({ onNavigate }) => {
         <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Études disponibles</h3>
         <div className="space-y-4">
           {MOCK_BAILIFFS.map(bailiff => (
-            <div key={bailiff.id} className="bg-white border border-slate-100 p-5 rounded-[2.5rem] shadow-sm flex flex-col gap-4">
+            <div key={bailiff.id} className="bg-white border border-slate-100 p-5 rounded-[2.5rem] shadow-sm flex flex-col gap-4 relative">
               <div className="flex items-center gap-4">
                 <img src={bailiff.avatar} className="w-16 h-16 rounded-2xl object-cover shadow-sm" />
                 <div className="flex-1">
@@ -82,16 +88,50 @@ const BailiffView: React.FC<BailiffViewProps> = ({ onNavigate }) => {
                   <p className="text-[9px] text-slate-500 font-black uppercase tracking-tight">{bailiff.office}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-[8px] font-black bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full uppercase">{bailiff.neighborhood}</span>
-                    <span className="text-[8px] font-black bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full uppercase">Certifié NS</span>
+                    <span className="text-[8px] font-black bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full uppercase">Certifié Maraude</span>
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => handleStartChat(bailiff)}
-                className="w-full py-3 bg-slate-700 text-white rounded-xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2"
-              >
-                <FileText className="w-3.5 h-3.5" /> Demander un acte
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => handleStartChat(bailiff)}
+                  className="flex-1 py-3 bg-slate-50 text-slate-600 rounded-xl font-black text-[10px] uppercase flex items-center justify-center gap-2 transition-all active:scale-95"
+                >
+                  <FileText className="w-3.5 h-3.5" /> Actes
+                </button>
+                <button 
+                  onClick={() => setContactingId(contactingId === bailiff.id ? null : bailiff.id)}
+                  className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95"
+                >
+                  <Phone className="w-3.5 h-3.5" /> Contacter
+                </button>
+              </div>
+
+              {contactingId === bailiff.id && (
+                <div className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-[2.5rem] flex flex-col items-center justify-center p-6 space-y-4 animate-in fade-in zoom-in-95 z-10">
+                  <button onClick={() => setContactingId(null)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-900">
+                    <X className="w-5 h-5" />
+                  </button>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 text-center">Étude {bailiff.name}</p>
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <button 
+                      onClick={() => handleContact(bailiff, 'tel')}
+                      className="flex flex-col items-center justify-center p-4 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 active:scale-95 transition-all"
+                    >
+                      <Phone className="w-6 h-6 mb-2" />
+                      <span className="text-[10px] font-black uppercase">Appeler</span>
+                    </button>
+                    <button 
+                      onClick={() => handleContact(bailiff, 'sms')}
+                      className="flex flex-col items-center justify-center p-4 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100 active:scale-95 transition-all"
+                    >
+                      <MessageSquare className="w-6 h-6 mb-2" />
+                      <span className="text-[10px] font-black uppercase">SMS</span>
+                    </button>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400">{bailiff.phone}</p>
+                </div>
+              )}
             </div>
           ))}
         </div>

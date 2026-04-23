@@ -110,7 +110,7 @@ const NotaryDashboard: React.FC<NotaryDashboardProps> = ({ onNavigate, notary })
       <div className="bg-slate-100 p-6 rounded-[2.5rem] border border-slate-200 flex items-start gap-3">
          <ShieldCheck className="w-5 h-5 text-slate-900 shrink-0" />
          <p className="text-[10px] text-slate-600 font-bold leading-relaxed">
-           Votre étude est certifiée Justice NS. Les honoraires sont versés sur votre portefeuille après authentification de l'acte par les parties.
+           Votre étude est certifiée Justice Maraude. Les honoraires sont versés sur votre portefeuille après authentification de l'acte par les parties.
          </p>
       </div>
     </div>

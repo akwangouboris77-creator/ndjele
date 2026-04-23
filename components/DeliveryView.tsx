@@ -33,14 +33,17 @@ const DeliveryView: React.FC<DeliveryViewProps> = ({ onNavigate, onStartRideRequ
     const finalPrice = calculateEstimate();
     const ride: ActiveRide = {
       id: Math.random().toString(36).substr(2, 9),
-      driverName: 'Livreur Ndjele',
+      driverName: 'Livreur Maraude',
       vehiclePlate: 'GA-DEL-99',
       type: selectedVehicle || TransportType.DELIVERY_MOTO,
       startTime: 0,
       destination: destination,
       isLocationShared: false,
       price: finalPrice,
-      status: 'PENDING'
+      status: 'PENDING',
+      rideMode: 'PRIVATE',
+      isRoadside: false,
+      seatsRequested: 1
     };
     onStartRideRequest(ride);
   };
@@ -52,7 +55,7 @@ const DeliveryView: React.FC<DeliveryViewProps> = ({ onNavigate, onStartRideRequ
           <button onClick={() => onNavigate('home')} className="p-2 bg-white rounded-full shadow-sm">
             <ArrowLeft className="w-5 h-5 text-slate-600" />
           </button>
-          <h2 className="text-2xl font-black text-slate-800">Ndjele Express</h2>
+          <h2 className="text-2xl font-black text-slate-800">Maraude Express</h2>
         </div>
         {!registeredLivreur ? (
           <button 

@@ -51,7 +51,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
       setGeneratedOtp(code);
       // Simulate sending
       setTimeout(() => {
-        alert(`Ndjele: Votre code de vérification est ${code}`);
+        alert(`Maraude: Votre code de vérification est ${code}`);
       }, 500);
     }
   };
@@ -91,7 +91,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
       const mockUser: UserProfile = {
         id: selectedRole.toLowerCase() + '-user-' + Math.random().toString(36).substr(2, 5),
         name: selectedRole === 'CLIENT' ? 'Client ' + phoneNumber.slice(-4) : 'Prestataire ' + phoneNumber.slice(-4),
-        email: phoneNumber + '@ndjele.ga',
+        email: phoneNumber + '@maraude.ga',
         phone: phoneNumber,
         photo: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?fit=crop&w=150&h=150',
         role: selectedRole
@@ -135,10 +135,10 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
       
       <div className="relative z-10 text-center space-y-4 pt-8">
         <div className="w-16 h-16 gradient-brand rounded-[1.8rem] flex items-center justify-center text-white mx-auto shadow-2xl border border-white/20">
-          <span className="text-2xl font-black">NS</span>
+          <span className="text-2xl font-black">MA</span>
         </div>
         <div className="space-y-1">
-          <h1 className="text-3xl font-black text-white tracking-tighter">Ndjele</h1>
+          <h1 className="text-3xl font-black text-white tracking-tighter">Maraude</h1>
           <p className="text-slate-400 font-bold text-[8px] uppercase tracking-[0.3em]">Connexion Sécurisée</p>
         </div>
       </div>
@@ -163,6 +163,14 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
                   className="w-full pl-24 pr-4 py-5 bg-slate-800 border border-white/10 rounded-2xl text-white font-black text-lg outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
+              <div className="flex justify-end px-2">
+                <button 
+                  onClick={() => alert("Fonctionnalité de réinitialisation : Un lien de récupération sera envoyé par SMS à votre numéro.")}
+                  className="text-[9px] font-black text-indigo-400 uppercase tracking-widest hover:text-white transition-colors"
+                >
+                  Mot de passe oublié ?
+                </button>
+              </div>
             </div>
 
             <div className="space-y-3">
@@ -173,7 +181,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
                  onClick={onOpenOnePager}
                  className="w-full bg-white/5 border border-white/10 text-white py-4 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"
                >
-                 <Info className="w-4 h-4 text-emerald-400" /> Découvrir Ndjele
+                 <Info className="w-4 h-4 text-emerald-400" /> Découvrir Maraude
                </button>
             </div>
           </div>

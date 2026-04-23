@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ArrowLeft, Star, ShieldCheck, MessageSquare, Sparkles, Loader2, MapPin, X, Send, Activity, HeartPulse, Baby, User, Eye, Pill, Droplet, Microscope, UserPlus } from 'lucide-react';
+import { Search, ArrowLeft, Star, ShieldCheck, MessageSquare, Sparkles, Loader2, MapPin, X, Send, Activity, HeartPulse, Baby, User, Eye, Pill, Droplet, Microscope, UserPlus, Phone } from 'lucide-react';
 import { ViewState, Doctor, ChatMessage } from '../types';
 import { getMedicalOrientation, getDriverChatResponse } from '../services/geminiService';
 
@@ -9,8 +9,8 @@ interface DoctorViewProps {
 }
 
 const MOCK_DOCTORS: Doctor[] = [
-  { id: 'd1', name: 'Dr. Marc Obiang', specialty: 'Médecin Généraliste', category: 'generaliste', rating: 4.9, distance: 0.8, isVerified: true, avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?fit=crop&w=150&h=150', neighborhood: 'Louis', experience: 12, availability: 'disponible' },
-  { id: 'd2', name: 'Dr. Sarah Bignoumba', specialty: 'Pédiatre Expert', category: 'pediatre', rating: 4.8, distance: 2.1, isVerified: true, avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?fit=crop&w=150&h=150', neighborhood: 'Nzeng-Ayong', experience: 8, availability: 'occupe' },
+  { id: 'd1', name: 'Dr. Marc Obiang', specialty: 'Médecin Généraliste', category: 'generaliste', rating: 4.9, distance: 0.8, isVerified: true, avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?fit=crop&w=150&h=150', neighborhood: 'Louis', experience: 12, availability: 'disponible', phone: '074 12 12 12' },
+  { id: 'd2', name: 'Dr. Sarah Bignoumba', specialty: 'Pédiatre Expert', category: 'pediatre', rating: 4.8, distance: 2.1, isVerified: true, avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?fit=crop&w=150&h=150', neighborhood: 'Nzeng-Ayong', experience: 8, availability: 'occupe', phone: '077 45 45 45' },
 ];
 
 const CATEGORIES = [
@@ -26,6 +26,7 @@ const DoctorView: React.FC<DoctorViewProps> = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   
   const [chatDoctor, setChatDoctor] = useState<Doctor | null>(null);
+  const [selectedDoctorForContact, setSelectedDoctorForContact] = useState<Doctor | null>(null);
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -86,7 +87,7 @@ const DoctorView: React.FC<DoctorViewProps> = ({ onNavigate }) => {
           <button onClick={() => onNavigate('home')} className="p-2 bg-white rounded-full shadow-sm text-slate-600 border border-slate-100">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Santé NS</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Santé Maraude</h2>
         </div>
         <button 
           onClick={() => onNavigate('doctor-registration')}
@@ -176,16 +177,53 @@ const DoctorView: React.FC<DoctorViewProps> = ({ onNavigate }) => {
                   <p className="text-[8px] font-black bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full uppercase inline-block mt-2">{doc.neighborhood}</p>
                 </div>
               </div>
-              <button 
-                onClick={() => handleStartChat(doc)}
-                className="w-full py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
-              >
-                <MessageSquare className="w-3.5 h-3.5" /> Prendre RDV
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <button 
+                  onClick={() => handleStartChat(doc)}
+                  className="py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" /> Prendre RDV
+                </button>
+                <button 
+                  onClick={() => setSelectedDoctorForContact(doc)}
+                  className="py-3 bg-white border border-slate-200 text-slate-900 rounded-xl font-black text-[10px] uppercase active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <Phone className="w-3.5 h-3.5" /> Contacter
+                </button>
+              </div>
             </div>
           ))}
         </div>
       </section>
+
+      {selectedDoctorForContact && (
+        <div className="fixed inset-0 z-[700] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="w-full max-w-sm bg-white rounded-[3rem] p-8 space-y-8 animate-in zoom-in-95 shadow-2xl relative">
+            <button onClick={() => setSelectedDoctorForContact(null)} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full text-slate-400"><X className="w-4 h-4" /></button>
+            <div className="text-center space-y-4 pt-4">
+              <img src={selectedDoctorForContact.avatar} className="w-24 h-24 rounded-[2.5rem] mx-auto object-cover border-4 border-emerald-50 shadow-xl" />
+              <div>
+                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">{selectedDoctorForContact.name}</h3>
+                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{selectedDoctorForContact.specialty}</p>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-2xl">
+                <p className="text-sm font-black text-slate-800">{selectedDoctorForContact.phone}</p>
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1">Cabinet Médical Maraude</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <a href={`tel:${selectedDoctorForContact.phone}`} className="flex flex-col items-center gap-3 p-6 bg-emerald-600 text-white rounded-[2rem] shadow-lg shadow-emerald-200 active:scale-95 transition-transform">
+                <Phone className="w-6 h-6" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Appeler</span>
+              </a>
+              <a href={`sms:${selectedDoctorForContact.phone}`} className="flex flex-col items-center gap-3 p-6 bg-slate-900 text-white rounded-[2rem] shadow-lg active:scale-95 transition-transform">
+                <MessageSquare className="w-6 h-6" />
+                <span className="text-[10px] font-black uppercase tracking-widest">SMS</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {chatDoctor && (
         <div className="fixed inset-0 z-[600] bg-slate-900/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 animate-in fade-in duration-300">

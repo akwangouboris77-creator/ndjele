@@ -303,7 +303,8 @@ const MaraudeView: React.FC<MaraudeViewProps> = ({ onNavigate, onStartRide, user
           <div className="relative h-64 bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl">
             <GpsMap 
               clientLoc={currentCoords || undefined} 
-              driverLoc={selectedDriver?.location || (foundDrivers[0]?.location)}
+              nearbyDrivers={foundDrivers.map(d => d.location)}
+              driverLoc={selectedDriver?.location}
               height="100%" 
             />
             <div className="absolute top-4 left-4 right-4 bg-slate-900/60 backdrop-blur-md p-3 rounded-2xl border border-white/10 flex items-center gap-3">

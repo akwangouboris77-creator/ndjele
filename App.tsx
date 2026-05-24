@@ -69,6 +69,10 @@ const DEFAULT_CONTACTS: Contact[] = [
   { id: 'c2', name: 'Commissariat Central', phone: '1722', isTrusted: true },
 ];
 
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './src/lib/firebase';
+import { dbService } from './src/services/dbService';
+
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
@@ -76,6 +80,22 @@ const App: React.FC = () => {
       return saved ? JSON.parse(saved) : null;
     } catch (e) { return null; }
   });
+
+  useEffect(() => {
+    // Sync Firebase Auth with localStorage user
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        console.log("Firebase Auth Synced:", firebaseUser.uid);
+      } else if (user) {
+        console.warn("User in localStorage but not in Firebase Auth. Sign-in needed.");
+      }
+    });
+
+    // Test connection
+    dbService.testConnection();
+
+    return () => unsubscribe();
+  }, []);
 
   const [walletBalance, setWalletBalance] = useState<number>(() => {
     const saved = localStorage.getItem('maraude_wallet');

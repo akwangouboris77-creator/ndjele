@@ -62,6 +62,13 @@ async function startServer() {
       io.emit(`negotiation-${requestId}`, { sender, text, price, timestamp: Date.now() });
     });
 
+    socket.on("update-driver-location", ({ driverId, name, type, lat, lng }) => {
+      db.deliveries[`driver-${driverId}`] = { lat, lng, status: "available" }; // Reusing deliveries storage structure for simplicity or adding new
+      // Better yet, update a drivers_online map
+      if (!db.trips["drivers_online"]) (db.trips as any)["drivers_online"] = {};
+      (db.trips as any)["drivers_online"][driverId] = { name, type, lat, lng, lastUpdate: Date.now() };
+    });
+
     socket.on("update-trip-location", ({ tripId, role, lat, lng }) => {
       if (!db.trips[tripId]) {
         db.trips[tripId] = { destination: "" };
@@ -113,11 +120,29 @@ async function startServer() {
   });
 
   app.get("/api/drivers/nearby", (req, res) => {
-    // Return registered drivers + some mock ones to ensure the radar always shows something
+    // Return registered drivers + some mock ones + real-time online drivers
     const mockDrivers = [
-      { id: 'm1', name: 'Ousmane B.', type: 'TAXI', rating: 4.7, distance: 0.2, location: { lat: 0.39, lng: 9.45 }, currentDestination: 'Akanda' },
-      { id: 'm2', name: 'Moussa K.', type: 'TAXI', rating: 4.8, distance: 0.4, location: { lat: 0.38, lng: 9.46 }, currentDestination: 'Nzeng-Ayong' },
+      { id: 'm1', name: 'Ousmane B.', type: 'TAXI', rating: 4.7, distance: 0.2, location: { lat: 0.395, lng: 9.455 }, currentDestination: 'Akanda' },
+      { id: 'm2', name: 'Moussa K.', type: 'TAXI', rating: 4.8, distance: 0.4, location: { lat: 0.385, lng: 9.465 }, currentDestination: 'Nzeng-Ayong' },
     ];
+
+    const onlineDrivers = [];
+    const driversOnline = (db.trips as any)["drivers_online"] || {};
+    for (const id in driversOnline) {
+      const d = driversOnline[id];
+      // Only show drivers updated in the last 2 minutes
+      if (Date.now() - d.lastUpdate < 120000) {
+        onlineDrivers.push({
+          id,
+          name: d.name,
+          type: d.type,
+          rating: 5.0,
+          distance: 0.1, // Should be calculated
+          location: { lat: d.lat, lng: d.lng },
+          currentDestination: 'Libreville'
+        });
+      }
+    }
     
     const registeredDrivers = db.drivers.map(d => ({
       id: d.id || Math.random().toString(36).substr(2, 9),
@@ -129,7 +154,7 @@ async function startServer() {
       currentDestination: 'Libreville'
     }));
 
-    res.json([...registeredDrivers, ...mockDrivers]);
+    res.json([...onlineDrivers, ...registeredDrivers, ...mockDrivers]);
   });
 
   app.post("/api/merchants/register", (req, res) => {
@@ -185,6 +210,7 @@ async function startServer() {
           }
         }
       });
+      
       res.json(JSON.parse(result.text || "{}"));
     } catch (error) {
       console.error(error);
@@ -217,6 +243,7 @@ async function startServer() {
           }
         }
       });
+      
       res.json(JSON.parse(result.text || "{}"));
     } catch (error) {
       console.error(error);
@@ -275,6 +302,7 @@ async function startServer() {
           }
         }
       });
+      
       res.json(JSON.parse(result.text || "{}"));
     } catch (error) {
       console.error(error);
@@ -288,6 +316,7 @@ async function startServer() {
       const prompt = `Tu es une IA de logistique à Libreville. Voici l'historique des dernières destinations d'un taxi : ${history.join(', ')}. 
       En te basant sur les habitudes de transport locales au Gabon et cet historique, prédis la prochaine destination la plus probable.
       Réponds uniquement avec le nom du quartier/lieu (ex: Aéroport, Owendo, Louis).`;
+      
       const result = await ai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: [{ role: "user", parts: [{ text: prompt }] }]

@@ -6,6 +6,7 @@ import { Navigation } from 'lucide-react';
 interface GpsMapProps {
   clientLoc?: { lat: number, lng: number };
   driverLoc?: { lat: number, lng: number };
+  nearbyDrivers?: { lat: number, lng: number }[];
   destinationLoc?: { lat: number, lng: number };
   zoom?: number;
   height?: string;
@@ -14,19 +15,20 @@ interface GpsMapProps {
 const GpsMap: React.FC<GpsMapProps> = ({ 
   clientLoc, 
   driverLoc, 
+  nearbyDrivers,
   destinationLoc, 
   zoom = 13, 
   height = '300px' 
 }) => {
-  // Center map on client, then driver, then Libreville fallback
+  // Center map on client, then driver, then first nearby, then Libreville fallback
   const center: [number, number] = clientLoc 
     ? [clientLoc.lat, clientLoc.lng] 
-    : (driverLoc ? [driverLoc.lat, driverLoc.lng] : [0.3908, 9.4534]);
+    : (driverLoc ? [driverLoc.lat, driverLoc.lng] : (nearbyDrivers?.length ? [nearbyDrivers[0].lat, nearbyDrivers[0].lng] : [0.3908, 9.4534]));
 
   return (
     <div className="rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl relative bg-slate-100" style={{ height }}>
       <Map 
-        defaultCenter={center} 
+        center={center} 
         defaultZoom={zoom}
         metaWheelZoom={true}
       >
@@ -57,6 +59,19 @@ const GpsMap: React.FC<GpsMapProps> = ({
             </div>
           </Marker>
         )}
+
+        {nearbyDrivers?.map((loc, idx) => (
+          <React.Fragment key={idx}>
+            <Marker 
+              width={30}
+              anchor={[loc.lat, loc.lng]} 
+            >
+              <div className="w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-md border-2 border-white">
+                <span className="text-xs">🚕</span>
+              </div>
+            </Marker>
+          </React.Fragment>
+        ))}
 
         {destinationLoc && (
           <Marker 

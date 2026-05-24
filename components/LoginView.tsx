@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Loader2, Sparkles, Phone, ArrowRight, Smartphone, MessageSquare, ArrowLeft, CheckCircle2, User, Car, Hammer, Store, Truck, Info, Stethoscope, Pill } from 'lucide-react';
 import { UserProfile, UserRole } from '../types';
 import { dbService } from '../src/services/dbService';
+import { auth } from '../src/lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 
 interface LoginViewProps {
   onLogin: (user: UserProfile) => void;
@@ -88,27 +90,33 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
     setStep('loading');
 
     setTimeout(async () => {
-      const mockUser: UserProfile = {
-        id: selectedRole.toLowerCase() + '-user-' + Math.random().toString(36).substr(2, 5),
-        name: selectedRole === 'CLIENT' ? 'Client ' + phoneNumber.slice(-4) : 'Prestataire ' + phoneNumber.slice(-4),
-        email: phoneNumber + '@maraude.ga',
-        phone: phoneNumber,
-        photo: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?fit=crop&w=150&h=150',
-        role: selectedRole
-      };
-
       try {
-        await dbService.pushData('users', mockUser);
+        // Sign in anonymously to Firebase
+        const userCredential = await signInAnonymously(auth);
+        const userId = userCredential.user.uid;
+
+        const mockUser: UserProfile = {
+          id: userId,
+          name: selectedRole === 'CLIENT' ? 'Client ' + phoneNumber.slice(-4) : 'Prestataire ' + phoneNumber.slice(-4),
+          email: phoneNumber + '@maraude.ga',
+          phone: phoneNumber,
+          photo: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?fit=crop&w=150&h=150',
+          role: selectedRole
+        };
+
+        await dbService.setData('users', userId, mockUser);
+        
+        // Also notify the server if needed
         await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(mockUser)
         });
-      } catch (e) {
-        console.error("Failed to sync user to DB", e);
-      }
 
-      onLogin(mockUser);
+        onLogin(mockUser);
+      } catch (e) {
+        console.error("Failed to login/sync user to DB", e);
+      }
     }, 2000);
   };
 

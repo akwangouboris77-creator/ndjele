@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "App users",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "firstName"]
+    },
+    "Driver": {
+      "title": "Driver",
+      "description": "Taxi drivers",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "firstName": { "type": "string" },
+        "licensePlate": { "type": "string" },
+        "vehicleType": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "status": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Ride": {
+      "title": "Ride",
+      "description": "Taxi trip requests",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "driverId": { "type": "string" },
+        "pickup": { "type": "string" },
+        "destination": { "type": "string" },
+        "status": { "type": "string" },
+        "price": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Professional": {
+      "title": "Professional",
+      "description": "Generic professional entity for lawyers, doctors, etc.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "specialty": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Users of the platform"
+    },
+    "/drivers/{driverId}": {
+      "schema": "Driver",
+      "description": "Drivers registered in the system"
+    },
+    "/rides/{rideId}": {
+      "schema": "Ride",
+      "description": "Ride requests and history"
+    },
+    "/lawyers/{lawyerId}": { "schema": "Professional", "description": "Lawyers" },
+    "/bailiffs/{bailiffId}": { "schema": "Professional", "description": "Bailiffs" },
+    "/notaries/{notaryId}": { "schema": "Professional", "description": "Notaries" },
+    "/accountants/{accountantId}": { "schema": "Professional", "description": "Accountants" },
+    "/artisans/{artisanId}": { "schema": "Professional", "description": "Artisans" },
+    "/pharmacies/{pharmacyId}": { "schema": "Professional", "description": "Pharmacies" },
+    "/merchants/{merchantId}": { "schema": "Professional", "description": "Merchants" },
+    "/doctors/{doctorId}": { "schema": "Professional", "description": "Doctors" }
+  }
+}

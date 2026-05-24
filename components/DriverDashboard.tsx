@@ -122,6 +122,18 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ user, onNavigate, onA
     };
   }, []);
 
+  useEffect(() => {
+    if (currentLocation && user) {
+      socketRef.current?.emit('update-driver-location', {
+        driverId: user.id,
+        name: user.name,
+        type: registeredDriver?.vehicleType || 'TAXI',
+        lat: currentLocation.lat,
+        lng: currentLocation.lng
+      });
+    }
+  }, [currentLocation, user, registeredDriver]);
+
   const handleStartNegotiation = (req: AvailableRequest) => {
     setNegotiatingWith(req);
     setNegotiationText(`Bonjour ${req.clientName}, je vais dans cette direction. 800 F ça vous va ?`);
@@ -496,7 +508,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ user, onNavigate, onA
            </div>
 
            <div className="w-full space-y-4">
-              <div className="bg-amber-400 p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(251,191,36,0.3)] border-[6px] border-white relative overflow-hidden group">
+              <div id="print-badge" className="bg-amber-400 p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(251,191,36,0.3)] border-[6px] border-white relative overflow-hidden group">
                  <div className="absolute top-0 right-0 bg-slate-900 text-white px-4 py-1.5 rounded-bl-2xl font-black text-[9px] uppercase tracking-widest">OFFICIEL MARAUDE</div>
                  <div className="flex flex-col items-center">
                    <p className="text-slate-900 font-black text-[10px] uppercase tracking-[0.3em] mb-2 opacity-80 text-center">NUMÉRO DE PORTIÈRE</p>

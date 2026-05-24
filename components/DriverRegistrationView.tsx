@@ -146,7 +146,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
         </div>
 
             <div className="w-full space-y-4 animate-in slide-in-from-bottom-6 duration-700 delay-200">
-               <div className="bg-amber-400 p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(251,191,36,0.3)] border-[6px] border-slate-900 relative overflow-hidden group">
+               <div id="print-badge" className="bg-amber-400 p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(251,191,36,0.3)] border-[6px] border-slate-900 relative overflow-hidden group">
                   <div className="absolute top-0 right-0 bg-slate-900 text-white px-4 py-1.5 rounded-bl-2xl font-black text-[9px] uppercase tracking-widest">OFFICIEL MARAUDE</div>
                   <div className="flex flex-col items-center">
                     <p className="text-slate-900 font-black text-[10px] uppercase tracking-[0.3em] mb-2 opacity-80 text-center">NUMÉRO DE PORTIÈRE</p>
@@ -306,7 +306,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
                   value={formData.licensePlate} 
                   onChange={(e) => setFormData({...formData, licensePlate: e.target.value.toUpperCase()})} 
                   placeholder="GA-000-AA" 
-                  className="w-full p-6 bg-white border border-slate-100 rounded-[2rem] font-black text-3xl tracking-[0.2em] text-center outline-none focus:border-amber-500 shadow-sm" 
+                  className="w-full p-6 bg-white border-2 border-slate-200 rounded-[2rem] font-black text-3xl tracking-[0.2em] text-center text-slate-900 outline-none focus:border-amber-500 shadow-sm" 
                 />
               </div>
 
@@ -461,7 +461,7 @@ const DriverRegistrationView: React.FC<DriverRegistrationViewProps> = ({ onNavig
          {step < 6 ? (
            <>
              <button onClick={handleBack} className="flex-1 py-5 bg-white border border-slate-100 text-slate-500 rounded-[2rem] font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Retour</button>
-             <button onClick={handleNext} disabled={ (step === 1 && !formData.firstName) || (step === 3 && !formData.plate) } className="flex-[2] py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-[10px] tracking-widest shadow-xl shadow-slate-200 disabled:opacity-50 active:scale-95 transition-all">Suivant</button>
+             <button onClick={handleNext} disabled={ (step === 1 && !formData.firstName) || (step === 3 && !formData.licensePlate) } className="flex-[2] py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-[10px] tracking-widest shadow-xl shadow-slate-200 disabled:opacity-50 active:scale-95 transition-all">Suivant</button>
            </>
          ) : (
            <button onClick={handlePayment} disabled={phoneNumber.length < 8 || isSubmitting} className="w-full py-6 gradient-primary text-white rounded-[2.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-2xl shadow-emerald-200 flex items-center justify-center gap-3 active:scale-95 transition-all">

@@ -5,9 +5,64 @@ import {
   ChevronRight, ArrowLeft, Star, Wallet, Settings, Bell, 
   CheckCircle2, HelpCircle, LogOut, Trophy, CreditCard,
   History, ShieldCheck, Heart, Zap, Camera, X, ShieldAlert, Info,
-  Smartphone, Languages, Moon, Volume2, MessageSquare, PhoneCall, ExternalLink, Truck
+  Smartphone, Languages, Moon, Volume2, MessageSquare, PhoneCall, ExternalLink, Truck,
+  Car
 } from 'lucide-react';
 import { ViewState, UserProfile, SubscriptionTier, MarketplaceOrder } from '../types';
+
+interface FaqItem {
+  category: 'TRANSPORT' | 'PAIEMENT' | 'SÉCURITÉ';
+  q: string;
+  a: string;
+}
+
+const FAQ_ITEMS: FaqItem[] = [
+  { 
+    category: 'TRANSPORT', 
+    q: "Comment commander un Taxi Privé ?", 
+    a: "Allez sur l'accueil, sélectionnez 'Taxi Privé', indiquez votre destination sur la carte ou saisissez-la, puis validez votre course instantanément." 
+  },
+  { 
+    category: 'TRANSPORT', 
+    q: "Qu'est-ce que le Numéro Maraude ?", 
+    a: "C'est l'identifiant de sécurité peint sur la portière des taxis officiels. Saisissez-le dans l'application pour valider que vous montez dans le bon véhicule." 
+  },
+  { 
+    category: 'TRANSPORT', 
+    q: "Comment fonctionne le Taxi Collectif ?", 
+    a: "C'est une option économique (500 - 1000 F CFA) pour partager votre trajet avec d'autres passagers voyageant dans la même direction." 
+  },
+  { 
+    category: 'PAIEMENT', 
+    q: "Comment recharger mon portefeuille ?", 
+    a: "Accédez à la section 'Wallet' de l'application et utilisez vos comptes Airtel Money ou Moov Money pour créditer votre solde instantanément." 
+  },
+  { 
+    category: 'PAIEMENT', 
+    q: "Les paiements en espèces sont-ils acceptés ?", 
+    a: "Oui, mais le paiement via le Wallet Maraude est fortement conseillé pour éviter les problèmes de monnaie et bénéficier de remises exclusives." 
+  },
+  { 
+    category: 'PAIEMENT', 
+    q: "Que faire en cas de prélèvement erroné ?", 
+    a: "Contactez notre assistance en direct ou signalez le trajet depuis votre historique. Notre support étudiera la réclamation sous 24h." 
+  },
+  { 
+    category: 'SÉCURITÉ', 
+    q: "Comment fonctionne le bouton Urgence SOS ?", 
+    a: "En cas de danger durant un trajet, un appui sur 'Urgence SOS' alerte immédiatement nos équipes de sécurité et transmet vos coordonnées GPS exactes aux autorités." 
+  },
+  { 
+    category: 'SÉCURITÉ', 
+    q: "Les chauffeurs sont-ils vérifiés ?", 
+    a: "Oui, chaque chauffeur partenaire Maraude subit un contrôle rigoureux de ses antécédents, de sa pièce d'identité et de sa licence de transport avant d'être validé." 
+  },
+  { 
+    category: 'SÉCURITÉ', 
+    q: "Puis-je partager mon trajet en direct ?", 
+    a: "Absolument. Dès que votre trajet commence, vous pouvez copier un lien de suivi en temps réel à envoyer par SMS ou WhatsApp à vos proches." 
+  }
+];
 
 interface ClientDashboardProps {
   onNavigate: (view: ViewState) => void;
@@ -23,6 +78,9 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate, user, sub
   const isPremium = subscriptionTier === 'PREMIUM';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeModal, setActiveModal] = useState<'settings' | 'payments' | 'help' | null>(null);
+  const [selectedFaqCategory, setSelectedFaqCategory] = useState<'TOUT' | 'TRANSPORT' | 'PAIEMENT' | 'SÉCURITÉ'>('TOUT');
+  const [faqSearchQuery, setFaqSearchQuery] = useState('');
+  const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -113,39 +171,122 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate, user, sub
     </div>
   );
 
-  const renderHelp = () => (
-    <div className="space-y-6 animate-in slide-in-from-bottom-4">
-      <div className="grid grid-cols-1 gap-3">
-        {[
-          { q: "Comment payer ma course ?", a: "Utilisez le Wallet Maraude crédité via Airtel ou Moov Money." },
-          { q: "Qu'est-ce que le Numéro Maraude ?", a: "C'est l'identifiant unique peint sur la portière des taxis certifiés." },
-          { q: "Ma commande est en retard", a: "Contactez directement le livreur via le chat de suivi." },
-        ].map((faq, i) => (
-          <div key={i} className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1">
-            <p className="text-xs font-black text-slate-800 uppercase tracking-tight">{faq.q}</p>
-            <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{faq.a}</p>
-          </div>
-        ))}
-      </div>
+  const renderHelp = () => {
+    const filteredFaqs = FAQ_ITEMS.filter(faq => {
+      const matchesCategory = selectedFaqCategory === 'TOUT' || faq.category === selectedFaqCategory;
+      const matchesQuery = faq.q.toLowerCase().includes(faqSearchQuery.toLowerCase()) || 
+                           faq.a.toLowerCase().includes(faqSearchQuery.toLowerCase());
+      return matchesCategory && matchesQuery;
+    });
 
-      <div className="space-y-3">
-        <button className="w-full flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-2xl group">
-          <div className="flex items-center gap-3">
-            <PhoneCall className="w-5 h-5 text-emerald-600" />
-            <span className="text-xs font-bold text-emerald-700">Appeler l'assistance (1722)</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-emerald-400" />
-        </button>
-        <button className="w-full flex items-center justify-between p-4 bg-blue-50 border border-blue-100 rounded-2xl group">
-          <div className="flex items-center gap-3">
-            <MessageSquare className="w-5 h-5 text-blue-600" />
-            <span className="text-xs font-bold text-blue-700">Chatter avec un conseiller</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-blue-400" />
-        </button>
+    return (
+      <div className="space-y-5 animate-in slide-in-from-bottom-4">
+        {/* Dynamic Search Input */}
+        <div className="relative">
+          <input 
+            type="text" 
+            placeholder="Rechercher une question..." 
+            value={faqSearchQuery}
+            onChange={(e) => setFaqSearchQuery(e.target.value)}
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-150 rounded-2xl text-xs font-semibold placeholder-slate-400 focus:outline-none focus:border-indigo-400 transition-all text-slate-800"
+          />
+          {faqSearchQuery && (
+            <button 
+              onClick={() => setFaqSearchQuery('')} 
+              className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Categories filters */}
+        <div className="flex gap-2 pb-1 overflow-x-auto scrollbar-none">
+          {[
+            { id: 'TOUT', label: 'Tout', icon: HelpCircle, color: 'bg-indigo-600 text-white', inactive: 'bg-slate-50 text-slate-500 border border-slate-200/60' },
+            { id: 'TRANSPORT', label: 'Transport', icon: Car, color: 'bg-emerald-600 text-white', inactive: 'bg-emerald-50/40 text-emerald-700 border border-emerald-100/40' },
+            { id: 'PAIEMENT', label: 'Paiement', icon: CreditCard, color: 'bg-amber-600 text-white', inactive: 'bg-amber-50/40 text-amber-700 border border-amber-100/40' },
+            { id: 'SÉCURITÉ', label: 'Sécurité', icon: Shield, color: 'bg-rose-600 text-white', inactive: 'bg-rose-50/40 text-rose-700 border border-rose-100/40' },
+          ].map((cat) => {
+            const isActive = selectedFaqCategory === cat.id;
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedFaqCategory(cat.id as any)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-black tracking-tight whitespace-nowrap transition-all duration-300 ${
+                  isActive ? `${cat.color} shadow-sm scale-[1.02]` : `${cat.inactive} hover:bg-slate-150 active:scale-95`
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{cat.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* FAQ list with accordion animation */}
+        <div className="space-y-3">
+          {filteredFaqs.length > 0 ? (
+            filteredFaqs.map((faq, i) => {
+              const isExpanded = expandedFaq === faq.q;
+              return (
+                <div 
+                  key={i} 
+                  className={`bg-white border rounded-2xl transition-all duration-300 p-4 ${
+                    isExpanded ? 'border-indigo-150 shadow-md bg-indigo-50/5' : 'border-slate-100 shadow-sm hover:border-slate-200'
+                  }`}
+                >
+                  <button
+                    onClick={() => setExpandedFaq(isExpanded ? null : faq.q)}
+                    className="w-full flex justify-between items-center text-left gap-3"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${
+                        faq.category === 'TRANSPORT' ? 'bg-emerald-500' :
+                        faq.category === 'PAIEMENT' ? 'bg-amber-500' : 'bg-rose-500'
+                      }`} />
+                      <p className="text-xs font-bold text-slate-800 tracking-tight">{faq.q}</p>
+                    </div>
+                    <ChevronRight className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-90 text-indigo-500' : ''}`} />
+                  </button>
+                  {isExpanded && (
+                    <p className="text-[11px] text-slate-500 font-medium leading-relaxed mt-2.5 pt-2.5 border-t border-slate-50 animate-in fade-in duration-200">
+                      {faq.a}
+                    </p>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-8 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <HelpCircle className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+              <p className="text-xs font-bold text-slate-500">Aucun résultat trouvé</p>
+              <p className="text-[10px] text-slate-400">Essayez de modifier votre recherche ou catégorie.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Quick action controls */}
+        <div className="space-y-3 pt-3 border-t border-slate-100">
+          <button className="w-full flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-2xl group">
+            <div className="flex items-center gap-3">
+              <PhoneCall className="w-5 h-5 text-emerald-600" />
+              <span className="text-xs font-bold text-emerald-700">Appeler l'assistance (1722)</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-emerald-400" />
+          </button>
+          <button className="w-full flex items-center justify-between p-4 bg-blue-50 border border-blue-100 rounded-2xl group">
+            <div className="flex items-center gap-3">
+              <MessageSquare className="w-5 h-5 text-blue-600" />
+              <span className="text-xs font-bold text-blue-700">Chatter avec un conseiller</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-blue-400" />
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-500 pb-32">

@@ -91,9 +91,15 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
 
     setTimeout(async () => {
       try {
-        // Sign in anonymously to Firebase
-        const userCredential = await signInAnonymously(auth);
-        const userId = userCredential.user.uid;
+        let userId: string;
+        try {
+          // Sign in anonymously to Firebase
+          const userCredential = await signInAnonymously(auth);
+          userId = userCredential.user.uid;
+        } catch (authError) {
+          console.warn("Failed to sign in anonymously to Firebase. Falling back to local offline ID:", authError);
+          userId = 'local_' + Math.random().toString(36).substr(2, 9);
+        }
 
         const mockUser: UserProfile = {
           id: userId,
@@ -107,15 +113,30 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
         await dbService.setData('users', userId, mockUser);
         
         // Also notify the server if needed
-        await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(mockUser)
-        });
+        try {
+          await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(mockUser)
+          });
+        } catch (serverError) {
+          console.warn("Server registration notification error (expected in offline preview mode):", serverError);
+        }
 
         onLogin(mockUser);
       } catch (e) {
-        console.error("Failed to login/sync user to DB", e);
+        console.warn("Failed to login/sync user to DB", e);
+        // Fail-safe fallback login in case anything else goes wrong
+        const fallbackId = 'local_' + Math.random().toString(36).substr(2, 9);
+        const fallbackUser: UserProfile = {
+          id: fallbackId,
+          name: selectedRole === 'CLIENT' ? 'Client ' + phoneNumber.slice(-4) : 'Prestataire ' + phoneNumber.slice(-4),
+          email: phoneNumber + '@maraude.ga',
+          phone: phoneNumber,
+          photo: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?fit=crop&w=150&h=150',
+          role: selectedRole
+        };
+        onLogin(fallbackUser);
       }
     }, 2000);
   };

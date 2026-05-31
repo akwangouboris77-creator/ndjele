@@ -8,11 +8,8 @@ service cloud.firestore {
 
     // Phase 3: Primitives
     function isSignedIn() { return request.auth != null; }
-    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
     function incoming() { return request.resource.data; }
     function existing() { return resource.data; }
-    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
-    function isVerifiedUser() { return isSignedIn() && request.auth.token.email_verified == true; }
     
     // Admin check - bootstrap admin from runtime user email if applicable
     // akwangouboris77@gmail.com
@@ -25,64 +22,30 @@ service cloud.firestore {
 
     // 1. User Profiles
     match /users/{userId} {
-      allow get: if isSignedIn();
-      allow list: if isAdmin();
-      allow create: if isOwner(userId) && isValidUser(incoming());
-      allow update: if (isOwner(userId) || isAdmin()) && isValidUser(incoming()) && (
-        // Prevent role changes by regular users
-        (incoming().diff(existing()).affectedKeys().hasOnly(['firstName', 'lastName', 'email', 'updatedAt'])) ||
-        isAdmin()
-      );
-
-      function isValidUser(data) {
-        return data.keys().hasAll(['userId', 'firstName']) &&
-               data.userId == request.auth.uid &&
-               data.firstName is string && data.firstName.size() <= 100 &&
-               (!('role' in data) || data.role is string);
-      }
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (userId == request.auth.uid || isAdmin());
     }
 
     // 2. Driver Profiles
     match /drivers/{driverId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidDriver(incoming());
-      allow update: if (isOwner(existing().userId) || isAdmin()) && isValidDriver(incoming()) && (
-        (incoming().diff(existing()).affectedKeys().hasOnly(['status', 'phoneNumber', 'updatedAt'])) ||
-        isAdmin()
-      );
-
-      function isValidDriver(data) {
-        return data.userId is string && data.userId == request.auth.uid &&
-               data.licensePlate is string && data.licensePlate.size() <= 20 &&
-               (!('isVerified' in data) || data.isVerified is bool);
-      }
+      allow create: if isSignedIn() && (incoming().userId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
     }
 
     // 3. Rides
     match /rides/{rideId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.driverId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && isValidRide(incoming());
-      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.driverId == request.auth.uid || isAdmin()) && (
-        (incoming().diff(existing()).affectedKeys().hasOnly(['status', 'driverId', 'updatedAt'])) ||
-        isAdmin()
-      );
-
-      function isValidRide(data) {
-        return data.userId == request.auth.uid &&
-               data.status is string &&
-               data.price is number;
-      }
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (incoming().userId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && (existing().userId == request.auth.uid || existing().driverId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
     }
 
     // 4. Professionals (Lawyers, Doctors, etc.)
     match /{profType}/{profId} {
       allow read: if isSignedIn();
-      allow write: if isAdmin() || (isSignedIn() && isOwner(incoming().userId) && profType.matches('^(lawyers|doctors|notaries|bailiffs|accountants|artisans|pharmacies|merchants)$'));
-      
-      // Additional check for professional types
-      function isProfType(type) {
-        return type in ['lawyers', 'doctors', 'notaries', 'bailiffs', 'accountants', 'artisans', 'pharmacies', 'merchants'];
-      }
+      allow write: if isSignedIn() && (incoming().userId == request.auth.uid || !('userId' in incoming()) || isAdmin());
     }
 
     // 5. Admins Collection

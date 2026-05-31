@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info, Sparkles
+  Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info, Sparkles, Smartphone
 } from 'lucide-react';
 import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor, Lawyer, Bailiff, Notary, Accountant } from './types';
 
@@ -58,6 +58,7 @@ import MaraudeView from './components/MaraudeView';
 import ClandoView from './components/ClandoView';
 import QuartierMaisonView from './components/QuartierMaisonView';
 import { AnimatePresence } from 'motion/react';
+import AppLauncher from './components/AppLauncher';
 
 const DEFAULT_ARTISANS: Artisan[] = [
   { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong', phone: '074 11 11 11' },
@@ -69,9 +70,10 @@ const DEFAULT_CONTACTS: Contact[] = [
   { id: 'c2', name: 'Commissariat Central', phone: '1722', isTrusted: true },
 ];
 
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { auth } from './src/lib/firebase';
 import { dbService } from './src/services/dbService';
+import { useRef } from 'react';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(() => {
@@ -81,13 +83,53 @@ const App: React.FC = () => {
     } catch (e) { return null; }
   });
 
+  const userRef = useRef<UserProfile | null>(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   useEffect(() => {
     // Sync Firebase Auth with localStorage user
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      const currentUser = userRef.current;
       if (firebaseUser) {
         console.log("Firebase Auth Synced:", firebaseUser.uid);
-      } else if (user) {
-        console.warn("User in localStorage but not in Firebase Auth. Sign-in needed.");
+        // If we have a user in state, ensure their id matches the firebaseUser's uid
+        if (currentUser && currentUser.id !== firebaseUser.uid) {
+          console.log("Updating user ID to match Firebase Auth session:", firebaseUser.uid);
+          const updatedUser = { ...currentUser, id: firebaseUser.uid };
+          localStorage.setItem('maraude_user', JSON.stringify(updatedUser));
+          setUser(updatedUser);
+          try {
+            await dbService.setData('users', firebaseUser.uid, updatedUser);
+          } catch (e) {
+            console.error("Failed to update user profile in Firestore:", e);
+          }
+        } else if (!currentUser) {
+          // If we have an auth user but no localStorage user, fetch profile
+          try {
+            const profile = await dbService.getData('users', firebaseUser.uid);
+            if (profile) {
+              localStorage.setItem('maraude_user', JSON.stringify(profile));
+              setUser(profile as UserProfile);
+            }
+          } catch (e) {
+            console.error("Failed to fetch user profile from Firestore:", e);
+          }
+        }
+      } else {
+        // No firebaseUser, sign in anonymously if no local user exists
+        if (!userRef.current) {
+          console.log("No Firebase Auth user & no local user. Signing in anonymously...");
+          try {
+            const userCredential = await signInAnonymously(auth);
+            console.log("Anonymous Sign-in successful:", userCredential.user.uid);
+          } catch (error) {
+            console.warn("Failed to sign in anonymously (expected if anonymous auth is disabled in your Firebase/Google Cloud setup):", error);
+          }
+        } else {
+          console.log("No Firebase Auth user, but local session found. Using local profile:", userRef.current.id);
+        }
       }
     });
 
@@ -108,6 +150,10 @@ const App: React.FC = () => {
 
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState<boolean>(() => {
     return localStorage.getItem('maraude_terms_accepted') === 'true';
+  });
+
+  const [appModule, setAppModule] = useState<'MARAUDE' | 'SERVICES' | null>(() => {
+    return (localStorage.getItem('maraude_app_module') as any) || null;
   });
 
   const [activeView, setActiveView] = useState<ViewState>(() => {
@@ -181,28 +227,34 @@ const App: React.FC = () => {
     if (!hasAcceptedTerms) return <TermsView onAccept={() => { setHasAcceptedTerms(true); localStorage.setItem('maraude_terms_accepted', 'true'); setActiveView('home'); }} />;
 
     if (activeView === 'home') {
-      switch (user.role) {
-        case 'DRIVER': return <DriverDashboard user={user} onNavigate={navigateProtected} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} registeredDriver={registeredDriver} />;
-        case 'DELIVERY': return <DeliveryDashboard 
-          onNavigate={setActiveView} 
-          registeredLivreur={registeredLivreur} 
-          marketplaceOrders={orders} 
-          onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} 
-          onAcceptOrder={(id, name) => setOrders(orders.map(o => o.id === id ? { ...o, status: 'PICKED_UP', livreurName: name } : o))} 
-          onMarkDelivered={(id) => setOrders(orders.map(o => o.id === id ? { ...o, status: 'DELIVERED' } : o))} 
-          onUpdateOrder={(id, updates) => setOrders(orders.map(o => o.id === id ? { ...o, ...updates } : o))} 
-        />;
-        case 'MERCHANT': return <MerchantDashboard onNavigate={setActiveView} registeredMerchant={registeredMerchant} onUpdateMerchant={setRegisteredMerchant} />;
-        case 'DOCTOR': return registeredDoctor ? <DoctorDashboard onNavigate={setActiveView} doctorName={user.name} /> : <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => {setRegisteredDoctor(d); setActiveView('home');}} />;
-        case 'PHARMACY': return registeredPharmacy ? <PharmacyDashboard onNavigate={setActiveView} pharmacy={registeredPharmacy} onUpdatePharmacy={setRegisteredPharmacy} /> : <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
-        case 'ARTISAN': return registeredArtisanPro ? <ArtisanDashboard onNavigate={setActiveView} artisan={registeredArtisanPro} /> : <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
-        case 'LAWYER': return registeredLawyer ? <LawyerDashboard onNavigate={setActiveView} lawyer={registeredLawyer} /> : <LawyerRegistrationView onNavigate={setActiveView} onRegister={(l) => { setRegisteredLawyer(l); setActiveView('home'); }} />;
-        case 'BAILIFF': return registeredBailiff ? <BailiffDashboard onNavigate={setActiveView} bailiff={registeredBailiff} /> : <BailiffRegistrationView onNavigate={setActiveView} onRegister={(b) => { setRegisteredBailiff(b); setActiveView('home'); }} />;
-        case 'NOTARY': return registeredNotary ? <NotaryDashboard onNavigate={setActiveView} notary={registeredNotary} /> : <NotaryRegistrationView onNavigate={setActiveView} onRegister={(n) => { setRegisteredNotary(n); setActiveView('home'); }} />;
-        case 'ACCOUNTANT': return registeredAccountant ? <AccountantDashboard onNavigate={setActiveView} accountant={registeredAccountant} /> : <AccountantRegistrationView onNavigate={setActiveView} onRegister={(a) => { setRegisteredAccountant(a); setActiveView('home'); }} />;
-        case 'ADMIN': return <AdminDashboard onNavigate={setActiveView} users={user ? [user] : []} orders={orders} rides={activeRide ? [activeRide] : []} artisans={artisans} />;
-        case 'CLIENT':
-        default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} />;
+      if (appModule === 'MARAUDE') {
+        switch (user.role) {
+          case 'DRIVER': return <DriverDashboard user={user} onNavigate={navigateProtected} onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} registeredDriver={registeredDriver} />;
+          case 'DELIVERY': return <DeliveryDashboard 
+            onNavigate={setActiveView} 
+            registeredLivreur={registeredLivreur} 
+            marketplaceOrders={orders} 
+            onAcceptRequest={(r) => { setActiveRide(r); setActiveView('ride-progress'); }} 
+            onAcceptOrder={(id, name) => setOrders(orders.map(o => o.id === id ? { ...o, status: 'PICKED_UP', livreurName: name } : o))} 
+            onMarkDelivered={(id) => setOrders(orders.map(o => o.id === id ? { ...o, status: 'DELIVERED' } : o))} 
+            onUpdateOrder={(id, updates) => setOrders(orders.map(o => o.id === id ? { ...o, ...updates } : o))} 
+          />;
+          case 'ADMIN': return <AdminDashboard onNavigate={setActiveView} users={user ? [user] : []} orders={orders} rides={activeRide ? [activeRide] : []} artisans={artisans} />;
+          default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} appModule="MARAUDE" onSwitchModule={(m) => { setAppModule(m); localStorage.setItem('maraude_app_module', m); }} />;
+        }
+      } else {
+        switch (user.role) {
+          case 'DOCTOR': return registeredDoctor ? <DoctorDashboard onNavigate={setActiveView} doctorName={user.name} /> : <DoctorRegistrationView onNavigate={setActiveView} onRegister={(d) => {setRegisteredDoctor(d); setActiveView('home');}} />;
+          case 'PHARMACY': return registeredPharmacy ? <PharmacyDashboard onNavigate={setActiveView} pharmacy={registeredPharmacy} onUpdatePharmacy={setRegisteredPharmacy} /> : <PharmacyRegistrationView onNavigate={setActiveView} onRegister={(p) => { setRegisteredPharmacy(p); setActiveView('home'); }} />;
+          case 'ARTISAN': return registeredArtisanPro ? <ArtisanDashboard onNavigate={setActiveView} artisan={registeredArtisanPro} /> : <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
+          case 'LAWYER': return registeredLawyer ? <LawyerDashboard onNavigate={setActiveView} lawyer={registeredLawyer} /> : <LawyerRegistrationView onNavigate={setActiveView} onRegister={(l) => { setRegisteredLawyer(l); setActiveView('home'); }} />;
+          case 'BAILIFF': return registeredBailiff ? <BailiffDashboard onNavigate={setActiveView} bailiff={registeredBailiff} /> : <BailiffRegistrationView onNavigate={setActiveView} onRegister={(b) => { setRegisteredBailiff(b); setActiveView('home'); }} />;
+          case 'NOTARY': return registeredNotary ? <NotaryDashboard onNavigate={setActiveView} notary={registeredNotary} /> : <NotaryRegistrationView onNavigate={setActiveView} onRegister={(n) => { setRegisteredNotary(n); setActiveView('home'); }} />;
+          case 'ACCOUNTANT': return registeredAccountant ? <AccountantDashboard onNavigate={setActiveView} accountant={registeredAccountant} /> : <AccountantRegistrationView onNavigate={setActiveView} onRegister={(a) => { setRegisteredAccountant(a); setActiveView('home'); }} />;
+          case 'MERCHANT': return <MerchantDashboard onNavigate={setActiveView} registeredMerchant={registeredMerchant} onUpdateMerchant={setRegisteredMerchant} />;
+          case 'ADMIN': return <AdminDashboard onNavigate={setActiveView} users={user ? [user] : []} orders={orders} rides={activeRide ? [activeRide] : []} artisans={artisans} />;
+          default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} appModule="SERVICES" onSwitchModule={(m) => { setAppModule(m); localStorage.setItem('maraude_app_module', m); }} />;
+        }
       }
     }
 
@@ -251,26 +303,47 @@ const App: React.FC = () => {
       case 'artisan-registration': return <ArtisanRegistrationView onNavigate={setActiveView} onRegister={(art) => { setRegisteredArtisanPro(art); setArtisans([art, ...artisans]); setActiveView('home'); }} />;
       case 'delivery-registration': return <DeliveryRegistrationView onNavigate={navigateProtected} onRegister={(l) => { setRegisteredLivreur(l); setActiveView('home'); }} />;
       case 'merchant-registration': return <MerchantRegistrationView onNavigate={navigateProtected} onRegister={(m) => { setRegisteredMerchant(m); setActiveView('home'); }} />;
-      default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} />;
+      default: return <HomeView onNavigate={navigateProtected} activeRide={activeRide} subscriptionTier={subscriptionTier} activeOrders={orders} onUpdateOrder={() => {}} userName={user.name} appModule={appModule || 'MARAUDE'} onSwitchModule={(m) => { setAppModule(m); localStorage.setItem('maraude_app_module', m); }} />;
     }
   };
 
   const getBottomNavItems = () => {
     if (!user) return [];
     if (user.role === 'CLIENT') {
-      return [
-        { id: 'home', icon: Home, label: 'Accueil' },
-        { id: 'booking', icon: MapPin, label: 'Course' },
-        { id: 'pharmacies', icon: Pill, label: 'Santé' },
-        { id: 'doctors', icon: Stethoscope, label: 'Médecin' },
-      ];
+      if (appModule === 'MARAUDE') {
+        return [
+          { id: 'home', icon: Home, label: 'Accueil' },
+          { id: 'booking', icon: MapPin, label: 'Course' },
+          { id: 'map', icon: MapPin, label: 'Carte' },
+        ];
+      } else {
+        return [
+          { id: 'home', icon: Home, label: 'Accueil' },
+          { id: 'pharmacies', icon: Pill, label: 'Santé' },
+          { id: 'marketplace', icon: ShoppingBag, label: 'Marché' },
+        ];
+      }
     }
     return [
       { id: 'home', icon: LayoutDashboard, label: 'Dashboard' },
       { id: 'wallet', icon: Wallet, label: 'Wallet' },
-      { id: 'marketplace', icon: ShoppingBag, label: 'Boutique' },
     ];
   };
+
+  if (user && appModule === null) {
+    return (
+      <div className="flex flex-col h-screen max-w-md mx-auto bg-white relative shadow-2xl overflow-hidden border-x border-slate-100">
+        <AppLauncher 
+          currentModule={appModule} 
+          onSelect={(module) => { 
+            setAppModule(module); 
+            localStorage.setItem('maraude_app_module', module); 
+            setActiveView('home'); 
+          }} 
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen max-w-md mx-auto bg-white relative shadow-2xl overflow-hidden border-x border-slate-100">
@@ -279,13 +352,32 @@ const App: React.FC = () => {
           <button onClick={() => setSidebarOpen(true)} className="p-2 hover:bg-slate-100 rounded-2xl transition-all">
             <Menu className="w-5 h-5 text-slate-800" />
           </button>
-            <div className="flex items-center gap-2">
-            <div className="w-7 h-7 gradient-brand rounded-lg flex items-center justify-center text-white font-black text-[9px] shadow-lg shadow-emerald-200">MA</div>
-            <h1 className="text-base font-extrabold text-slate-900 tracking-tight">Maraude</h1>
+          
+          <div className="flex items-center gap-2">
+            <div className={`w-7 h-7 rounded-xl flex items-center justify-center text-white font-black text-[10px] shadow-lg ${appModule === 'MARAUDE' ? 'bg-gradient-to-tr from-emerald-600 to-teal-500 shadow-emerald-200' : 'bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-indigo-200'}`}>
+              {appModule === 'MARAUDE' ? 'MA' : 'SE'}
+            </div>
+            <h1 className="text-base font-black text-slate-900 tracking-tight flex items-center gap-1.5">
+              <span>{appModule === 'MARAUDE' ? 'Maraude' : 'Services'}</span>
+              <span className={`w-1.5 h-1.5 rounded-full ${appModule === 'MARAUDE' ? 'bg-emerald-500' : 'bg-indigo-500'}`}></span>
+            </h1>
           </div>
-          <button onClick={() => setActiveView('client-dashboard')} className="w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/20">
-            <img src={user.photo} className="w-full h-full object-cover" alt="Profile" />
-          </button>
+
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => { 
+                setAppModule(null); 
+                localStorage.removeItem('maraude_app_module'); 
+              }} 
+              className="p-1.5 hover:bg-slate-100 rounded-xl text-amber-500 hover:text-amber-600 transition-all flex items-center justify-center border border-amber-100 bg-amber-50/50"
+              title="Portail Dual Apps"
+            >
+              <Sparkles className="w-4 h-4 fill-amber-500 animate-pulse" />
+            </button>
+            <button onClick={() => setActiveView('client-dashboard')} className="w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/20">
+              <img src={user.photo} className="w-full h-full object-cover" alt="Profile" />
+            </button>
+          </div>
         </header>
       )}
 
@@ -324,17 +416,35 @@ const App: React.FC = () => {
             </div>
             <div className="p-4 space-y-1">
                {[
+                 { id: 'hub', icon: Sparkles, iconColor: 'text-amber-500', label: 'Portail Dual Apps 🌟' },
                  { id: 'home', icon: Home, label: 'Accueil' },
-                 { id: 'one-pager', icon: Info, label: 'Présentation Maraude' },
-                 { id: 'business-dashboard', icon: BarChart3, label: 'Projections Business' },
-                 { id: 'pharmacies', icon: Pill, label: 'Pharmacie' },
-                 { id: 'doctors', icon: Stethoscope, label: 'Médecins' },
-                 { id: 'marketplace', icon: ShoppingBag, label: 'Marketplace' },
+                 // Maraude only
+                 ...(appModule === 'MARAUDE' ? [
+                   { id: 'booking', icon: MapPin, label: 'Course' },
+                   { id: 'maraude', icon: Smartphone, label: 'Radar Proximité' },
+                   { id: 'one-pager', icon: Info, label: 'Présentation Maraude' },
+                 ] : []),
+                 // Services only
+                 ...(appModule === 'SERVICES' ? [
+                   { id: 'pharmacies', icon: Pill, label: 'Pharmacie' },
+                   { id: 'doctors', icon: Stethoscope, label: 'Médecins' },
+                   { id: 'marketplace', icon: ShoppingBag, label: 'Marketplace' },
+                   { id: 'business-dashboard', icon: BarChart3, label: 'Projections Business' },
+                 ] : []),
+                 // Shared
                  { id: 'wallet', icon: Wallet, label: 'Portefeuille' },
                  { id: 'role-selection', icon: LayoutDashboard, label: 'Changer Profil' },
                ].map((nav) => (
-                 <button key={nav.id} onClick={() => { setActiveView(nav.id as ViewState); setSidebarOpen(false); }} className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-emerald-50 text-slate-600 font-bold text-xs transition-all">
-                   <nav.icon className="w-4 h-4" /> {nav.label}
+                 <button key={nav.id} onClick={() => { 
+                   if (nav.id === 'hub') {
+                     setAppModule(null);
+                     localStorage.removeItem('maraude_app_module');
+                   } else {
+                     setActiveView(nav.id as ViewState);
+                   }
+                   setSidebarOpen(false); 
+                 }} className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-emerald-50 text-slate-600 font-bold text-xs transition-all">
+                   <nav.icon className={`w-4 h-4 ${nav.iconColor || ''}`} /> {nav.label}
                  </button>
                ))}
                <div className="pt-6 border-t border-slate-100 mt-4">

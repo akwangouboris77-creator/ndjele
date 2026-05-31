@@ -100,11 +100,40 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ user, onNavigate, onA
   const [isDetecting, setIsDetecting] = useState(false);
   const [showDirectionSaved, setShowDirectionSaved] = useState(false);
 
+  const [isOnline, setIsOnline] = useState(true);
+  const [roadsideAlert, setRoadsideAlert] = useState<{ id: string, clientName: string, pickupPointName: string, destination: string, price: number, seats: number } | null>(null);
+
   const [realtimeRequests, setRealtimeRequests] = useState<AvailableRequest[]>([]);
   const [negotiatingWith, setNegotiatingWith] = useState<AvailableRequest | null>(null);
   const [negotiationText, setNegotiationText] = useState('');
   
   const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (!isOnline) {
+      setRoadsideAlert(null);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      if (!roadsideAlert && Math.random() < 0.35) {
+        const clientNames = ['Marius L.', 'Géraldine N.', 'Serge M.', 'Chantal K.', 'Ulrich B.'];
+        const destinationsList = ['Aéroport Léon Mba', 'Goudron', 'Owendo (Port)', 'Louis', 'Nzeng-Ayong', 'PK12'];
+        const randomCrosswords = ['Carrefour Rio', 'Échangeur de Nzeng-Ayong', 'Carrefour Charbonnages', 'Carrefour Glass'];
+        
+        setRoadsideAlert({
+          id: 'road-' + Math.random().toString(36).substr(2, 5),
+          clientName: clientNames[Math.floor(Math.random() * clientNames.length)],
+          pickupPointName: randomCrosswords[Math.floor(Math.random() * randomCrosswords.length)],
+          destination: destinationsList[Math.floor(Math.random() * destinationsList.length)],
+          price: 500 + Math.floor(Math.random() * 5) * 500,
+          seats: 1 + Math.floor(Math.random() * 2)
+        });
+      }
+    }, 14000);
+
+    return () => clearInterval(interval);
+  }, [isOnline, roadsideAlert]);
 
   useEffect(() => {
     socketRef.current = io();
@@ -245,6 +274,49 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ user, onNavigate, onA
     });
   }, [filterPeriod]);
 
+  const handleAcceptRoadside = () => {
+    if (!roadsideAlert) return;
+    
+    const mockActiveRide: ActiveRide = {
+      id: roadsideAlert.id,
+      driverName: registeredDriver?.fullName || user.name || 'Chauffeur Maraude',
+      driverLoc: currentLocation || { lat: 0.3908, lng: 9.4544 },
+      clientLoc: { lat: 0.3944, lng: 9.4588 },
+      destinationLoc: { lat: 0.4022, lng: 9.4311 },
+      destination: roadsideAlert.destination,
+      price: roadsideAlert.price,
+      vehiclePlate: registeredDriver?.licensePlate || 'G-1234-A',
+      rideMode: isCollectiveMode ? 'COLLECTIVE' : 'PRIVATE',
+      seatsRequested: roadsideAlert.seats,
+      type: registeredDriver?.vehicleType || TransportType.TAXI,
+      status: 'ACCEPTED',
+      startTime: Date.now(),
+      isLocationShared: true,
+      isRoadside: true,
+      pickupPointName: roadsideAlert.pickupPointName,
+      clientName: roadsideAlert.clientName
+    } as any;
+
+    onAcceptRequest?.(mockActiveRide);
+    setRoadsideAlert(null);
+  };
+
+  const handleNegotiateRoadside = () => {
+    if (!roadsideAlert) return;
+    const req: AvailableRequest = {
+      id: roadsideAlert.id,
+      clientName: roadsideAlert.clientName,
+      destination: roadsideAlert.destination,
+      price: roadsideAlert.price,
+      distance: '150m',
+      rideMode: isCollectiveMode ? 'COLLECTIVE' : 'PRIVATE',
+      seats: roadsideAlert.seats,
+      pickupPointName: roadsideAlert.pickupPointName
+    };
+    handleStartNegotiation(req);
+    setRoadsideAlert(null);
+  };
+
   return (
     <div className="p-6 space-y-6 animate-in fade-in duration-500 pb-24 h-full overflow-y-auto bg-slate-50/50">
       <div className="flex items-center justify-between">
@@ -253,10 +325,15 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ user, onNavigate, onA
           <p className="text-xs text-slate-500 font-medium">Content de vous revoir, {registeredDriver?.fullName.split(' ')[0] || 'Chef'}</p>
         </div>
         <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-             <Zap className="w-3 h-3 fill-current" />
-             <span className="text-[10px] font-black uppercase tracking-widest">En Service</span>
-          </div>
+          <button 
+            onClick={() => setIsOnline(!isOnline)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all active:scale-95 ${isOnline ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 'text-slate-400 bg-slate-100 border-slate-200'}`}
+          >
+             <Zap className={`w-3 h-3 ${isOnline ? 'fill-current text-emerald-600' : 'text-slate-400'}`} />
+             <span className="text-[10px] font-black uppercase tracking-widest">
+               {isOnline ? 'En Service' : 'Hors Ligne'}
+             </span>
+          </button>
           <button 
             onClick={() => setIsCollectiveMode(!isCollectiveMode)}
             className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all ${isCollectiveMode ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-200 text-slate-500'}`}
@@ -265,6 +342,68 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ user, onNavigate, onA
           </button>
         </div>
       </div>
+
+      {roadsideAlert && (
+        <div 
+          className="bg-amber-500 text-slate-950 p-6 rounded-[2.5rem] border border-amber-400 shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300"
+        >
+          <div className="absolute right-6 top-6">
+            <button 
+              onClick={() => setRoadsideAlert(null)}
+              className="p-1.5 bg-slate-950/10 hover:bg-slate-950/20 rounded-full transition-all"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex gap-4 items-start relative z-10">
+            <div className="w-12 h-12 bg-slate-950 text-amber-500 rounded-3xl flex items-center justify-center text-xl shrink-0 animate-bounce">
+              🚨
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-[10px] bg-slate-950 text-amber-400 px-2.5 py-1 rounded-full font-black uppercase tracking-widest inline-block">
+                Signalement Maraude
+              </span>
+              <h4 className="text-base font-black truncate mt-2 text-slate-950">
+                {roadsideAlert.clientName} cherche un {isCollectiveMode ? 'Taxi Collectif' : 'Taxi Privé'}
+              </h4>
+              <p className="text-xs font-bold text-slate-800 flex items-center gap-1 mt-1">
+                📍 Point de ramassage : <span className="underline font-black">{roadsideAlert.pickupPointName}</span>
+              </p>
+              <p className="text-xs font-bold text-slate-800 flex items-center gap-1 mt-0.5">
+                🏁 Destination : <span className="font-black">{roadsideAlert.destination}</span>
+              </p>
+              
+              <div className="flex items-center gap-6 mt-3 pt-3 border-t border-slate-950/10">
+                <div>
+                   <p className="text-[8px] font-black text-slate-800 uppercase tracking-widest">Offre Initiale</p>
+                   <p className="text-lg font-black text-slate-950">{roadsideAlert.price} FCFA</p>
+                </div>
+                <div>
+                   <p className="text-[8px] font-black text-slate-800 uppercase tracking-widest">Passagers</p>
+                   <p className="text-lg font-black text-slate-950">{roadsideAlert.seats} Pers.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                <button 
+                  onClick={handleNegotiateRoadside}
+                  className="py-3 bg-slate-950 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all active:scale-95 shadow-lg"
+                >
+                  Négocier Prix
+                </button>
+                <button 
+                  onClick={handleAcceptRoadside}
+                  className="py-3 bg-white text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 shadow-md flex items-center justify-center gap-1"
+                >
+                  Capter Client
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-slate-950/5 rounded-full blur-2xl"></div>
+        </div>
+      )}
 
       {/* Wallet Card */}
       <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-2xl relative overflow-hidden">

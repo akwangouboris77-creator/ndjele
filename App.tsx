@@ -1,64 +1,67 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { 
-  Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info, Sparkles, Smartphone
+  Home, MapPin, Wallet, LayoutDashboard, AlertTriangle, Menu, X, Bell, Package, Hammer, Crown, ShoppingBag, Settings, LogOut, User as UserIcon, Store, Car, Stethoscope, Pill, BarChart3, Info, Sparkles, Smartphone, ShieldCheck
 } from 'lucide-react';
 import { ViewState, TransportType, ActiveRide, Contact, DriverRegistration, Artisan, SubscriptionTier, Livreur, Merchant, MarketplaceOrder, Product, UserProfile, UserRole, Pharmacy, Doctor, Lawyer, Bailiff, Notary, Accountant } from './types';
 
-// Imports des vues
+// Eagerly loaded core views for instantaneous visual bootstrap
 import HomeView from './components/HomeView';
-import BookingView from './components/BookingView';
-import WalletView from './components/WalletView';
-import SOSView from './components/SOSView';
-import RideProgressView from './components/RideProgressView';
-import WaitingValidationView from './components/WaitingValidationView';
-import DeliveryView from './components/DeliveryView';
-import ArtisansView from './components/ArtisansView';
-import ArtisanRegistrationView from './components/ArtisanRegistrationView';
-import SubscriptionView from './components/SubscriptionView';
-import TermsView from './components/TermsView';
-import MarketplaceView from './components/MarketplaceView';
 import LoginView from './components/LoginView';
-import OrderCheckoutView from './components/OrderCheckoutView';
-import DriverRegistrationView from './components/DriverRegistrationView';
-import DriverDashboard from './components/DriverDashboard';
-import DeliveryRegistrationView from './components/DeliveryRegistrationView';
-import DeliveryDashboard from './components/DeliveryDashboard';
-import MerchantRegistrationView from './components/MerchantRegistrationView';
-import MerchantDashboard from './components/MerchantDashboard';
-import ClientDashboard from './components/ClientDashboard';
-import DoctorView from './components/DoctorView';
 import RoleSelectionView from './components/RoleSelectionView';
-import ArtisanDashboard from './components/ArtisanDashboard';
-import DoctorDashboard from './components/DoctorDashboard';
-import PharmacyView from './components/PharmacyView';
-import MedicationOrderView from './components/MedicationOrderView';
-import DoctorRegistrationView from './components/DoctorRegistrationView';
-import PharmacyRegistrationView from './components/PharmacyRegistrationView';
-import PharmacyDashboard from './components/PharmacyDashboard';
-import BusinessDashboard from './components/BusinessDashboard';
-import OnePagerView from './components/OnePagerView';
-import LawyerView from './components/LawyerView';
-import BailiffView from './components/BailiffView';
-import LawyerRegistrationView from './components/LawyerRegistrationView';
-import BailiffRegistrationView from './components/BailiffRegistrationView';
-import LawyerDashboard from './components/LawyerDashboard';
-import BailiffDashboard from './components/BailiffDashboard';
-import NotaryView from './components/NotaryView';
-import AccountantView from './components/AccountantView';
-import NotaryRegistrationView from './components/NotaryRegistrationView';
-import AccountantRegistrationView from './components/AccountantRegistrationView';
-import NotaryDashboard from './components/NotaryDashboard';
-import AccountantDashboard from './components/AccountantDashboard';
-import AdminDashboard from './components/AdminDashboard';
-import MapView from './components/MapView';
-import DeliveryTrackingView from './components/DeliveryTrackingView';
-import OnboardingOverlay from './components/OnboardingOverlay';
-import MaraudeView from './components/MaraudeView';
-import ClandoView from './components/ClandoView';
-import QuartierMaisonView from './components/QuartierMaisonView';
-import { AnimatePresence } from 'motion/react';
 import AppLauncher from './components/AppLauncher';
+
+// Lazily loaded supplemental views to bypass high-latency transport cost
+const BookingView = lazy(() => import('./components/BookingView'));
+const WalletView = lazy(() => import('./components/WalletView'));
+const SOSView = lazy(() => import('./components/SOSView'));
+const RideProgressView = lazy(() => import('./components/RideProgressView'));
+const WaitingValidationView = lazy(() => import('./components/WaitingValidationView'));
+const DeliveryView = lazy(() => import('./components/DeliveryView'));
+const ArtisansView = lazy(() => import('./components/ArtisansView'));
+const ArtisanRegistrationView = lazy(() => import('./components/ArtisanRegistrationView'));
+const SubscriptionView = lazy(() => import('./components/SubscriptionView'));
+const TermsView = lazy(() => import('./components/TermsView'));
+const MarketplaceView = lazy(() => import('./components/MarketplaceView'));
+const OrderCheckoutView = lazy(() => import('./components/OrderCheckoutView'));
+const DriverRegistrationView = lazy(() => import('./components/DriverRegistrationView'));
+const DriverDashboard = lazy(() => import('./components/DriverDashboard'));
+const DeliveryRegistrationView = lazy(() => import('./components/DeliveryRegistrationView'));
+const DeliveryDashboard = lazy(() => import('./components/DeliveryDashboard'));
+const MerchantRegistrationView = lazy(() => import('./components/MerchantRegistrationView'));
+const MerchantDashboard = lazy(() => import('./components/MerchantDashboard'));
+const ClientDashboard = lazy(() => import('./components/ClientDashboard'));
+const DoctorView = lazy(() => import('./components/DoctorView'));
+const ArtisanDashboard = lazy(() => import('./components/ArtisanDashboard'));
+const DoctorDashboard = lazy(() => import('./components/DoctorDashboard'));
+const PharmacyView = lazy(() => import('./components/PharmacyView'));
+const MedicationOrderView = lazy(() => import('./components/MedicationOrderView'));
+const DoctorRegistrationView = lazy(() => import('./components/DoctorRegistrationView'));
+const PharmacyRegistrationView = lazy(() => import('./components/PharmacyRegistrationView'));
+const PharmacyDashboard = lazy(() => import('./components/PharmacyDashboard'));
+const BusinessDashboard = lazy(() => import('./components/BusinessDashboard'));
+const OnePagerView = lazy(() => import('./components/OnePagerView'));
+const LawyerView = lazy(() => import('./components/LawyerView'));
+const BailiffView = lazy(() => import('./components/BailiffView'));
+const LawyerRegistrationView = lazy(() => import('./components/LawyerRegistrationView'));
+const BailiffRegistrationView = lazy(() => import('./components/BailiffRegistrationView'));
+const LawyerDashboard = lazy(() => import('./components/LawyerDashboard'));
+const BailiffDashboard = lazy(() => import('./components/BailiffDashboard'));
+const NotaryView = lazy(() => import('./components/NotaryView'));
+const AccountantView = lazy(() => import('./components/AccountantView'));
+const NotaryRegistrationView = lazy(() => import('./components/NotaryRegistrationView'));
+const AccountantRegistrationView = lazy(() => import('./components/AccountantRegistrationView'));
+const NotaryDashboard = lazy(() => import('./components/NotaryDashboard'));
+const AccountantDashboard = lazy(() => import('./components/AccountantDashboard'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const MapView = lazy(() => import('./components/MapView'));
+const DeliveryTrackingView = lazy(() => import('./components/DeliveryTrackingView'));
+const OnboardingOverlay = lazy(() => import('./components/OnboardingOverlay'));
+const MaraudeView = lazy(() => import('./components/MaraudeView'));
+const ClandoView = lazy(() => import('./components/ClandoView'));
+const QuartierMaisonView = lazy(() => import('./components/QuartierMaisonView'));
+
+import { AnimatePresence } from 'motion/react';
 
 const DEFAULT_ARTISANS: Artisan[] = [
   { id: 'a1', name: 'Tonton Serge', job: 'Frigoriste Expert', category: 'froid', rating: 4.9, distance: 1.2, isVerified: true, avatar: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?fit=crop&w=150&h=150', completedTasks: 124, yearsOnPlatform: 3, neighborhood: 'Nzeng-Ayong', phone: '074 11 11 11' },
@@ -279,6 +282,7 @@ const App: React.FC = () => {
       case 'doctors': return <DoctorView onNavigate={setActiveView} />;
       case 'ride-progress': return activeRide ? <RideProgressView ride={activeRide} onEndRide={() => { setActiveRide(null); setActiveView('home'); }} onOpenSOS={() => setActiveView('sos')} contacts={contacts} user={user} /> : null;
       case 'wallet': return <WalletView onNavigate={setActiveView} balance={walletBalance} onUpdateBalance={setWalletBalance} />;
+      case 'terms': return <TermsView isOnboarding={false} onClose={() => setActiveView('home')} />;
       case 'sos': return <SOSView onNavigate={setActiveView} contacts={contacts} activeRide={activeRide} onUpdateRide={(r) => setActiveRide(r)} />;
       case 'subscription': return <SubscriptionView onNavigate={setActiveView} currentTier={subscriptionTier} onUpgrade={() => {setSubscriptionTier('PREMIUM'); setActiveView('home');}} />;
       case 'booking': return <BookingView onNavigate={setActiveView} onStartRideRequest={(r) => { setPendingRide(r); setActiveView('waiting-validation'); }} />;
@@ -382,7 +386,14 @@ const App: React.FC = () => {
       )}
 
       <main className={`flex-1 overflow-y-auto relative bg-slate-50/30 z-0 hide-scrollbar ${user && activeView !== 'role-selection' && activeView !== 'one-pager' ? 'pb-32' : ''}`}>
-        {renderView()}
+        <Suspense fallback={
+          <div className="flex flex-col items-center justify-center p-20 space-y-4">
+            <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest animate-pulse">Chargement Sécurisé...</p>
+          </div>
+        }>
+          {renderView()}
+        </Suspense>
       </main>
 
       {user && activeView !== 'role-selection' && activeView !== 'one-pager' && (
@@ -434,6 +445,7 @@ const App: React.FC = () => {
                  // Shared
                  { id: 'wallet', icon: Wallet, label: 'Portefeuille' },
                  { id: 'role-selection', icon: LayoutDashboard, label: 'Changer Profil' },
+                 { id: 'terms', icon: ShieldCheck, label: 'Légal & Confidentialité' },
                ].map((nav) => (
                  <button key={nav.id} onClick={() => { 
                    if (nav.id === 'hub') {

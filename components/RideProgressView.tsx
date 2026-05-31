@@ -21,6 +21,8 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
   const [clientLoc, setClientLoc] = useState(ride.clientLoc || { lat: 0.39, lng: 9.45 });
   const [socket, setSocket] = useState<Socket | null>(null);
 
+  const [rideStage, setRideStage] = useState<'approaching' | 'waiting' | 'transit' | 'finished'>('approaching');
+
   useEffect(() => {
     const newSocket = io();
     setSocket(newSocket);
@@ -91,6 +93,17 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
     setViewState('success');
   };
 
+  const advanceStage = () => {
+    if (rideStage === 'approaching') {
+      setRideStage('waiting');
+    } else if (rideStage === 'waiting') {
+      setRideStage('transit');
+    } else if (rideStage === 'transit') {
+      setRideStage('finished');
+      handleConfirmFinish();
+    }
+  };
+
   return (
     <div className="flex flex-col h-full bg-slate-50 animate-in fade-in duration-500 relative overflow-hidden">
       <div className="relative flex-1 bg-slate-200">
@@ -119,24 +132,52 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
              <span className="text-xs font-black text-slate-800">{ride.price + platformFees} F</span>
           </div>
           
-              <div className="bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/10 flex items-center gap-3">
-                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-emerald-400">
-                  <Navigation2 className="w-4 h-4 animate-pulse" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destination</p>
-                    {ride.rideMode === 'COLLECTIVE' && (
-                      <span className="text-[7px] font-black bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter">Collectif ({ride.seatsRequested} sièges)</span>
-                    )}
-                  </div>
-                  <p className="text-[10px] font-bold text-white truncate">{ride.destination}</p>
-                </div>
+          <div className="bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/10 flex items-center gap-3">
+            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-emerald-400">
+              <Navigation2 className="w-4 h-4 animate-pulse" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Destination</p>
+                {ride.rideMode === 'COLLECTIVE' && (
+                  <span className="text-[7px] font-black bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter">Collectif ({ride.seatsRequested} sièges)</span>
+                )}
               </div>
+              <p className="text-[10px] font-bold text-white truncate">{ride.destination}</p>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="bg-white rounded-t-[3rem] p-8 shadow-2xl z-20 -mt-10 space-y-6">
+        {/* Course Stepper Progress */}
+        <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-100/80 flex justify-between items-center text-center">
+          {[
+            { id: 'approaching', label: 'Approche', icon: '🚙' },
+            { id: 'waiting', label: 'Arrivé', icon: '📍' },
+            { id: 'transit', label: 'En Course', icon: '🛣️' },
+            { id: 'finished', label: 'Terminé', icon: '🏁' }
+          ].map((st) => {
+            const isCurrent = rideStage === st.id;
+            const completed = 
+              (st.id === 'approaching') ||
+              (st.id === 'waiting' && rideStage !== 'approaching') ||
+              (st.id === 'transit' && (rideStage === 'transit' || rideStage === 'finished')) ||
+              (st.id === 'finished' && rideStage === 'finished');
+
+            return (
+              <div key={st.id} className="flex-1 flex flex-col items-center relative">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${completed ? 'bg-emerald-600 text-white shadow-md' : 'bg-slate-200 text-slate-400'}`}>
+                  {completed ? '✓' : st.icon}
+                </div>
+                <span className={`text-[8px] font-black uppercase mt-1 ${isCurrent ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {st.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
         <div className="flex justify-between items-center">
            <div className="flex items-center gap-4">
               <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center text-2xl">👨🏾‍✈️</div>
@@ -203,10 +244,13 @@ const RideProgressView: React.FC<RideProgressViewProps> = ({ ride, onEndRide, on
                   <HeartCrack className="w-4 h-4" /> Signaler Litige
                 </button>
                 <button 
-                  onClick={handleConfirmFinish}
+                  onClick={advanceStage}
                   className="py-4 gradient-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center justify-center gap-2"
                 >
-                  Valider Arrivée
+                  {rideStage === 'approaching' && 'Chauffeur Arrivé'}
+                  {rideStage === 'waiting' && 'Démarrer Course'}
+                  {rideStage === 'transit' && 'Valider Arrivée'}
+                  {rideStage === 'finished' && 'Terminé'}
                 </button>
              </div>
           </div>

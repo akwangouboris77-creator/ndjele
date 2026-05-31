@@ -3,29 +3,103 @@
 <head>
  
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Maraude - Confiance Digitalisée</title>
+
+  <!-- PWA Mobile Architecture Parameters -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Maraude">
+  <meta name="theme-color" content="#0F172A">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1549576490-b0b4831da60a?fit=crop&w=192&h=192">
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#0F172A',
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              200: '#E2E8F0',
+              300: '#CBD5E1',
+              400: '#94A3B8',
+              500: '#64748B',
+              600: '#475569',
+              750: '#1E293B',
+              800: '#1E293B',
+              900: '#0F172A',
+              950: '#020617',
+            },
+            accent: {
+              DEFAULT: '#22C55E',
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+              200: '#BBF7D0',
+              300: '#86EFAC',
+              400: '#4ADE80',
+              500: '#22C55E',
+              600: '#16A34A',
+              700: '#15803D',
+              800: '#166534',
+              900: '#14532D',
+            },
+            warning: {
+              DEFAULT: '#FACC15',
+              50: '#FEFCE8',
+              100: '#FEF9C3',
+              200: '#FEF08A',
+              300: '#FDE047',
+              400: '#FACC15',
+              500: '#EAB308',
+              600: '#CA8A04',
+              700: '#A16207',
+              800: '#854D0E',
+              900: '#713F12',
+            },
+            mutedtext: {
+              DEFAULT: '#E5E7EB',
+              50: '#FAFAFA',
+              100: '#F4F4F5',
+              200: '#E4E4E7',
+              300: '#D4D4D8',
+              400: '#A1A1AA',
+              500: '#71717A',
+              600: '#52525B',
+              700: '#3F3F46',
+              800: '#27272A',
+              900: '#18181B',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #0f172a;
-      color: #f8fafc;
+      color: #e5e7eb;
       margin: 0;
       padding: 0;
     }
     .gradient-brand {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
     }
     .gradient-primary {
-      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      background: linear-gradient(135deg, #22c55e 0%, #166534 100%);
     }
     .glass-morphism {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(15, 23, 42, 0.8) !important;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -36,6 +110,102 @@
       100% { transform: translateY(0px); }
     }
     .animate-float { animation: float 3s ease-in-out infinite; }
+
+    /* Custom Theme Overrides: Primary #0F172A, Accent #22C55E, Warning #FACC15, Text #E5E7EB */
+    #root .bg-white,
+    #root aside.bg-white,
+    #root div[class*="bg-white"],
+    #root [class*="bg-white"] {
+      background-color: #0F172A !important;
+      color: #E5E7EB !important;
+    }
+
+    #root .bg-slate-50,
+    #root .bg-slate-100,
+    #root .bg-slate-100\/50,
+    #root .bg-slate-50/50,
+    #root .bg-slate-50/30,
+    #root div[class*="bg-slate-50"] {
+      background-color: #1E293B !important;
+      color: #E5E7EB !important;
+    }
+
+    #root .border-slate-100, 
+    #root .border-slate-200, 
+    #root .border-slate-300,
+    #root .border-indigo-500\/10,
+    #root .border-emerald-500\/10,
+    #root .border-emerald-500\/20 {
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    #root .text-slate-900,
+    #root .text-slate-800,
+    #root .text-slate-700 {
+      color: #E5E7EB !important;
+    }
+
+    #root .text-slate-600,
+    #root .text-slate-500 {
+      color: #94A3B8 !important;
+    }
+
+    #root .hover\:bg-slate-100:hover,
+    #root .hover\:bg-slate-50:hover,
+    #root .hover\:bg-emerald-50:hover {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Accent color: #22C55E */
+    #root .bg-emerald-600,
+    #root .bg-emerald-500,
+    #root [class*="bg-emerald-600"],
+    #root [class*="bg-emerald-500"] {
+      background-color: #22C55E !important;
+      color: #ffffff !important;
+    }
+
+    #root .text-emerald-600,
+    #root .text-emerald-500,
+    #root .text-emerald-700 {
+      color: #22C55E !important;
+    }
+
+    /* Warning color: #FACC15 */
+    #root .bg-amber-500,
+    #root .bg-amber-400,
+    #root .bg-amber-600,
+    #root .bg-yellow-400,
+    #root .bg-yellow-500 {
+      background-color: #FACC15 !important;
+      color: #0F172A !important;
+    }
+
+    #root .text-amber-500,
+    #root .text-amber-400,
+    #root .text-amber-600,
+    #root .text-yellow-400,
+    #root .text-yellow-500 {
+      color: #FACC15 !important;
+    }
+
+    #root button .text-white,
+    #root span .text-white,
+    #root .text-white {
+      color: #ffffff !important;
+    }
+
+    #root input,
+    #root select,
+    #root textarea {
+      background-color: #1E293B !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    #root input::placeholder {
+      color: #94A3B8 !important;
+    }
   </style>
   <link rel="stylesheet" href="/index.css">
   <meta name="google-site-verification" content="cjBhKwd9KHJETlyQKeHj888WJlFgUbGdypzfA0xNMVQ" />
@@ -43,5 +213,14 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Mobile Service Worker ready!'))
+          .catch(err => console.warn('PWA Service Worker offline sync fallback:', err));
+      });
+    }
+  </script>
 </body>
 </html>

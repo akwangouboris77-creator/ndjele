@@ -114,13 +114,20 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
         
         // Also notify the server if needed
         try {
-          await fetch('/api/register', {
+          const response = await fetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(mockUser)
           });
+          const data = await response.json();
+          if (data && data.success && data.token) {
+            sessionStorage.setItem('maraude_token', data.token);
+          } else {
+            sessionStorage.setItem('maraude_token', 'local_fallback_token_signature_' + Math.random().toString(36).substr(2, 9));
+          }
         } catch (serverError) {
           console.warn("Server registration notification error (expected in offline preview mode):", serverError);
+          sessionStorage.setItem('maraude_token', 'local_offline_token_signature_' + Math.random().toString(36).substr(2, 9));
         }
 
         onLogin(mockUser);
@@ -136,6 +143,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onOpenOnePager }) => {
           photo: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?fit=crop&w=150&h=150',
           role: selectedRole
         };
+        sessionStorage.setItem('maraude_token', 'local_fail_token_signature_' + Math.random().toString(36).substr(2, 9));
         onLogin(fallbackUser);
       }
     }, 2000);

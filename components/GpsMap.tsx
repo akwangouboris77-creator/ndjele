@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Map, Marker } from 'pigeon-maps';
 import { Navigation } from 'lucide-react';
 
@@ -25,6 +25,24 @@ const GpsMap: React.FC<GpsMapProps> = ({
     ? [clientLoc.lat, clientLoc.lng] 
     : (driverLoc ? [driverLoc.lat, driverLoc.lng] : (nearbyDrivers?.length ? [nearbyDrivers[0].lat, nearbyDrivers[0].lng] : [0.3908, 9.4534]));
 
+  // Generate a beautiful visual routing trail between start and end coordinates
+  const routeTrailPoints = useMemo(() => {
+    const start = driverLoc || clientLoc;
+    const end = destinationLoc;
+    if (!start || !end) return [];
+
+    const points = [];
+    const steps = 8; // Number of intermediate path points
+    for (let i = 1; i < steps; i++) {
+      const fraction = i / steps;
+      points.push({
+        lat: start.lat + (end.lat - start.lat) * fraction,
+        lng: start.lng + (end.lng - start.lng) * fraction
+      });
+    }
+    return points;
+  }, [clientLoc, driverLoc, destinationLoc]);
+
   return (
     <div className="rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl relative bg-slate-100" style={{ height }}>
       <Map 
@@ -32,6 +50,18 @@ const GpsMap: React.FC<GpsMapProps> = ({
         defaultZoom={zoom}
         metaWheelZoom={true}
       >
+        {/* Render Glowing Route Trail Points */}
+        {routeTrailPoints.map((pt, idx) => (
+          <React.Fragment key={`trail-${idx}`}>
+            <Marker 
+              width={12}
+              anchor={[pt.lat, pt.lng]}
+            >
+              <div className="w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse" />
+            </Marker>
+          </React.Fragment>
+        ))}
+
         {clientLoc && (
           <Marker 
             width={40}

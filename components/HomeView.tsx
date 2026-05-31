@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, Smartphone, Star, Car, Truck, ChevronRight, Package, Hammer, Crown, ShoppingBag, Plus, CreditCard, ArrowUpRight, CheckCircle2, Clock, Lock, Zap, Home, LayoutDashboard, AlertTriangle, Stethoscope, Pill, User as UserIcon, ShieldCheck, Gavel, BarChart3, Scale, Calculator, Dog, Brain, Ruler, Users, Navigation, ArrowRight, Briefcase } from 'lucide-react';
+import { MapPin, Smartphone, Star, Car, Truck, ChevronRight, Package, Hammer, Crown, ShoppingBag, Plus, CreditCard, ArrowUpRight, CheckCircle2, Clock, Lock, Zap, Home, LayoutDashboard, AlertTriangle, Stethoscope, Pill, User as UserIcon, ShieldCheck, Gavel, BarChart3, Scale, Calculator, Dog, Brain, Ruler, Users, Navigation, ArrowRight, Briefcase, Search } from 'lucide-react';
 import { ViewState, ActiveRide, SubscriptionTier, MarketplaceOrder } from '../types';
 
 interface HomeViewProps {
@@ -69,6 +69,108 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
           <span>Services & Pro</span>
         </button>
       </div>
+
+      {/* ================= UX INTELLIGENCE & IMMEDIATE ACTIONS CENTER ================= */}
+      <section className="space-y-4 animate-in zoom-in-95 duration-500">
+        <div className="flex items-center justify-between px-2">
+          <h3 className="font-extrabold text-[10px] text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-pulse" />
+            Actions Immédiates
+          </h3>
+          <span className="text-[8px] bg-slate-900/5 text-slate-500 px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider">
+            Radar Live
+          </span>
+        </div>
+
+        {/* 1. "Où allez-vous ?" - Premium interactive destination capsule */}
+        <div 
+          onClick={() => {
+            onSwitchModule('MARAUDE');
+            onNavigate('booking');
+          }}
+          className="bg-white p-4.5 rounded-[2.5rem] border-2 border-emerald-500/10 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 cursor-pointer transition-all flex items-center justify-between group"
+        >
+          <div className="flex items-center gap-3.5 flex-1 min-w-0">
+            <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-[1.25rem] flex items-center justify-center shrink-0 shadow-inner">
+              <Search className="w-5 h-5 animate-pulse text-emerald-600" />
+            </div>
+            <div className="text-left flex-1 min-w-0">
+              <span className="text-[10px] font-black uppercase text-emerald-600 tracking-wider block">Maraude Ride</span>
+              <p className="text-sm font-black text-slate-800 truncate flex items-center gap-1.5 mt-0.5">
+                Où allez-vous ? 
+                <span className="inline-block w-[2px] h-[15px] bg-emerald-500 animate-[pulse_0.8s_infinite] shrink-0"></span>
+              </p>
+            </div>
+          </div>
+          <div className="px-5 py-2.5 bg-slate-900 group-hover:bg-emerald-600 text-white rounded-[1.125rem] text-[10px] font-black uppercase tracking-widest transition-all shadow-md group-hover:scale-105 active:scale-95 shrink-0">
+            Rechercher
+          </div>
+        </div>
+
+        {/* 2 & 3 & 4. Primary Quick Action Grid */}
+        <div className="grid grid-cols-2 gap-3.5">
+          {/* Tile 2: Besoin d'un chauffeur ? */}
+          <div 
+            onClick={() => {
+              onSwitchModule('MARAUDE');
+              onNavigate('booking');
+            }}
+            className="bg-slate-900 text-white p-5 rounded-[2.5rem] hover:ring-2 hover:ring-emerald-500/20 transition-all cursor-pointer relative overflow-hidden group flex flex-col justify-between h-44 shadow-xl"
+          >
+            <div className="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+            <div className="w-10 h-10 bg-emerald-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20 transition-transform group-hover:scale-110">
+              <Car className="w-5 h-5" />
+            </div>
+            <div className="mt-4 relative z-10">
+              <span className="text-[8px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-black uppercase tracking-widest inline-block mb-1.5 border border-emerald-500/20">
+                Chauffeurs Actifs
+              </span>
+              <h4 className="text-xs font-black uppercase tracking-tight leading-snug">Besoin d'un chauffeur ?</h4>
+              <p className="text-[9px] text-slate-400 font-bold mt-1 leading-normal">Capter un taxi privé, moto ou clando en 1 clic.</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3.5">
+            {/* Tile 3: Pharmacie ouverte près de vous */}
+            <div 
+              onClick={() => {
+                onSwitchModule('SERVICES');
+                onNavigate('pharmacies');
+              }}
+              className="flex-1 bg-gradient-to-br from-rose-50 to-rose-100/30 p-4 rounded-[2.2rem] border border-rose-100/80 flex items-center gap-3 cursor-pointer hover:border-rose-200 hover:shadow-md transition-all group min-h-[5.25rem]"
+            >
+              <div className="w-10 h-10 bg-rose-500 text-white rounded-2xl flex items-center justify-center shadow-sm shrink-0 transition-transform group-hover:scale-105">
+                <Pill className="w-5 h-5 animate-pulse" />
+              </div>
+              <div className="text-left min-w-0">
+                <h4 className="text-[10px] font-black text-rose-950 uppercase tracking-tight truncate flex items-center gap-1">
+                  Pharmacie Ouverte 🏥
+                </h4>
+                <p className="text-[9px] text-rose-600/95 font-bold tracking-tight mt-0.5 leading-snug">De garde près de vous 24h/24.</p>
+              </div>
+            </div>
+
+            {/* Tile 4: Services proches */}
+            <div 
+              onClick={() => {
+                onSwitchModule('SERVICES');
+                onNavigate('artisans');
+              }}
+              className="flex-1 bg-gradient-to-br from-indigo-50 to-blue-100/30 p-4 rounded-[2.2rem] border border-indigo-100/80 flex items-center gap-3 cursor-pointer hover:border-indigo-200 hover:shadow-md transition-all group min-h-[5.25rem]"
+            >
+              <div className="w-10 h-10 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-sm shrink-0 transition-transform group-hover:scale-105">
+                <Hammer className="w-5 h-5" />
+              </div>
+              <div className="text-left min-w-0">
+                <h4 className="text-[10px] font-black text-indigo-950 uppercase tracking-tight truncate">
+                  Services proches 👷
+                </h4>
+                <p className="text-[9px] text-indigo-600/95 font-bold tracking-tight mt-0.5 leading-snug">Artisans & Experts qualifiés autour.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* RIDE ACTIVE OVERLAY (Only in Maraude/Transport app) */}
       {isMaraudeMode && activeRide && (
@@ -183,7 +285,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
 
           {/* Banner Driver Enrollment */}
           <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100 mt-6">
-             <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Driver" />
+             <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=50&w=400" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Driver" />
              <div className="absolute inset-0 bg-gradient-to-t from-amber-900 via-amber-900/40 to-transparent p-8 flex flex-col justify-end">
                 <h4 className="text-xl font-black text-white leading-tight">Chauffeur ? Inscrivez-vous</h4>
                 <p className="text-[10px] text-amber-300 font-bold uppercase tracking-widest mt-1">Obtenez votre matricule Maraude officiel.</p>
@@ -221,7 +323,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
 
           {/* Banner Santé */}
           <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
-             <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Health" />
+             <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=50&w=400" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Health" />
              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent p-8 flex flex-col justify-end">
                 <h4 className="text-xl font-black text-white leading-tight">Vivre en bonne santé</h4>
                 <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mt-1">Médecins & Pharmacies de garde.</p>
@@ -233,7 +335,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
 
           {/* Banner Artisan Enrollment */}
           <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
-             <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Artisan" />
+             <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=50&w=400" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Artisan" />
              <div className="absolute inset-0 bg-gradient-to-t from-indigo-900 via-indigo-900/40 to-transparent p-8 flex flex-col justify-end">
                 <h4 className="text-xl font-black text-white leading-tight">Gagnez plus avec Maraude</h4>
                 <p className="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau d'artisans certifiés.</p>
@@ -245,7 +347,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
 
           {/* Banner Notary Enrollment */}
           <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
-             <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Notary" />
+             <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=50&w=400" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Notary" />
              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent p-8 flex flex-col justify-end">
                 <h4 className="text-xl font-black text-white leading-tight">Étude notariale digitale</h4>
                 <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Rejoignez le réseau Justice & Notariat.</p>
@@ -257,7 +359,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigate, activeRide, subscriptio
 
           {/* Banner Accountant Enrollment */}
           <section className="relative h-44 rounded-[3rem] overflow-hidden group shadow-xl border border-slate-100">
-             <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Accountant" />
+             <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=50&w=400" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" alt="Accountant" />
              <div className="absolute inset-0 bg-gradient-to-t from-slate-800 via-slate-800/40 to-transparent p-8 flex flex-col justify-end">
                 <h4 className="text-xl font-black text-white leading-tight">Experts Comptables</h4>
                 <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-1">Optimisez votre cabinet d'expertise.</p>

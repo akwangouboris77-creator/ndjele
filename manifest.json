@@ -1,0 +1,25 @@
+{
+  "name": "Maraude - Confiance Digitalisée",
+  "short_name": "Maraude",
+  "description": "Portail dual d'accès aux services de transport et de confiance maraude.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "productivity"],
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1549576490-b0b4831da60a?fit=crop&w=192&h=192",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1549576490-b0b4831da60a?fit=crop&w=512&h=512",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
